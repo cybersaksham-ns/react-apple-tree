@@ -2,14 +2,24 @@
   "name": "react-apple-tree",
   "version": "1.0.0",
   "description": "A React library for virtualized, draggable tree lists.",
-  "main": "src/index.js",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "babel src -d dist --copy-files"
+  },
   "dependencies": {
     "react": "^18.2.0",
-    "react-window": "1.8.10",
     "react-dnd": "16.0.1",
-    "react-dnd-html5-backend": "16.0.1"
+    "react-dnd-html5-backend": "16.0.1",
+    "react-window": "1.8.10"
   },
   "peerDependencies": {
     "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "node-schedule": "^2.1.1",
+    "@babel/cli": "^7.24.7",
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
+    "@babel/preset-react": "^7.24.7"
   }
 }
