@@ -4,7 +4,7 @@
   "description": "A React library for virtualized, draggable tree lists.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel src -d dist --copy-files"
+    "build": "babel src -d dist"
   },
   "dependencies": {
     "react": "^18.2.0",
