@@ -21,17 +21,50 @@ const LineBlock = styled.div`
     content: "";
     background-color: black;
   }
+  &::before {
+    position: absolute;
+    content: "";
+    background-color: black;
+  }
 `;
+
+export const EmptyBlock = styled(LineBlock)``;
 
 export const VerticalLineBlock = styled(LineBlock)`
   &::after {
     width: 1px;
+    height: 100%;
     left: 50%;
     top: 0;
+  }
+`;
+
+export const HorizontalLineBlock = styled(LineBlock)`
+  &::before {
+    height: 1px;
+    width: 50%;
+    right: 0;
+    top: 50%;
+  }
+`;
+
+export const VerticalAndHorizontalLineBlock = styled(LineBlock)`
+  &::after {
+    width: 1px;
     height: 100%;
+    left: 50%;
+    top: 0;
+  }
+  &::before {
+    height: 1px;
+    width: 50%;
+    right: 0;
+    top: 50%;
   }
 `;
 
 export const TreeItemContent = styled.div`
   width: 100%;
+  display: flex;
+  align-items: center;
 `;

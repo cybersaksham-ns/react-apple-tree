@@ -3,7 +3,10 @@ import { useDrag, useDrop } from "react-dnd";
 import {
   TreeItemRow,
   TreeItemIndentation,
+  EmptyBlock,
   VerticalLineBlock,
+  HorizontalLineBlock,
+  VerticalAndHorizontalLineBlock,
   TreeItemContent,
 } from "./index.styled";
 
@@ -67,9 +70,16 @@ const TreeItem = ({ index, style, node, moveItem }) => {
       style={{ ...style, opacity, ...indentStyle }}
     >
       <TreeItemIndentation>
-        {Array.from(new Array(node.depth)).map((el, i) => (
-          <VerticalLineBlock key={`rat_item_indentation_${node.id}_${i}`} />
-        ))}
+        {node.depth > 0 ? <EmptyBlock /> : <></>}
+        {node.depth > 0 &&
+          Array.from(new Array(node.depth - 1)).map((el, i) => (
+            <VerticalLineBlock key={`rat_item_indentation_${node.id}_${i}`} />
+          ))}
+        {node.depth === 0 ? (
+          <HorizontalLineBlock />
+        ) : (
+          <VerticalAndHorizontalLineBlock />
+        )}
       </TreeItemIndentation>
       <TreeItemContent>{node.name}</TreeItemContent>
     </TreeItemRow>
