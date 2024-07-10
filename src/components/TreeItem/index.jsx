@@ -8,6 +8,8 @@ import {
   HorizontalLineBlock,
   VerticalAndHorizontalLineBlock,
   TreeItemContent,
+  RowMainButton,
+  RowMainContentWrapper,
 } from "./index.styled";
 
 const TreeItem = ({ index, style, node, moveItem }) => {
@@ -81,7 +83,10 @@ const TreeItem = ({ index, style, node, moveItem }) => {
           <VerticalAndHorizontalLineBlock />
         )}
       </TreeItemIndentation>
-      <TreeItemContent>{node.name}</TreeItemContent>
+      <TreeItemContent>
+        <RowMainButton isCollapsed={false} />
+        <RowMainContentWrapper>{node.name}</RowMainContentWrapper>
+      </TreeItemContent>
     </TreeItemRow>
   );
 };

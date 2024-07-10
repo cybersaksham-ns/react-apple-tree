@@ -14,7 +14,7 @@ const LineBlock = styled.div`
   width: 40px;
   height: 100%;
   position: relative;
-  opacity: 40%;
+  opacity: 20%;
 
   &::after {
     position: absolute;
@@ -65,6 +65,32 @@ export const VerticalAndHorizontalLineBlock = styled(LineBlock)`
 
 export const TreeItemContent = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
+`;
+
+export const RowMainButton = styled.div`
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+
+  &::before {
+    height: 12px;
+    width: 12px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: absolute;
+    ${(props) => (props.isCollapsed ? "content: '►';" : "content: '▼';")}
+    font-size: 10px;
+    top: 38%;
+    left: -25.5px;
+  }
+`;
+
+export const RowMainContentWrapper = styled.div`
+  width: 100%;
 `;
