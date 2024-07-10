@@ -11,7 +11,7 @@ import {
   RowMainContentWrapper,
 } from "./index.styled";
 
-const TreeItem = ({ style, node }) => {
+const TreeItem = ({ style, node, nodesData }) => {
   const itemRef = useRef(null);
 
   return (
@@ -36,7 +36,7 @@ const TreeItem = ({ style, node }) => {
         )}
       </TreeItemIndentation>
       <TreeItemContent>
-        <RowMainButton $isCollapsed={"false"} />
+        <RowMainButton $isCollapsed={node.isCollapsed} />
         <RowMainContentWrapper>{node.name}</RowMainContentWrapper>
       </TreeItemContent>
     </TreeItemRow>
