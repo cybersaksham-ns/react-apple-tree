@@ -1,7 +1,11 @@
 import React, { forwardRef, useState, useEffect } from "react";
 import { FixedSizeList as List } from "react-window";
 import TreeItem from "../TreeItem";
-import { convertTreeToNode } from "../../utils/convertTree";
+import {
+  convertTreeToNode,
+  convertOneLevelToList,
+  collapseOneLevelToNode,
+} from "../../utils/convertTree";
 
 const TreeList = forwardRef(({ treeData, itemHeight = 45 }, ref) => {
   const [nodes, setNodes] = useState({});
@@ -21,6 +25,14 @@ const TreeList = forwardRef(({ treeData, itemHeight = 45 }, ref) => {
     }
   }, [rootNode]);
 
+  const onExpandOrCollapseFunction = (node, index) => {
+    if (node.isCollapsed) {
+      setNodeList([...convertOneLevelToList(node, nodes, nodeList, index)]);
+    } else {
+      setNodeList([...collapseOneLevelToNode(node, nodeList, index)]);
+    }
+  };
+
   return (
     <List
       ref={ref}
@@ -36,6 +48,9 @@ const TreeList = forwardRef(({ treeData, itemHeight = 45 }, ref) => {
           style={style}
           node={data[index]}
           nodesData={nodes}
+          onExpandFunction={() =>
+            onExpandOrCollapseFunction(data[index], index)
+          }
         />
       )}
     </List>

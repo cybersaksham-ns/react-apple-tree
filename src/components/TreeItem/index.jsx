@@ -11,7 +11,7 @@ import {
   RowMainContentWrapper,
 } from "./index.styled";
 
-const TreeItem = ({ style, node, nodesData }) => {
+const TreeItem = ({ style, node, nodesData, onExpandFunction }) => {
   const itemRef = useRef(null);
 
   return (
@@ -36,7 +36,12 @@ const TreeItem = ({ style, node, nodesData }) => {
         )}
       </TreeItemIndentation>
       <TreeItemContent>
-        <RowMainButton $isCollapsed={node.isCollapsed} />
+        {node.children.length > 0 && (
+          <RowMainButton
+            $isCollapsed={node.isCollapsed}
+            onClick={onExpandFunction}
+          />
+        )}
         <RowMainContentWrapper>{node.name}</RowMainContentWrapper>
       </TreeItemContent>
     </TreeItemRow>

@@ -20,25 +20,32 @@ export const convertTreeToNode = (
   return node;
 };
 
-export const convertTreeToList = (node) => {};
-
-export const convertOneLevelToList = (node, nodeList) => {};
-
-export const flattenTree = (node, depth = 0, flattened = []) => {
-  flattened.push({ ...node, depth, isCollapsed: true });
-  node.children.forEach((child) => flattenTree(child, depth + 1, flattened));
-};
-
-export const flattenTreeForOneLevel = (node, flattened = [], nodeIndex) => {
-  let flattendArray = [];
-  node.children.forEach((child) =>
-    flattendArray.push({ ...child, depth: node.depth + 1 })
-  );
-  if (nodeIndex >= 0 && nodeIndex < flattened.length) {
-    flattened = [
-      ...flattened.slice(0, nodeIndex),
+export const convertOneLevelToList = (node, nodeMap, nodeList, nodeIndex) => {
+  node.isCollapsed = false;
+  let flattendArray = [node];
+  node.children.forEach((id) => flattendArray.push(nodeMap[id]));
+  if (nodeIndex >= 0 && nodeIndex < nodeList.length) {
+    nodeList = [
+      ...nodeList.slice(0, nodeIndex),
       ...flattendArray,
-      ...flattened.slice(nodeIndex + 1),
+      ...nodeList.slice(nodeIndex + 1),
     ];
   }
+  return nodeList;
+};
+
+export const collapseOneLevelToNode = (node, nodeList, nodeIndex) => {
+  let start = nodeIndex;
+  let end = start + 1;
+  while (end < nodeList.length) {
+    let childNode = nodeList[end];
+    if (childNode.depth > node.depth) {
+      childNode.isCollapsed = true;
+      end += 1;
+    } else {
+      break;
+    }
+  }
+  node.isCollapsed = true;
+  return [...nodeList.slice(0, start + 1), ...nodeList.slice(end)];
 };
