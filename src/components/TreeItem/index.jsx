@@ -1,8 +1,13 @@
 import React, { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import {
+  TreeItemRow,
+  TreeItemIndentation,
+  VerticalLineBlock,
+  TreeItemContent,
+} from "./index.styled";
 
-const TreeItem = ({ index, style, data, moveItem }) => {
-  const item = data[index];
+const TreeItem = ({ index, style, node, moveItem }) => {
   const itemRef = useRef(null);
 
   const [{ isDragging }, drag] = useDrag({
@@ -49,10 +54,10 @@ const TreeItem = ({ index, style, data, moveItem }) => {
   });
 
   const opacity = isDragging ? 0.5 : 1;
-  const indentStyle = { paddingLeft: item.depth * 20 };
+  const indentStyle = { paddingLeft: node.depth * 0 };
 
   return (
-    <div
+    <TreeItemRow
       ref={(node) => {
         if (node) {
           itemRef.current = node;
@@ -61,8 +66,13 @@ const TreeItem = ({ index, style, data, moveItem }) => {
       }}
       style={{ ...style, opacity, ...indentStyle }}
     >
-      {item.name}
-    </div>
+      <TreeItemIndentation>
+        {Array.from(new Array(node.depth)).map((el, i) => (
+          <VerticalLineBlock key={`rat_item_indentation_${node.id}_${i}`} />
+        ))}
+      </TreeItemIndentation>
+      <TreeItemContent>{node.name}</TreeItemContent>
+    </TreeItemRow>
   );
 };
 

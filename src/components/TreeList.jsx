@@ -42,7 +42,7 @@ const TreeList = forwardRef(
               key={data[index].id}
               index={index}
               style={style}
-              data={data}
+              node={data[index]}
               moveItem={moveItem}
             />
           )}
