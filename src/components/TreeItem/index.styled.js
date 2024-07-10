@@ -84,7 +84,7 @@ export const RowMainButton = styled.div`
     align-items: center;
     text-align: center;
     position: absolute;
-    ${(props) => (props.isCollapsed ? "content: '►';" : "content: '▼';")}
+    ${(props) => (props.$isCollapsed ? "content: '►';" : "content: '▼';")}
     font-size: 10px;
     top: 38%;
     left: -25.5px;

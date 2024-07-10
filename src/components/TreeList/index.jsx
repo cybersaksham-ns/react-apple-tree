@@ -2,8 +2,8 @@ import React, { forwardRef, useState, useEffect } from "react";
 import { FixedSizeList as List } from "react-window";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import TreeItem from "./TreeItem";
-import flattenTree from "../utils/flattenTree";
+import TreeItem from "../TreeItem";
+import flattenTree from "../../utils/flattenTree";
 
 const TreeList = forwardRef(
   ({ treeData, itemHeight = 25, indentSize = 20, onMoveItem }, ref) => {

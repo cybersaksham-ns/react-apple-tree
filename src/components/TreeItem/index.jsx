@@ -84,7 +84,7 @@ const TreeItem = ({ index, style, node, moveItem }) => {
         )}
       </TreeItemIndentation>
       <TreeItemContent>
-        <RowMainButton isCollapsed={false} />
+        <RowMainButton $isCollapsed={"false"} />
         <RowMainContentWrapper>{node.name}</RowMainContentWrapper>
       </TreeItemContent>
     </TreeItemRow>
