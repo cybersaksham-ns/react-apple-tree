@@ -1,2 +1,2 @@
-import TreeList from "./components/TreeList/index";
+import TreeList from "./components/TreeList";
 export { TreeList };
