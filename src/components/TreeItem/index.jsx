@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import { useDrag, useDrop } from "react-dnd";
 import {
   TreeItemRow,
   TreeItemIndentation,
@@ -9,20 +10,49 @@ import {
   TreeItemContent,
   RowMainButton,
   RowMainContentWrapper,
-} from "./index.styled";
+} from "./index.styles";
+import DropZone from "../DropZone";
 
 const TreeItem = ({ style, node, nodesData, onExpandFunction }) => {
   const itemRef = useRef(null);
 
+  const [{ isOver }, drop] = useDrop({
+    accept: "TREE_ITEM",
+    drop: (item, monitor) => {
+      const didDrop = monitor.didDrop();
+      if (didDrop) {
+        return;
+      }
+      const draggedNode = item.node;
+      const dropNode = node;
+      if (!draggedNode || !dropNode || draggedNode.id === dropNode.id) {
+        return;
+      }
+      console.log("drop", draggedNode, dropNode);
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+    hover(item, monitor) {
+      const draggedNode = item.node;
+      const hoveredNode = node;
+      if (!draggedNode || !hoveredNode || draggedNode.id === hoveredNode.id) {
+        return;
+      }
+      // TODO: remove previous dropzones and create new
+    },
+  });
+
+  const [{ isDragging }, drag] = useDrag({
+    type: "TREE_ITEM",
+    item: { node },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
   return (
-    <TreeItemRow
-      ref={(node) => {
-        if (node) {
-          itemRef.current = node;
-        }
-      }}
-      style={{ ...style }}
-    >
+    <TreeItemRow ref={itemRef} style={{ ...style }}>
       <TreeItemIndentation>
         {node.depth > 0 ? <EmptyBlock /> : <></>}
         {node.depth > 0 &&
@@ -42,7 +72,20 @@ const TreeItem = ({ style, node, nodesData, onExpandFunction }) => {
             onClick={onExpandFunction}
           />
         )}
-        <RowMainContentWrapper>{node.name}</RowMainContentWrapper>
+        <RowMainContentWrapper
+          ref={(node) => {
+            drag(drop(node));
+          }}
+        >
+          {isDragging ? (
+            <DropZone
+              isDragging={isDragging}
+              children={<div>{node.name}</div>}
+            />
+          ) : (
+            <div>{node.name}</div>
+          )}
+        </RowMainContentWrapper>
       </TreeItemContent>
     </TreeItemRow>
   );
