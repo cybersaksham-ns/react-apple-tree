@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useContext } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import {
   TreeItemRow,
@@ -12,9 +12,11 @@ import {
   RowMainContentWrapper,
 } from "./index.styles";
 import DropZone from "../DropZone";
+import { NodeDataContext } from "../../contexts/NodeDataContext";
 
-const TreeItem = ({ style, node, nodesData, onExpandFunction }) => {
+const TreeItem = ({ style, nodeIndex, node }) => {
   const itemRef = useRef(null);
+  const { expandOrCollapseNode } = useContext(NodeDataContext);
 
   const [{ isOver }, drop] = useDrop({
     accept: "TREE_ITEM",
@@ -69,7 +71,7 @@ const TreeItem = ({ style, node, nodesData, onExpandFunction }) => {
         {node.children.length > 0 && (
           <RowMainButton
             $isCollapsed={node.isCollapsed}
-            onClick={onExpandFunction}
+            onClick={() => expandOrCollapseNode(node, nodeIndex)}
           />
         )}
         <RowMainContentWrapper

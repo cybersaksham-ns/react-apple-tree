@@ -92,7 +92,6 @@ export const RowMainButton = styled.div`
 `;
 
 export const RowMainContentWrapper = styled.div`
-  width: 100%;
   height: 80%;
   display: flex;
   align-items: center;
