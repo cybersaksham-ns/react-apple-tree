@@ -1,5 +1,5 @@
-import React, { useRef, useContext } from "react";
-import { useDrag, useDrop } from "react-dnd";
+import React, { useRef, useContext, useEffect } from "react";
+import { useDrag } from "react-dnd";
 import {
   TreeItemRow,
   TreeItemIndentation,
@@ -11,47 +11,26 @@ import {
   RowMainButton,
   RowMainContentWrapper,
 } from "./index.styles";
-import DropZone from "../DropZone";
 import { NodeDataContext } from "../../contexts/NodeDataContext";
 
 const TreeItem = ({ style, nodeIndex, node }) => {
   const itemRef = useRef(null);
-  const { expandOrCollapseNode } = useContext(NodeDataContext);
-
-  const [{ isOver }, drop] = useDrop({
-    accept: "TREE_ITEM",
-    drop: (item, monitor) => {
-      const didDrop = monitor.didDrop();
-      if (didDrop) {
-        return;
-      }
-      const draggedNode = item.node;
-      const dropNode = node;
-      if (!draggedNode || !dropNode || draggedNode.id === dropNode.id) {
-        return;
-      }
-      console.log("drop", draggedNode, dropNode);
-    },
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-    }),
-    hover(item, monitor) {
-      const draggedNode = item.node;
-      const hoveredNode = node;
-      if (!draggedNode || !hoveredNode || draggedNode.id === hoveredNode.id) {
-        return;
-      }
-      // TODO: remove previous dropzones and create new
-    },
-  });
+  const { expandOrCollapseNode, startNodeDrag } = useContext(NodeDataContext);
 
   const [{ isDragging }, drag] = useDrag({
     type: "TREE_ITEM",
-    item: { node },
+    item: { node, index: nodeIndex, depth: node.depth },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
+
+  useEffect(() => {
+    if (isDragging) {
+      startNodeDrag(node, nodeIndex);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDragging]);
 
   return (
     <TreeItemRow ref={itemRef} style={{ ...style }}>
@@ -75,18 +54,11 @@ const TreeItem = ({ style, nodeIndex, node }) => {
           />
         )}
         <RowMainContentWrapper
-          ref={(node) => {
-            drag(drop(node));
-          }}
+          ref={drag}
+          $dropzone={node.dropzone}
+          $isDragging={node.isDragging}
         >
-          {isDragging ? (
-            <DropZone
-              isDragging={isDragging}
-              children={<div>{node.name}</div>}
-            />
-          ) : (
-            <div>{node.name}</div>
-          )}
+          <div>{node.name}</div>
         </RowMainContentWrapper>
       </TreeItemContent>
     </TreeItemRow>

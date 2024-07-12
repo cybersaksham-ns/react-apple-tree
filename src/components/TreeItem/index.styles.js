@@ -92,8 +92,23 @@ export const RowMainButton = styled.div`
 `;
 
 export const RowMainContentWrapper = styled.div`
+  width: 200px;
   height: 80%;
   display: flex;
   align-items: center;
-  padding: 0 10px;
+
+  opacity: ${(props) => (props.$isDragging ? "0.4" : "1.0")};
+
+  background-color: ${(props) =>
+    props.$dropzone
+      ? props.$dropzone === "self"
+        ? "lightgrey"
+        : props.$dropzone === "allow"
+        ? "lightblue"
+        : "lightcoral"
+      : "transparent"};
+
+  &:hover {
+    border: 2px dotted black;
+  }
 `;

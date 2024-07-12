@@ -1,4 +1,4 @@
-import { Node } from "../types";
+import { Node } from "../models/Node";
 
 export const convertTreeToNode = (
   treeData,
@@ -49,3 +49,5 @@ export const collapseOneLevelToNode = (node, nodeList, nodeIndex) => {
   node.isCollapsed = true;
   return [...nodeList.slice(0, start + 1), ...nodeList.slice(end)];
 };
+
+export const refactorNodeList = (nodeList) => {};
