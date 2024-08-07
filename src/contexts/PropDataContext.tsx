@@ -1,5 +1,6 @@
 import React, { createContext, useState } from "react";
 import { ContextProviderProps, ReactAppleTreeProps } from "../types";
+import { defaultAppleTreeProps } from "../utils/default-props";
 
 interface PropDataContextProps {
   appleTreeProps: ReactAppleTreeProps;
@@ -7,20 +8,16 @@ interface PropDataContextProps {
 }
 
 const PropDataContext = createContext<PropDataContextProps>({
-  appleTreeProps: {
-    treeData: [],
-    onChange: () => {},
-  },
+  appleTreeProps: defaultAppleTreeProps,
   setAppleTreeProps: () => {},
 });
 
 const PropDataContextProvider = (
   props: ContextProviderProps
 ): React.JSX.Element => {
-  const [appleTreeProps, setAppleTreeProps] = useState<ReactAppleTreeProps>({
-    treeData: [],
-    onChange: () => {},
-  });
+  const [appleTreeProps, setAppleTreeProps] = useState<ReactAppleTreeProps>(
+    defaultAppleTreeProps
+  );
 
   return (
     <PropDataContext.Provider value={{ appleTreeProps, setAppleTreeProps }}>

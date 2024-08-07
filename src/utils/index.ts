@@ -9,16 +9,14 @@ import {
 
 export function flattenTree<T>(
   treeData: Array<TreeItem<T>>,
-  getNodeKey: GetNodeKeyFn<T> = () => {
-    return 0;
-  },
+  getNodeKey: GetNodeKeyFn<T>,
   initialPath: NumberOrStringArray = []
 ): [TreeMap, Array<FlatTreeItem>] {
   const flattenedArray: Array<FlatTreeItem> = [];
   const map: TreeMap = {};
 
   const flatten = (node: TreeItem<T>, path: NumberOrStringArray = []): void => {
-    const mapId = getNodeKey({ node, treeIndex: -1 });
+    const mapId = getNodeKey({ node, treeIndex: flattenedArray.length });
     map[mapId] = node;
     flattenedArray.push({ mapId, path: [...path, mapId] });
 
@@ -37,9 +35,7 @@ export function expandNodeOneLevelUtils<T>(
   node: TreeItem<T>,
   treeMap: TreeMap,
   flatTree: Array<FlatTreeItem>,
-  getNodeKey: GetNodeKeyFn<T> = () => {
-    return 0;
-  }
+  getNodeKey: GetNodeKeyFn<T>
 ): [TreeMap, Array<FlatTreeItem>] {
   let idx = flatTree.findIndex((el) => el.mapId === nodeKey);
   if (

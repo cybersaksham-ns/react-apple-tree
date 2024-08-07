@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { ContextProviderProps, FlatTreeItem, NodeKey, TreeMap } from "../types";
 import { PropDataContext } from "./PropDataContext";
 import { collapseNode, expandNodeOneLevelUtils, flattenTree } from "../utils";
-import { defaultOnChange } from "../utils/default-props";
 
 interface TreeContextProps {
   treeMap: TreeMap;
@@ -34,7 +33,7 @@ const TreeDataContextProvider = (
     }
   }, [appleTreeProps]);
 
-  function expandOrCollapseNode<T>(nodeKey: NodeKey) {
+  function expandOrCollapseNode(nodeKey: NodeKey) {
     if (!treeMap[nodeKey].expanded) {
       const [map, flatArray] = expandNodeOneLevelUtils(
         nodeKey,
@@ -55,7 +54,7 @@ const TreeDataContextProvider = (
       );
       setFlatTree([...flatArray]);
     }
-    defaultOnChange(appleTreeProps.onChange, appleTreeProps.treeData);
+    appleTreeProps.onChange(appleTreeProps.treeData);
   }
 
   return (
