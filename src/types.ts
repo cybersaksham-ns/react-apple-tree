@@ -25,7 +25,6 @@ export type GetNodeKeyFn<T> = (
 ) => NodeKey;
 
 export interface ReactAppleTreeProps<T = {}> {
-  // treeData: Array<TreeItem<T>>;
   treeData?: Array<TreeItem<T>>;
   onChange?: (treeData: Array<TreeItem<T>>) => void;
   getNodeKey?: GetNodeKeyFn<T>;
