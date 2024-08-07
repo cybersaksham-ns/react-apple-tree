@@ -113,9 +113,18 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
           ? "lightblue"
           : "lightcoral"
       : "transparent"};
+`;
+
+export const RowDragIcon = styled.div`
+  margin-right: 10px;
+  padding: 5px 2px;
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+  cursor: move;
 
   &:hover {
-    border: 2px dotted black;
+    background-color: #898c94;
   }
 `;
 

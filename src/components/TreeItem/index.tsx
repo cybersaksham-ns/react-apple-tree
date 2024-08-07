@@ -4,6 +4,7 @@ import {
   EmptyBlock,
   HorizontalLineBlock,
   RowButtonsWrapper,
+  RowDragIcon,
   RowMainButton,
   RowMainContentWrapper,
   TreeItemContent,
@@ -15,6 +16,7 @@ import {
 import { TreeDataContext } from "../../contexts/TreeDataContext";
 import { PropDataContext } from "../../contexts/PropDataContext";
 import { ExtendedNodeProps } from "../../types";
+import DragHandle from "../../assets/DragHandle";
 
 const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
   const { appleTreeProps } = useContext(PropDataContext);
@@ -89,6 +91,9 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
           className={nodePropsData.className || ""}
           style={nodePropsData.style || {}}
         >
+          <RowDragIcon>
+            <DragHandle />
+          </RowDragIcon>
           {nodePropsData.title ? (
             nodePropsData.title()
           ) : (
