@@ -1,4 +1,9 @@
 import styled from "styled-components";
+import {
+  DropZoneValues,
+  RowMainButtonProps,
+  RowMainContentWrapperProps,
+} from "./types";
 
 export const TreeItemRow = styled.div`
   overflow: auto;
@@ -70,7 +75,7 @@ export const TreeItemContent = styled.div`
   align-items: center;
 `;
 
-export const RowMainButton = styled.div`
+export const RowMainButton = styled.div<RowMainButtonProps>`
   height: 100%;
   position: relative;
   cursor: pointer;
@@ -84,14 +89,14 @@ export const RowMainButton = styled.div`
     align-items: center;
     text-align: center;
     position: absolute;
-    ${(props) => (props.$isCollapsed ? "content: '►';" : "content: '▼';")}
+    ${({ $isCollapsed }) => ($isCollapsed ? "content: '►';" : "content: '▼';")}
     font-size: 10px;
     top: 38%;
     left: -25.5px;
   }
 `;
 
-export const RowMainContentWrapper = styled.div`
+export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
   width: 200px;
   height: 80%;
   display: flex;
@@ -101,11 +106,11 @@ export const RowMainContentWrapper = styled.div`
 
   background-color: ${(props) =>
     props.$dropzone
-      ? props.$dropzone === "self"
+      ? props.$dropzone === DropZoneValues.Self
         ? "lightgrey"
-        : props.$dropzone === "allow"
-        ? "lightblue"
-        : "lightcoral"
+        : props.$dropzone === DropZoneValues.Allow
+          ? "lightblue"
+          : "lightcoral"
       : "transparent"};
 
   &:hover {
