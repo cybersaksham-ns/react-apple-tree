@@ -60,7 +60,10 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
   }, [treeNode.expanded]);
 
   return (
-    <TreeItemRow style={{ ...style }}>
+    <TreeItemRow
+      style={{ ...style }}
+      $rowDirection={appleTreeProps.rowDirection}
+    >
       <TreeItemIndentation>
         {depth > 0 ? <EmptyBlock /> : <></>}
         {depth > 0 &&

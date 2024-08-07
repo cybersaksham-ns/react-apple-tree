@@ -3,12 +3,14 @@ import {
   DropZoneValues,
   RowMainButtonProps,
   RowMainContentWrapperProps,
+  TreeItemRowProps,
 } from "./types";
 
-export const TreeItemRow = styled.div`
+export const TreeItemRow = styled.div<TreeItemRowProps>`
   overflow: auto;
   display: flex;
-  flex-direction: row;
+  flex-direction: ${({ $rowDirection }) =>
+    $rowDirection ? ($rowDirection === "rtl" ? "row-reverse" : "row") : "row"};
 `;
 
 export const TreeItemIndentation = styled.div`
