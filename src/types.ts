@@ -17,23 +17,11 @@ export type ContextProviderProps = { children: React.JSX.Element };
 export type NodeKey = string | number;
 export type TreeMap = Record<NodeKey, TreeItem>;
 
-export interface GetTreeItemChildren<T = {}> {
-  done: (children: Array<TreeItem<T>>) => void;
-  node: TreeItem<T>;
-  path: NumberOrStringArray;
-  lowerSiblingCounts: number[];
-  treeIndex: number;
-}
-
-export type GetTreeItemChildrenFn<T = {}> = (
-  data: GetTreeItemChildren<T>
-) => void;
-
 export type TreeItem<T = {}> = T & {
   title?: React.ReactNode | undefined;
   subtitle?: React.ReactNode | undefined;
   expanded?: boolean | undefined;
-  children?: Array<TreeItem<T>> | GetTreeItemChildrenFn<T> | undefined;
+  children?: Array<TreeItem<T>> | undefined;
 };
 
 export interface TreeNode<T = {}> {
@@ -201,9 +189,7 @@ export interface ThemeProps<T = {}> extends ThemeTreeProps<T> {
 
 // Prop Functions
 export type OnChangeFn<T> = (treeData: Array<TreeItem<T>>) => void;
-export type GetNodeKeyFn<T> = (
-  data: TreeNode<T> & TreeIndex
-) => string | number;
+export type GetNodeKeyFn<T> = (data: TreeNode<T> & TreeIndex) => NodeKey;
 export type GenerateNodePropsFn<T> = (data: ExtendedNodeData<T>) => {
   [index: string]: any;
 };

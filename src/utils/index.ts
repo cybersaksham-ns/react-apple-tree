@@ -18,7 +18,7 @@ export function flattenTree<T>(
   const map: TreeMap = {};
 
   const flatten = (node: TreeItem<T>, path: NumberOrStringArray = []): void => {
-    const mapId = getNodeKey({ node });
+    const mapId = getNodeKey({ node, treeIndex: -1 });
     map[mapId] = node;
     flattenedArray.push({ mapId, path: [...path, mapId] });
 
