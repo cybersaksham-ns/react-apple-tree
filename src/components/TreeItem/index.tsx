@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
+import React, { memo, useContext, useEffect, useMemo, useState } from "react";
 import { TreeItemComponentProps } from "./types";
 import {
   EmptyBlock,
   HorizontalLineBlock,
+  RowButtonsWrapper,
   RowMainButton,
   RowMainContentWrapper,
   TreeItemContent,
@@ -12,11 +13,41 @@ import {
   VerticalLineBlock,
 } from "./index.styles";
 import { TreeDataContext } from "../../contexts/TreeDataContext";
+import { PropDataContext } from "../../contexts/PropDataContext";
+import { ExtendedNodeProps } from "../../types";
 
 const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
+  const { appleTreeProps } = useContext(PropDataContext);
   const { treeMap, expandOrCollapseNode } = useContext(TreeDataContext);
-  let depth = node.path.length - 1;
-  let treeNode = treeMap[node.mapId];
+
+  const [depth, setDepth] = useState(node.path.length - 1);
+  const [treeNode, setTreeNode] = useState(treeMap[node.mapId]);
+  const [parentNode, setParentNode] = useState(
+    treeMap[node.path[node.path.length - 1]]
+  );
+  const [nodePropsData, setNodePropsData] = useState<ExtendedNodeProps>({});
+
+  useEffect(() => {
+    setDepth(node.path.length - 1);
+    setTreeNode(treeMap[node.mapId]);
+    setParentNode(treeMap[node.path[node.path.length - 2]]);
+  }, [node, treeMap]);
+
+  useMemo(() => {
+    if (appleTreeProps.generateNodeProps && parentNode !== treeNode) {
+      setNodePropsData(
+        appleTreeProps.generateNodeProps({
+          node: treeNode,
+          isSearchFocus: false,
+          isSearchMatch: false,
+          lowerSiblingCounts: [],
+          parentNode,
+          path: node.path,
+          treeIndex: nodeIndex,
+        })
+      );
+    }
+  }, [node, appleTreeProps, treeNode, nodeIndex, parentNode]);
 
   return (
     <TreeItemRow style={{ ...style }}>
@@ -41,12 +72,24 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
             onClick={() => expandOrCollapseNode(node.mapId)}
           />
         )}
-        <RowMainContentWrapper>
-          <div>{node.mapId}</div>
+        <RowMainContentWrapper
+          className={nodePropsData.className || ""}
+          style={nodePropsData.style || {}}
+        >
+          {nodePropsData.title ? (
+            nodePropsData.title()
+          ) : (
+            <div>{treeNode.title || ""}</div>
+          )}
+          {nodePropsData.buttons && (
+            <RowButtonsWrapper>
+              {nodePropsData.buttons.map((btn) => btn)}
+            </RowButtonsWrapper>
+          )}
         </RowMainContentWrapper>
       </TreeItemContent>
     </TreeItemRow>
   );
 };
 
-export default TreeItem;
+export default memo(TreeItem);

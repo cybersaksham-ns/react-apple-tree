@@ -97,7 +97,6 @@ export const RowMainButton = styled.div<RowMainButtonProps>`
 `;
 
 export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
-  width: 200px;
   height: 80%;
   display: flex;
   align-items: center;
@@ -116,4 +115,12 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
   &:hover {
     border: 2px dotted black;
   }
+`;
+
+export const RowButtonsWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  gap: 10px;
 `;

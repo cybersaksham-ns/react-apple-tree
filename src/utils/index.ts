@@ -7,7 +7,7 @@ import {
   TreeMap,
 } from "../types";
 
-export function flattenTree<T>(
+export function flattenNode<T>(
   treeData: Array<TreeItem<T>>,
   getNodeKey: GetNodeKeyFn<T>,
   initialPath: NumberOrStringArray = []
@@ -16,7 +16,7 @@ export function flattenTree<T>(
   const map: TreeMap = {};
 
   const flatten = (node: TreeItem<T>, path: NumberOrStringArray = []): void => {
-    const mapId = getNodeKey({ node, treeIndex: flattenedArray.length });
+    const mapId = getNodeKey({ node });
     map[mapId] = node;
     flattenedArray.push({ mapId, path: [...path, mapId] });
 
@@ -45,7 +45,7 @@ export function expandNodeOneLevelUtils<T>(
     node.children.length > 0
   ) {
     node.expanded = true;
-    const [map, flatArray] = flattenTree(
+    const [map, flatArray] = flattenNode(
       [node],
       getNodeKey,
       flatTree[idx].path.slice(0, -1)

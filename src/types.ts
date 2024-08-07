@@ -52,10 +52,17 @@ export interface SearchData<T = {}> extends NodeData<T> {
 }
 
 export interface ExtendedNodeData<T = {}> extends NodeData<T> {
-  parentNode: TreeItem<T>;
+  parentNode?: TreeItem<T>;
   lowerSiblingCounts: number[];
   isSearchMatch: boolean;
   isSearchFocus: boolean;
+}
+
+export interface ExtendedNodeProps {
+  buttons?: Array<React.ReactNode>;
+  title?: () => React.ReactNode;
+  style?: React.CSSProperties;
+  className?: string;
 }
 
 export interface OnVisibilityToggleData<T = {}>
@@ -189,10 +196,10 @@ export interface ThemeProps<T = {}> extends ThemeTreeProps<T> {
 
 // Prop Functions
 export type OnChangeFn<T> = (treeData: Array<TreeItem<T>>) => void;
-export type GetNodeKeyFn<T> = (data: TreeNode<T> & TreeIndex) => NodeKey;
-export type GenerateNodePropsFn<T> = (data: ExtendedNodeData<T>) => {
-  [index: string]: any;
-};
+export type GetNodeKeyFn<T> = (data: TreeNode<T>) => NodeKey;
+export type GenerateNodePropsFn<T> = (
+  data: ExtendedNodeData<T>
+) => ExtendedNodeProps;
 export type OnMoveNodeFn<T> = (
   data: NodeData<T> & FullTree<T> & OnMovePreviousAndNextLocation<T>
 ) => void;

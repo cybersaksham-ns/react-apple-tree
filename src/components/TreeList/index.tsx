@@ -3,8 +3,8 @@ import { FixedSizeList as List } from "react-window";
 
 import { ReactAppleTreeProps } from "../../types";
 import { PropDataContext } from "../../contexts/PropDataContext";
-import TreeItem from "../TreeItem";
 import { TreeDataContext } from "../../contexts/TreeDataContext";
+import ItemRenderer from "./ItemRenderer";
 
 export default function TreeList<T>(props: ReactAppleTreeProps<T>) {
   const { setAppleTreeProps } = useContext(PropDataContext);
@@ -22,15 +22,11 @@ export default function TreeList<T>(props: ReactAppleTreeProps<T>) {
         itemSize={45}
         itemCount={flatTree.length}
         itemData={flatTree}
+        itemKey={(index, data) => {
+          return data[index].mapId;
+        }}
       >
-        {({ index, style, data }) => (
-          <TreeItem
-            key={data[index].mapId}
-            style={style}
-            node={data[index]}
-            nodeIndex={index}
-          />
-        )}
+        {ItemRenderer}
       </List>
     </div>
   );

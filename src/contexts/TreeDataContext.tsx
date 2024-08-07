@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { ContextProviderProps, FlatTreeItem, NodeKey, TreeMap } from "../types";
 import { PropDataContext } from "./PropDataContext";
-import { collapseNode, expandNodeOneLevelUtils, flattenTree } from "../utils";
+import { collapseNode, expandNodeOneLevelUtils, flattenNode } from "../utils";
 
 interface TreeContextProps {
   treeMap: TreeMap;
@@ -24,7 +24,7 @@ const TreeDataContextProvider = (
 
   useEffect(() => {
     if (appleTreeProps && appleTreeProps.treeData) {
-      const [map, flatArray] = flattenTree(
+      const [map, flatArray] = flattenNode(
         appleTreeProps.treeData,
         appleTreeProps.getNodeKey
       );
