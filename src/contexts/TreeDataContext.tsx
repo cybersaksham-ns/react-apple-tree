@@ -1,11 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import {
-  ContextProviderProps,
-  FlatTreeItem,
-  NodeKey,
-  TreeItem,
-  TreeMap,
-} from "../types";
+import { ContextProviderProps, FlatTreeItem, NodeKey, TreeMap } from "../types";
 import { PropDataContext } from "./PropDataContext";
 import { collapseNode, expandNodeOneLevelUtils, flattenTree } from "../utils";
 

@@ -5,7 +5,7 @@ import {
   NumberOrStringArray,
   TreeItem,
   TreeMap,
-} from "./types";
+} from "../types";
 
 export function flattenTree<T>(
   treeData: Array<TreeItem<T>>,
