@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { TreeItemComponentProps } from "./types";
 import {
   EmptyBlock,
   HorizontalLineBlock,
@@ -15,8 +14,16 @@ import {
 } from "./index.styles";
 import { TreeDataContext } from "../../contexts/TreeDataContext";
 import { PropDataContext } from "../../contexts/PropDataContext";
-import { ExtendedNodeProps } from "../../types";
+import { ExtendedNodeProps, FlatTreeItem } from "../../types";
+import { useDragHook } from "../../hooks/dnd";
+import { useDrag } from "react-dnd";
 import DragHandle from "../../assets/DragHandle";
+
+interface TreeItemComponentProps {
+  style: React.CSSProperties;
+  nodeIndex: number;
+  node: FlatTreeItem;
+}
 
 const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
   const { appleTreeProps } = useContext(PropDataContext);
@@ -61,6 +68,15 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
     }
   }, [treeNode.expanded]);
 
+  // const { isDragging, dragRef, dragPreview } = useDragHook({});
+  const [{ isDragging }, dragRef, dragPreview] = useDrag({
+    type: "TREE_ITEM",
+    item: {},
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
   return (
     <TreeItemRow
       style={{ ...style }}
@@ -90,8 +106,9 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
         <RowMainContentWrapper
           className={nodePropsData.className || ""}
           style={nodePropsData.style || {}}
+          ref={dragPreview}
         >
-          <RowDragIcon>
+          <RowDragIcon ref={dragRef}>
             <DragHandle />
           </RowDragIcon>
           {nodePropsData.title ? (

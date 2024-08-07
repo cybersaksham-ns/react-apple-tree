@@ -1,5 +1,4 @@
-import React from "react";
-import { FlatTreeItem, RowDirection } from "../../types";
+import { RowDirection } from "../../types";
 
 export interface TreeItemRowProps {
   $rowDirection?: RowDirection;
@@ -17,10 +16,4 @@ export enum DropZoneValues {
 export interface RowMainContentWrapperProps {
   $isDragging?: boolean;
   $dropzone?: DropZoneValues;
-}
-
-export interface TreeItemComponentProps {
-  style: React.CSSProperties;
-  nodeIndex: number;
-  node: FlatTreeItem;
 }

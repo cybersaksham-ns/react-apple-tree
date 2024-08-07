@@ -102,6 +102,7 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
   height: 80%;
   display: flex;
   align-items: center;
+  padding-right: 10px;
 
   opacity: ${(props) => (props.$isDragging ? "0.4" : "1.0")};
 
@@ -113,6 +114,10 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
           ? "lightblue"
           : "lightcoral"
       : "transparent"};
+
+  &:hover {
+    background-color: #b3d4fc;
+  }
 `;
 
 export const RowDragIcon = styled.div`
