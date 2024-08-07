@@ -1,4 +1,4 @@
-import React, { memo, useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { TreeItemComponentProps } from "./types";
 import {
   EmptyBlock,
@@ -49,6 +49,16 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
     }
   }, [node, appleTreeProps, treeNode, nodeIndex, parentNode]);
 
+  useEffect(() => {
+    if (appleTreeProps.onVisibilityToggle) {
+      appleTreeProps.onVisibilityToggle({
+        expanded: treeNode.expanded || false,
+        node: treeNode,
+        treeData: appleTreeProps.treeData,
+      });
+    }
+  }, [treeNode.expanded]);
+
   return (
     <TreeItemRow style={{ ...style }}>
       <TreeItemIndentation>
@@ -92,4 +102,4 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
   );
 };
 
-export default memo(TreeItem);
+export default TreeItem;
