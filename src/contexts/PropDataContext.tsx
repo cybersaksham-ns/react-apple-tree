@@ -7,14 +7,20 @@ interface PropDataContextProps {
 }
 
 const PropDataContext = createContext<PropDataContextProps>({
-  appleTreeProps: {},
+  appleTreeProps: {
+    treeData: [],
+    onChange: () => {},
+  },
   setAppleTreeProps: () => {},
 });
 
 const PropDataContextProvider = (
   props: ContextProviderProps
 ): React.JSX.Element => {
-  const [appleTreeProps, setAppleTreeProps] = useState<ReactAppleTreeProps>({});
+  const [appleTreeProps, setAppleTreeProps] = useState<ReactAppleTreeProps>({
+    treeData: [],
+    onChange: () => {},
+  });
 
   return (
     <PropDataContext.Provider value={{ appleTreeProps, setAppleTreeProps }}>

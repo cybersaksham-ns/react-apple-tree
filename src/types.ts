@@ -222,8 +222,8 @@ export type Classname = string | undefined;
 export type IsVirtualized = boolean | undefined;
 
 export interface ReactAppleTreeProps<T = {}> extends ThemeTreeProps<T> {
-  treeData?: Array<TreeItem<T>>;
-  onChange?: OnChangeFn<T>;
+  treeData: Array<TreeItem<T>>;
+  onChange: OnChangeFn<T>;
   getNodeKey?: GetNodeKeyFn<T>;
   generateNodeProps?: GenerateNodePropsFn<T>;
   onMoveNode?: OnMoveNodeFn<T>;
