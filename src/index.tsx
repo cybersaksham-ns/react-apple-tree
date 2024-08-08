@@ -1,6 +1,7 @@
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import "./library.css";
 
 import { ReactAppleTreeProps } from "./types";
 
@@ -16,7 +17,9 @@ export default function ReactAppleTree<T>(
     <DndProvider backend={HTML5Backend}>
       <PropDataContextProvider>
         <TreeDataContextProvider>
-          <TreeList {...props} />
+          <div className="react-apple-tree">
+            <TreeList {...props} />
+          </div>
         </TreeDataContextProvider>
       </PropDataContextProvider>
     </DndProvider>

@@ -1,0 +1,5 @@
+.react-apple-tree {
+  --node-hover-color: #dde4f6;
+  --can-drop-color: #a0bbff;
+  --cannot-drop-color: #f09393;
+}

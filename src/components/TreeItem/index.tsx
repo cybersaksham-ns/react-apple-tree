@@ -15,8 +15,9 @@ import {
 import { TreeDataContext } from "../../contexts/TreeDataContext";
 import { PropDataContext } from "../../contexts/PropDataContext";
 import { ExtendedNodeProps, FlatTreeItem } from "../../types";
-import { useDragHook } from "../../hooks/dnd";
+import { useDragHook, useDropHook } from "../../hooks/dnd";
 import DragHandle from "../../assets/DragHandle";
+import { DropZoneValues } from "./types";
 
 interface TreeItemComponentProps {
   style: React.CSSProperties;
@@ -67,12 +68,14 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
     }
   }, [treeNode.expanded]);
 
-  const { isDragging, dragRef, dragPreview } = useDragHook({});
+  const { isDragging, dragRef, dragPreview } = useDragHook({ listNode: node });
+  const { isOver, dropRef } = useDropHook();
 
   return (
     <TreeItemRow
       style={{ ...style }}
       $rowDirection={appleTreeProps.rowDirection}
+      ref={(node) => dropRef(node)}
     >
       <TreeItemIndentation>
         {depth > 0 ? <EmptyBlock /> : <></>}

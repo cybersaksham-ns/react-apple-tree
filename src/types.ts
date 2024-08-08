@@ -9,6 +9,8 @@ import { ListProps } from "react-window";
 export type FlatTreeItem = {
   mapId: NodeKey;
   path: NumberOrStringArray;
+  dropSuccessNode?: boolean;
+  dropErrorNode?: boolean;
 };
 
 // Common Types

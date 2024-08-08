@@ -105,8 +105,8 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
   padding-right: 10px;
   position: absolute;
 
-  ${(props) =>
-    props.$isDragging &&
+  ${({ $isDragging, $dropzone }) =>
+    ($isDragging || $dropzone) &&
     css`
       &:before {
         content: "";
@@ -116,21 +116,23 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
         z-index: 10;
         width: 100%;
         height: 100%;
-        background-color: #dde4f6;
+        ${$isDragging &&
+        css`
+          background-color: var(--node-hover-color);
+        `}
+        ${$dropzone === DropZoneValues.Allow &&
+        css`
+          background-color: var(--can-drop-color);
+        `}
+        ${$dropzone === DropZoneValues.Disallow &&
+        css`
+          background-color: var(--cannot-drop-color);
+        `}
       }
-    `};
-
-  background-color: ${(props) =>
-    props.$dropzone
-      ? props.$dropzone === DropZoneValues.Self
-        ? "lightgrey"
-        : props.$dropzone === DropZoneValues.Allow
-          ? "lightblue"
-          : "lightcoral"
-      : "transparent"};
+    `}
 
   &:hover {
-    background-color: #dde4f6;
+    background-color: var(--node-hover-color);
   }
 `;
 
