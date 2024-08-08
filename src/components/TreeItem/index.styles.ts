@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import {
   DropZoneValues,
   RowMainButtonProps,
@@ -103,8 +103,22 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
   display: flex;
   align-items: center;
   padding-right: 10px;
+  position: absolute;
 
-  opacity: ${(props) => (props.$isDragging ? "0.4" : "1.0")};
+  ${(props) =>
+    props.$isDragging &&
+    css`
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        width: 100%;
+        height: 100%;
+        background-color: #dde4f6;
+      }
+    `};
 
   background-color: ${(props) =>
     props.$dropzone
@@ -116,7 +130,7 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
       : "transparent"};
 
   &:hover {
-    background-color: #b3d4fc;
+    background-color: #dde4f6;
   }
 `;
 

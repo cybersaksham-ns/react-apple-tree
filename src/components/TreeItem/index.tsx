@@ -97,8 +97,9 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
         )}
         <RowMainContentWrapper
           className={nodePropsData.className || ""}
-          style={{ ...nodePropsData.style, opacity: isDragging ? 0.4 : 1 }}
+          style={{ ...nodePropsData.style }}
           ref={(node) => dragPreview(node)}
+          $isDragging={isDragging}
         >
           <RowDragIcon ref={(node) => dragRef(node)}>
             <DragHandle />
