@@ -5,13 +5,17 @@ import { collapseNode, expandNodeOneLevelUtils, flattenNode } from "../utils";
 
 interface TreeContextProps {
   treeMap: TreeMap;
+  setTreeMap: any;
   flatTree: Array<FlatTreeItem>;
+  setFlatTree: any;
   expandOrCollapseNode: (nodeKey: NodeKey) => void;
 }
 
 const TreeDataContext = createContext<TreeContextProps>({
   treeMap: {},
+  setTreeMap: () => {},
   flatTree: [],
+  setFlatTree: () => {},
   expandOrCollapseNode: () => {},
 });
 
@@ -59,7 +63,13 @@ const TreeDataContextProvider = (
 
   return (
     <TreeDataContext.Provider
-      value={{ treeMap, flatTree, expandOrCollapseNode }}
+      value={{
+        treeMap,
+        setTreeMap,
+        flatTree,
+        setFlatTree,
+        expandOrCollapseNode,
+      }}
     >
       {props.children}
     </TreeDataContext.Provider>

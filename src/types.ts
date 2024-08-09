@@ -9,8 +9,11 @@ import { ListProps } from "react-window";
 export type FlatTreeItem = {
   mapId: NodeKey;
   path: NumberOrStringArray;
+  parentKey: NodeKey | null;
+  draggingNode?: boolean;
   dropSuccessNode?: boolean;
   dropErrorNode?: boolean;
+  forcedDepth?: number;
 };
 
 // Common Types
@@ -198,7 +201,7 @@ export interface ThemeProps<T = {}> extends ThemeTreeProps<T> {
 
 // Prop Functions
 export type OnChangeFn<T> = (treeData: Array<TreeItem<T>>) => void;
-export type GetNodeKeyFn<T> = (data: TreeNode<T>) => NodeKey;
+export type GetNodeKeyFn<T = {}> = (data: TreeNode<T>) => NodeKey;
 export type GenerateNodePropsFn<T> = (
   data: ExtendedNodeData<T>
 ) => ExtendedNodeProps;

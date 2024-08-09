@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   EmptyBlock,
   HorizontalLineBlock,
@@ -14,10 +14,12 @@ import {
 } from "./index.styles";
 import { TreeDataContext } from "../../contexts/TreeDataContext";
 import { PropDataContext } from "../../contexts/PropDataContext";
+import { DNDContext } from "../../contexts/DNDContext";
 import { ExtendedNodeProps, FlatTreeItem } from "../../types";
 import { useDragHook, useDropHook } from "../../hooks/dnd";
 import DragHandle from "../../assets/DragHandle";
 import { DropZoneValues } from "./types";
+import { calculateNodeDepth } from "../../utils";
 
 interface TreeItemComponentProps {
   style: React.CSSProperties;
@@ -28,16 +30,45 @@ interface TreeItemComponentProps {
 const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
   const { appleTreeProps } = useContext(PropDataContext);
   const { treeMap, expandOrCollapseNode } = useContext(TreeDataContext);
+  const {
+    draggingNodeInformation,
+    dropzoneInformation,
+    startDrag,
+    appendDropNode,
+    completeDrop,
+  } = useContext(DNDContext);
 
-  const [depth, setDepth] = useState(node.path.length - 1);
+  const [depth, setDepth] = useState(calculateNodeDepth(node) - 1);
   const [treeNode, setTreeNode] = useState(treeMap[node.mapId]);
   const [parentNode, setParentNode] = useState(
     treeMap[node.path[node.path.length - 1]]
   );
   const [nodePropsData, setNodePropsData] = useState<ExtendedNodeProps>({});
 
+  const showActualDropLines = dropzoneInformation
+    ? dropzoneInformation.actualDropIndex ||
+      -1 > dropzoneInformation.dropIndex + 1
+    : false;
+  const startActualDropLine =
+    showActualDropLines &&
+    dropzoneInformation &&
+    nodeIndex === dropzoneInformation.dropIndex;
+  const midActualDropLine =
+    showActualDropLines &&
+    dropzoneInformation &&
+    nodeIndex > dropzoneInformation.dropIndex &&
+    nodeIndex + 1 < (dropzoneInformation.actualDropIndex || -1);
+  const endActualDropLine =
+    showActualDropLines &&
+    dropzoneInformation &&
+    nodeIndex + 1 === dropzoneInformation.actualDropIndex;
+  const checkMultipleDropLine =
+    (startActualDropLine && midActualDropLine) ||
+    (startActualDropLine && endActualDropLine) ||
+    (midActualDropLine && endActualDropLine);
+
   useEffect(() => {
-    setDepth(node.path.length - 1);
+    setDepth(calculateNodeDepth(node) - 1);
     setTreeNode(treeMap[node.mapId]);
     setParentNode(treeMap[node.path[node.path.length - 2]]);
   }, [node, treeMap]);
@@ -68,8 +99,35 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
     }
   }, [treeNode.expanded]);
 
-  const { isDragging, dragRef, dragPreview } = useDragHook({ listNode: node });
-  const { isOver, dropRef } = useDropHook();
+  const nodeElement = useRef(null);
+
+  const { isDragging, dragRef, dragPreview } = useDragHook({
+    nodeIndex,
+    listNode: node,
+  });
+  const { isOver, dropRef } = useDropHook({
+    nodeIndex,
+    listNode: node,
+    nodeElement,
+    shouldRunHoverFunction:
+      !node.draggingNode && !node.dropSuccessNode && !node.dropErrorNode,
+    appendDropNode,
+    completeDrop,
+  });
+
+  useEffect(() => {
+    if (isDragging) {
+      startDrag({ nodeIndex, flatNode: node });
+    } else {
+      if (
+        dropzoneInformation &&
+        draggingNodeInformation &&
+        node.mapId === draggingNodeInformation.flatNode.mapId
+      ) {
+        completeDrop();
+      }
+    }
+  }, [isDragging]);
 
   return (
     <TreeItemRow
@@ -91,7 +149,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
           <VerticalAndHorizontalLineBlock />
         )}
       </TreeItemIndentation>
-      <TreeItemContent>
+      <TreeItemContent ref={nodeElement}>
         {treeNode.children && treeNode.children.length > 0 && (
           <RowMainButton
             $isCollapsed={!treeNode.expanded}
@@ -103,6 +161,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
           style={{ ...nodePropsData.style }}
           ref={(node) => dragPreview(node)}
           $isDragging={isDragging}
+          $dropzone={node.dropSuccessNode ? DropZoneValues.Allow : undefined}
         >
           <RowDragIcon ref={(node) => dragRef(node)}>
             <DragHandle />
