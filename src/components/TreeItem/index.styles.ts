@@ -8,10 +8,10 @@ import {
 
 export const TreeItemRow = styled.div<TreeItemRowProps>`
   min-height: 45px;
-  overflow: auto;
   display: flex;
   flex-direction: ${({ $rowDirection }) =>
     $rowDirection ? ($rowDirection === "rtl" ? "row-reverse" : "row") : "row"};
+  white-space: nowrap;
 `;
 
 export const TreeItemIndentation = styled.div`
