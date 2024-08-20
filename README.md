@@ -44,12 +44,4 @@ To test React Apple Tree locally, follow these steps:
     npm run watch
     ```
 
-5. Go to `src/components/topicTree/TopicTree.js` file in `newton-web` repository and do following changes.
-
-    ```jsx
-    const ReactAppleTree = dynamic(() => import('react-apple-tree'), {
-        ssr: false,
-    });
-    ```
-
-6. Now use `ReactAppleTree` instead of `SortableTree`
+5. Clone `react-apple-tree-testing` branch from `newton-web` repository and enjoy testing, debugging in the file `src/components/topicTree/TopicTree.js`.
