@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { ContextProviderProps, ReactAppleTreeProps } from "../types";
 import { defaultAppleTreeProps } from "../utils/default-props";
 
@@ -19,8 +19,25 @@ const PropDataContextProvider = (
     defaultAppleTreeProps
   );
 
+  useEffect(() => {
+    appleTreeProps.onChange(appleTreeProps.treeData);
+  }, [appleTreeProps.treeData]);
+
+  useEffect(() => {
+    if (appleTreeProps.searchQuery && appleTreeProps.searchMethod) {
+      // appleTreeProps.searchMethod({})
+    }
+  }, [appleTreeProps.searchQuery]);
+
   return (
-    <PropDataContext.Provider value={{ appleTreeProps, setAppleTreeProps }}>
+    <PropDataContext.Provider
+      value={{
+        appleTreeProps,
+        setAppleTreeProps: (props: ReactAppleTreeProps) => {
+          setAppleTreeProps({ ...appleTreeProps, ...props });
+        },
+      }}
+    >
       {props.children}
     </PropDataContext.Provider>
   );
