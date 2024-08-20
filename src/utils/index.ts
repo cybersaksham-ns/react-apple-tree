@@ -1,4 +1,6 @@
 import {
+  CanDragFn,
+  ExtendedNodeData,
   FlatTreeItem,
   GetNodeKeyFn,
   NodeKey,
@@ -6,6 +8,7 @@ import {
   TreeItem,
   TreeMap,
 } from "../types";
+import { promiseResolver } from "./promise-resolver";
 
 export function flattenNode<T>(
   treeData: Array<TreeItem<T>>,
@@ -208,4 +211,17 @@ export function getReactElementText(parent: any): string {
   return parent.props.children
     .map((child: any) => getReactElementText(child))
     .join("");
+}
+
+export async function checkCanDragNode(
+  canDragFn: CanDragFn,
+  extendedNodeData: ExtendedNodeData
+): Promise<boolean> {
+  if (typeof canDragFn !== "undefined" && canDragFn !== null) {
+    if (typeof canDragFn === "boolean") {
+      return canDragFn;
+    }
+    return await promiseResolver(() => canDragFn(extendedNodeData));
+  }
+  return true;
 }

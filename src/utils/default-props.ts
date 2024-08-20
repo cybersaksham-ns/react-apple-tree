@@ -31,4 +31,5 @@ export const defaultAppleTreeProps: ReactAppleTreeProps = {
     return titleMatch || subtitleMatch;
   },
   isVirtualized: true,
+  canDrag: true,
 };

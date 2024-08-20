@@ -15,11 +15,11 @@ import {
 import { TreeDataContext } from "../../contexts/TreeDataContext";
 import { PropDataContext } from "../../contexts/PropDataContext";
 import { DNDContext } from "../../contexts/DNDContext";
-import { ExtendedNodeProps, FlatTreeItem } from "../../types";
+import { ExtendedNodeData, ExtendedNodeProps, FlatTreeItem } from "../../types";
 import { useDragHook, useDropHook } from "../../hooks/dnd";
 import DragHandle from "../../assets/DragHandle";
 import { DropZoneValues } from "./types";
-import { calculateNodeDepth } from "../../utils";
+import { calculateNodeDepth, checkCanDragNode } from "../../utils";
 
 interface TreeItemComponentProps {
   style?: React.CSSProperties;
@@ -43,7 +43,19 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
   const [parentNode, setParentNode] = useState(
     treeMap[node.path[node.path.length - 1]]
   );
+
+  const extendedNodeData: ExtendedNodeData = {
+    node: treeNode,
+    isSearchFocus: false,
+    isSearchMatch: false,
+    lowerSiblingCounts: [],
+    parentNode,
+    path: node.path,
+    treeIndex: nodeIndex,
+  };
   const [nodePropsData, setNodePropsData] = useState<ExtendedNodeProps>({});
+
+  const [canDragNode, setCanDragNode] = useState(true);
 
   const showActualDropLines = dropzoneInformation
     ? dropzoneInformation.actualDropIndex ||
@@ -67,6 +79,16 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
     (startActualDropLine && endActualDropLine) ||
     (midActualDropLine && endActualDropLine);
 
+  const checkDrag = async () => {
+    if (typeof appleTreeProps.canDrag !== "undefined") {
+      const checkDrag = await checkCanDragNode(
+        appleTreeProps.canDrag,
+        extendedNodeData
+      );
+      setCanDragNode(checkDrag);
+    }
+  };
+
   useEffect(() => {
     setDepth(calculateNodeDepth(node) - 1);
     setTreeNode(treeMap[node.mapId]);
@@ -75,18 +97,9 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
 
   useMemo(() => {
     if (appleTreeProps.generateNodeProps && parentNode !== treeNode) {
-      setNodePropsData(
-        appleTreeProps.generateNodeProps({
-          node: treeNode,
-          isSearchFocus: false,
-          isSearchMatch: false,
-          lowerSiblingCounts: [],
-          parentNode,
-          path: node.path,
-          treeIndex: nodeIndex,
-        })
-      );
+      setNodePropsData(appleTreeProps.generateNodeProps(extendedNodeData));
     }
+    checkDrag();
   }, [node, appleTreeProps, treeNode, nodeIndex, parentNode]);
 
   useEffect(() => {
@@ -163,9 +176,11 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
           $isDragging={isDragging}
           $dropzone={node.dropSuccessNode ? DropZoneValues.Allow : undefined}
         >
-          <RowDragIcon ref={(node) => dragRef(node)}>
-            <DragHandle />
-          </RowDragIcon>
+          {canDragNode && (
+            <RowDragIcon ref={(node) => dragRef(node)}>
+              <DragHandle />
+            </RowDragIcon>
+          )}
           {nodePropsData.title ? (
             nodePropsData.title()
           ) : (

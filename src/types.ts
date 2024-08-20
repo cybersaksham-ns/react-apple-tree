@@ -243,7 +243,7 @@ export interface ReactAppleTreeProps<T = {}> extends ThemeTreeProps<T> {
   onDragStateChanged?: OnDragStateChangedFn<T>;
   maxDepth?: MaxDepth;
   rowDirection?: RowDirection; //
-  canDrag?: CanDragFn;
+  canDrag?: CanDragFn; //
   canDrop?: CanDropFn<T>;
   canNodeHaveChildren?: CanNodeHaveChildrenFn<T>;
   theme?: ThemeProps<T> | undefined;
