@@ -234,15 +234,15 @@ export type Classname = string | undefined;
 export type IsVirtualized = boolean | undefined;
 
 export interface ReactAppleTreeProps<T = {}> extends ThemeTreeProps<T> {
-  treeData: Array<TreeItem<T>>;
-  onChange: OnChangeFn<T>;
-  getNodeKey: GetNodeKeyFn<T>;
-  generateNodeProps?: GenerateNodePropsFn<T>;
+  treeData: Array<TreeItem<T>>; //
+  onChange: OnChangeFn<T>; //
+  getNodeKey: GetNodeKeyFn<T>; //
+  generateNodeProps?: GenerateNodePropsFn<T>; //
   onMoveNode?: OnMoveNodeFn<T>;
-  onVisibilityToggle?: OnVisibilityToggleFn<T>;
+  onVisibilityToggle?: OnVisibilityToggleFn<T>; //
   onDragStateChanged?: OnDragStateChangedFn<T>;
   maxDepth?: MaxDepth;
-  rowDirection?: RowDirection;
+  rowDirection?: RowDirection; //
   canDrag?: CanDragFn;
   canDrop?: CanDropFn<T>;
   canNodeHaveChildren?: CanNodeHaveChildrenFn<T>;
@@ -254,6 +254,7 @@ export interface ReactAppleTreeProps<T = {}> extends ThemeTreeProps<T> {
   searchFinishCallback?: SearchFinishCallbackFn<T>;
   dndType?: DNDType;
   shouldCopyOnOutsideDrop?: ShouldCopyOnOutsideDropFn<T>;
-  className?: Classname;
-  isVirtualized?: IsVirtualized;
+  className?: Classname; //
+  isVirtualized?: IsVirtualized; //
+  dragDropManager?: any; //
 }

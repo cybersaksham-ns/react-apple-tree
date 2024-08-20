@@ -7,6 +7,7 @@ import {
 } from "./types";
 
 export const TreeItemRow = styled.div<TreeItemRowProps>`
+  min-height: 45px;
   overflow: auto;
   display: flex;
   flex-direction: ${({ $rowDirection }) =>

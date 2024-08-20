@@ -232,7 +232,7 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
       if (draggingNodeInformation.initialExpanded) {
         draggingNodeInformation.treeNode.expanded = true;
       }
-      setAppleTreeProps({ ...appleTreeProps, treeData: [...newTree] });
+      setAppleTreeProps({ treeData: [...newTree] });
       setDropzoneInformation(null);
       setDraggingNodeInformation(null);
     }

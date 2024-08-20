@@ -22,7 +22,7 @@ import { DropZoneValues } from "./types";
 import { calculateNodeDepth } from "../../utils";
 
 interface TreeItemComponentProps {
-  style: React.CSSProperties;
+  style?: React.CSSProperties;
   nodeIndex: number;
   node: FlatTreeItem;
 }

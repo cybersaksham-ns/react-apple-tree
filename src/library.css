@@ -3,4 +3,7 @@
   --can-drop-color: #a0bbff;
   --cannot-drop-color: #f09393;
   --special-line-color: blue;
+
+  width: 100%;
+  height: 100%;
 }
