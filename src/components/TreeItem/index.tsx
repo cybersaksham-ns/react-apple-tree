@@ -6,6 +6,7 @@ import {
   RowDragIcon,
   RowMainButton,
   RowMainContentWrapper,
+  RowTitleContentWrapper,
   TreeItemContent,
   TreeItemIndentation,
   TreeItemRow,
@@ -181,11 +182,13 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
               <DragHandle />
             </RowDragIcon>
           )}
-          {nodePropsData.title ? (
-            nodePropsData.title()
-          ) : (
-            <div>{treeNode.title || ""}</div>
-          )}
+          <RowTitleContentWrapper>
+            {nodePropsData.title ? (
+              nodePropsData.title()
+            ) : (
+              <div>{treeNode.title || ""}</div>
+            )}
+          </RowTitleContentWrapper>
           {nodePropsData.buttons && (
             <RowButtonsWrapper>
               {nodePropsData.buttons.map((btn) => btn)}

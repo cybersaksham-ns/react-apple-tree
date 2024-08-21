@@ -138,7 +138,6 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
 `;
 
 export const RowDragIcon = styled.div`
-  margin-right: 10px;
   padding: 5px 2px;
   display: flex;
   align-items: center;
@@ -148,6 +147,11 @@ export const RowDragIcon = styled.div`
   &:hover {
     background-color: #898c94;
   }
+`;
+
+export const RowTitleContentWrapper = styled.div`
+  font-weight: 600;
+  margin-left: 10px;
 `;
 
 export const RowButtonsWrapper = styled.div`
