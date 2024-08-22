@@ -7,7 +7,7 @@ import {
 } from "./types";
 
 export const TreeItemRow = styled.div<TreeItemRowProps>`
-  min-height: 45px;
+  min-height: 43px;
   display: flex;
   flex-direction: ${({ $rowDirection }) =>
     $rowDirection ? ($rowDirection === "rtl" ? "row-reverse" : "row") : "row"};
@@ -71,13 +71,6 @@ export const VerticalAndHorizontalLineBlock = styled(LineBlock)`
   }
 `;
 
-export const TreeItemContent = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-`;
-
 export const RowMainButton = styled.div<RowMainButtonProps>`
   height: 100%;
   position: relative;
@@ -94,7 +87,7 @@ export const RowMainButton = styled.div<RowMainButtonProps>`
     position: absolute;
     ${({ $isCollapsed }) => ($isCollapsed ? "content: '►';" : "content: '▼';")}
     font-size: 10px;
-    top: 38%;
+    top: calc(50% - 6px);
     left: -25.5px;
   }
 `;
@@ -103,7 +96,7 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
   height: 80%;
   display: flex;
   align-items: center;
-  padding-right: 10px;
+  padding: 10px 10px 10px 0;
   position: absolute;
 
   ${({ $isDragging, $dropzone }) =>
@@ -131,10 +124,6 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
         `}
       }
     `}
-
-  &:hover {
-    background-color: var(--node-hover-color);
-  }
 `;
 
 export const RowDragIcon = styled.div`
@@ -160,4 +149,15 @@ export const RowButtonsWrapper = styled.div`
   align-items: center;
   margin-left: 20px;
   gap: 10px;
+`;
+
+export const TreeItemContent = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  &:hover ${RowMainContentWrapper} {
+    background-color: var(--node-hover-color);
+  }
 `;

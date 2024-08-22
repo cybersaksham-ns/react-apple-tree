@@ -8,7 +8,7 @@ import ItemRenderer from "./ItemRenderer";
 import TreeItem from "../TreeItem";
 
 export default function TreeList<T>(props: ReactAppleTreeProps<T>) {
-  const { setAppleTreeProps } = useContext(PropDataContext);
+  const { appleTreeProps, setAppleTreeProps } = useContext(PropDataContext);
   const { flatTree } = useContext(TreeDataContext);
 
   useEffect(() => {
@@ -17,11 +17,11 @@ export default function TreeList<T>(props: ReactAppleTreeProps<T>) {
 
   return (
     <div>
-      {props.isVirtualized ? (
+      {appleTreeProps.isVirtualized ? (
         <List
           height={500}
           width={"100%"}
-          itemSize={45}
+          itemSize={33}
           itemCount={flatTree.length}
           itemData={flatTree}
           itemKey={(index, data) => {
@@ -40,8 +40,8 @@ export default function TreeList<T>(props: ReactAppleTreeProps<T>) {
               style={{
                 position: "absolute",
                 left: 0,
-                top: 45 * i,
-                height: "45px",
+                top: 33 * i,
+                height: "33px",
                 width: "100%",
               }}
             />
