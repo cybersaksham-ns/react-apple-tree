@@ -1,6 +1,24 @@
 {
-  "name": "react-apple-tree",
-  "version": "0.1.0",
+  "name": "@newtonschool/react-apple-tree",
+  "version": "0.0.1",
+  "description": "",
+  "keywords": [
+    "Newton School",
+    "React Apple Tree",
+    "Sortable Tree",
+    "React"
+  ],
+  "homepage": "https://github.com/Newton-School/react-apple-tree",
+  "author": "Newton School",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Newton-School/react-apple-tree"
+  },
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Newton-School/react-apple-tree/issues"
+  },
+  "source": "src/index.tsx",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -24,6 +42,7 @@
     "babel-plugin-lodash": "^3.3.4",
     "copyfiles": "^2.4.1",
     "lodash": "^4.17.21",
+    "nodemon": "^3.1.4",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
     "styled-components": "6.1.11",
