@@ -1,5 +1,9 @@
 import React, { createContext, useContext, useState } from "react";
-import { ContextProviderProps, FlatTreeItem } from "../types";
+import {
+  ContextProviderProps,
+  FlatTreeItem,
+  NumberOrStringArray,
+} from "../types";
 import { PropDataContext } from "./PropDataContext";
 import { TreeDataContext } from "./TreeDataContext";
 import {
@@ -178,6 +182,45 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
       }
     }
 
+    // Get position of node in tree
+    const [parentKey, siblingCount] = getParentKeyAndSiblingCountFromList(
+      flatTree,
+      params.nodeIndex
+    );
+
+    // Checking can drop
+    let canDrop = true;
+    let prevParent = null;
+    if (draggingNodeInformation.flatNode.path.at(-2)) {
+      prevParent = treeMap[draggingNodeInformation.flatNode.path.at(-2) || ""];
+    }
+    let nextParent = null;
+    let nextParentPath: NumberOrStringArray = [];
+    if (parentKey) {
+      nextParent = treeMap[parentKey];
+      let nextParentIndex = newFlatList.findIndex(
+        (node) => node.mapId === parentKey
+      );
+      if (nextParentIndex !== -1) {
+        nextParentPath = newFlatList[nextParentIndex].path;
+      }
+    }
+
+    let moveNodeData = {
+      node: draggingNodeInformation.treeNode,
+      path: [...nextParentPath, draggingNodeInformation.flatNode.mapId],
+      treeIndex: draggingNodeInformation.dragStartIndex,
+      nextParent: nextParent,
+      nextPath: [...nextParentPath, draggingNodeInformation.flatNode.mapId],
+      nextTreeIndex: actualDropIndex - 1,
+      prevParent: prevParent,
+      prevPath: draggingNodeInformation.flatNode.path,
+      prevTreeIndex: draggingNodeInformation.dragStartIndex,
+    };
+    if (appleTreeProps.canDrop) {
+      canDrop = appleTreeProps.canDrop(moveNodeData);
+    }
+
     // Creating new dropzone node
     let newFlatNode: FlatTreeItem = {
       ...draggingNodeInformation.flatNode,
@@ -189,19 +232,17 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
     ) {
       newFlatNode.draggingNode = true;
     } else {
-      newFlatNode.dropSuccessNode = true;
+      if (canDrop) {
+        newFlatNode.dropSuccessNode = true;
+      } else {
+        newFlatNode.dropErrorNode = true;
+      }
     }
     newFlatList = [
       ...newFlatList.slice(0, hoverDropIndex),
       { ...newFlatNode },
       ...newFlatList.slice(hoverDropIndex),
     ];
-
-    // Get position of node in tree
-    const [parentKey, siblingCount] = getParentKeyAndSiblingCountFromList(
-      flatTree,
-      params.nodeIndex
-    );
 
     // Updating UI
     setFlatTree([...newFlatList]);
@@ -214,6 +255,8 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
       flatList: newFlatList,
       nextParentKey: parentKey,
       siblingIndex: siblingCount,
+      canDrop: canDrop,
+      moveNodeData: moveNodeData,
     });
   }
 
@@ -232,6 +275,11 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
       if (draggingNodeInformation.initialExpanded) {
         draggingNodeInformation.treeNode.expanded = true;
       }
+      appleTreeProps.onMoveNode?.({
+        ...dropzoneInformation.moveNodeData,
+        treeData: structuredClone(newTree),
+        nextParentNode: dropzoneInformation.moveNodeData.nextParent,
+      });
       setAppleTreeProps({ treeData: [...newTree] });
       setDropzoneInformation(null);
       setDraggingNodeInformation(null);

@@ -1,4 +1,10 @@
-import { FlatTreeItem, NodeKey, TreeItem } from "../types";
+import {
+  FlatTreeItem,
+  NodeData,
+  NodeKey,
+  OnDragPreviousAndNextLocation,
+  TreeItem,
+} from "../types";
 
 export enum NodeAppendDirection {
   Above = "above",
@@ -21,6 +27,8 @@ export type DropZoneInformation = {
   actualDropIndex?: number;
   nextParentKey: NodeKey | null;
   siblingIndex: number;
+  canDrop: boolean;
+  moveNodeData: OnDragPreviousAndNextLocation & NodeData;
 };
 
 export interface StartDragProps {

@@ -175,7 +175,13 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
           style={{ ...nodePropsData.style }}
           ref={(node) => dragPreview(node)}
           $isDragging={isDragging}
-          $dropzone={node.dropSuccessNode ? DropZoneValues.Allow : undefined}
+          $dropzone={
+            node.dropSuccessNode
+              ? DropZoneValues.Allow
+              : node.dropErrorNode
+                ? DropZoneValues.Disallow
+                : undefined
+          }
         >
           {canDragNode && (
             <RowDragIcon ref={(node) => dragRef(node)}>

@@ -238,13 +238,13 @@ export interface ReactAppleTreeProps<T = {}> extends ThemeTreeProps<T> {
   onChange: OnChangeFn<T>; //
   getNodeKey: GetNodeKeyFn<T>; //
   generateNodeProps?: GenerateNodePropsFn<T>; //
-  onMoveNode?: OnMoveNodeFn<T>;
+  onMoveNode?: OnMoveNodeFn<T>; //
   onVisibilityToggle?: OnVisibilityToggleFn<T>; //
   onDragStateChanged?: OnDragStateChangedFn<T>;
   maxDepth?: MaxDepth;
   rowDirection?: RowDirection; //
   canDrag?: CanDragFn; //
-  canDrop?: CanDropFn<T>;
+  canDrop?: CanDropFn<T>; //
   canNodeHaveChildren?: CanNodeHaveChildrenFn<T>;
   theme?: ThemeProps<T> | undefined;
   searchMethod?: SearchMethodFn<T>;

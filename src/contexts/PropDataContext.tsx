@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { ContextProviderProps, ReactAppleTreeProps } from "../types";
 import { defaultAppleTreeProps } from "../utils/default-props";
+import { cloneDeep } from "lodash";
 
 interface PropDataContextProps {
   appleTreeProps: ReactAppleTreeProps;
@@ -20,10 +21,6 @@ const PropDataContextProvider = (
   );
 
   useEffect(() => {
-    appleTreeProps.onChange(appleTreeProps.treeData);
-  }, [appleTreeProps.treeData]);
-
-  useEffect(() => {
     if (appleTreeProps.searchQuery && appleTreeProps.searchMethod) {
       // appleTreeProps.searchMethod({})
     }
@@ -34,7 +31,8 @@ const PropDataContextProvider = (
       value={{
         appleTreeProps,
         setAppleTreeProps: (props: ReactAppleTreeProps) => {
-          setAppleTreeProps({ ...appleTreeProps, ...props });
+          let cloneProps = cloneDeep(props);
+          setAppleTreeProps({ ...appleTreeProps, ...cloneProps });
         },
       }}
     >
