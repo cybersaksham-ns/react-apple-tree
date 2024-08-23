@@ -19,7 +19,7 @@ import {
   expandNodeOneLevelUtils,
   getParentKeyAndSiblingCountFromList,
   moveNodeToDifferentParent,
-} from "../utils";
+} from "../utils/node-operations";
 
 interface DNDContextProps {
   draggingNodeInformation: DraggingNodeInformation | null;

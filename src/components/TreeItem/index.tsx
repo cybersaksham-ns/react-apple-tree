@@ -20,7 +20,8 @@ import { ExtendedNodeData, ExtendedNodeProps, FlatTreeItem } from "../../types";
 import { useDragHook, useDropHook } from "../../hooks/dnd";
 import DragHandle from "../../assets/DragHandle";
 import { DropZoneValues } from "./types";
-import { calculateNodeDepth, checkCanDragNode } from "../../utils";
+import { calculateNodeDepth } from "../../utils/node-operations";
+import { checkCanDragNode } from "../../utils/prop-utils";
 
 interface TreeItemComponentProps {
   style?: React.CSSProperties;

@@ -1,4 +1,4 @@
-import { getReactElementText } from ".";
+import { getReactElementText } from "./common";
 import { ReactAppleTreeProps } from "../types";
 
 export const defaultAppleTreeProps: ReactAppleTreeProps = {

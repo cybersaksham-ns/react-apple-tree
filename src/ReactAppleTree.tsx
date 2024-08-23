@@ -10,7 +10,7 @@ import { PropDataContextProvider } from "./contexts/PropDataContext";
 import { DNDContextProvider } from "./contexts/DNDContext";
 
 import TreeList from "./components/TreeList";
-import { classnames } from "./utils";
+import { classnames } from "./utils/common";
 
 export default function ReactAppleTree<T>(
   props: React.PropsWithChildren<ReactAppleTreeProps<T>>
