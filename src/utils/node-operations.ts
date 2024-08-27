@@ -90,6 +90,20 @@ export function collapseNode<T>(
   return flatTree;
 }
 
+export function collapseTree<T>(
+  treeData: Array<TreeItem<T>>,
+  treeMap: TreeMap,
+  flatTree: Array<FlatTreeItem>,
+  getNodeKey: GetNodeKeyFn<T>
+): Array<FlatTreeItem> {
+  treeData.forEach((node) => {
+    if (node.expanded) {
+      flatTree = collapseNode(getNodeKey({ node }), node, treeMap, flatTree);
+    }
+  });
+  return flatTree;
+}
+
 export function calculateNodeDepth(flatNode: FlatTreeItem): number {
   if (flatNode.forcedDepth) {
     return flatNode.forcedDepth;

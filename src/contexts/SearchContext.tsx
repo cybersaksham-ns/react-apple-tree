@@ -10,8 +10,10 @@ import {
 import { dfs } from "../utils/walk";
 import { PropDataContext } from "./PropDataContext";
 import { TreeDataContext } from "./TreeDataContext";
-import { expandNodeOneLevelUtils } from "../utils/node-operations";
-import { cloneDeep } from "lodash";
+import {
+  collapseTree,
+  expandNodeOneLevelUtils,
+} from "../utils/node-operations";
 
 interface SearchContextProps {
   searchedNodeMap: SearchedNodeMap;
@@ -31,10 +33,21 @@ const SearchContextProvider = (
   const [searchedNodeMap, setSearchedNodeMap] = useState<SearchedNodeMap>({});
 
   useEffect(() => {
+    let newTreeMap: TreeMap = { ...treeMap };
+    let newFlatArray: Array<FlatTreeItem> = [...flatTree];
+    if (
+      appleTreeProps.onlyExpandSearchedNodes &&
+      appleTreeProps.searchQuery === ""
+    ) {
+      newFlatArray = collapseTree(
+        appleTreeProps.treeData,
+        treeMap,
+        flatTree,
+        appleTreeProps.getNodeKey
+      );
+    }
     if (appleTreeProps.searchQuery && appleTreeProps.searchMethod) {
       let newSearchedNodeMap: SearchedNodeMap = {};
-      let newTreeMap: TreeMap = cloneDeep(treeMap);
-      let newFlatArray: Array<FlatTreeItem> = cloneDeep(flatTree);
       let treeIndexStack: Array<number> = [-1];
       let siblingStack: Array<number> = [];
       let lastDepth = 1;
@@ -117,11 +130,11 @@ const SearchContextProvider = (
         },
       });
       setSearchedNodeMap({ ...newSearchedNodeMap });
-      setFlatTree(newFlatArray);
-      setTreeMap({ ...newTreeMap });
     } else {
       setSearchedNodeMap({});
     }
+    setFlatTree(newFlatArray);
+    setTreeMap({ ...newTreeMap });
   }, [appleTreeProps.searchQuery]);
 
   return (

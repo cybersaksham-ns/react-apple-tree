@@ -248,10 +248,10 @@ export interface ReactAppleTreeProps<T = {}> extends ThemeTreeProps<T> {
   canDrop?: CanDropFn<T>; //
   canNodeHaveChildren?: CanNodeHaveChildrenFn<T>;
   theme?: ThemeProps<T> | undefined;
-  searchMethod?: SearchMethodFn<T>;
-  searchQuery?: SearchQuery;
+  searchMethod?: SearchMethodFn<T>; //
+  searchQuery?: SearchQuery; //
   searchFocusOffset?: SearchFocusOffset;
-  onlyExpandSearchedNodes?: OnlyExpandSearchedNodes;
+  onlyExpandSearchedNodes?: OnlyExpandSearchedNodes; //
   searchFinishCallback?: SearchFinishCallbackFn<T>;
   dndType?: DNDType;
   shouldCopyOnOutsideDrop?: ShouldCopyOnOutsideDropFn<T>;
