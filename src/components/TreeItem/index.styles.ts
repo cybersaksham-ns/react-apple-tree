@@ -22,17 +22,16 @@ const LineBlock = styled.div`
   width: 40px;
   height: 100%;
   position: relative;
-  opacity: 20%;
 
   &::after {
     position: absolute;
     content: "";
-    background-color: black;
+    background-color: var(--ns-rat-tree-lines-color);
   }
   &::before {
     position: absolute;
     content: "";
-    background-color: black;
+    background-color: var(--ns-rat-tree-lines-color);
   }
 `;
 
@@ -112,15 +111,15 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
         height: 100%;
         ${$isDragging &&
         css`
-          background-color: var(--node-hover-color);
+          background-color: var(--ns-rat-node-hover-color);
         `}
         ${$dropzone === DropZoneValues.Allow &&
         css`
-          background-color: var(--can-drop-color);
+          background-color: var(--ns-rat-can-drop-color);
         `}
         ${$dropzone === DropZoneValues.Disallow &&
         css`
-          background-color: var(--cannot-drop-color);
+          background-color: var(--ns-rat-cannot-drop-color);
         `}
       }
     `}
@@ -158,6 +157,6 @@ export const TreeItemContent = styled.div`
   align-items: center;
 
   &:hover ${RowMainContentWrapper} {
-    background-color: var(--node-hover-color);
+    background-color: var(--ns-rat-node-hover-color);
   }
 `;
