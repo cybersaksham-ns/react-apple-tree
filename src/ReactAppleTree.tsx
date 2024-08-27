@@ -11,6 +11,7 @@ import { DNDContextProvider } from "./contexts/DNDContext";
 
 import TreeList from "./components/TreeList";
 import { classnames } from "./utils/common";
+import { SearchContextProvider } from "./contexts/SearchContext";
 
 export default function ReactAppleTree<T>(
   props: React.PropsWithChildren<ReactAppleTreeProps<T>>
@@ -19,11 +20,13 @@ export default function ReactAppleTree<T>(
     <DndProvider backend={HTML5Backend}>
       <PropDataContextProvider>
         <TreeDataContextProvider>
-          <DNDContextProvider>
-            <div className={classnames("react-apple-tree", props.className)}>
-              <TreeList {...props} />
-            </div>
-          </DNDContextProvider>
+          <SearchContextProvider>
+            <DNDContextProvider>
+              <div className={classnames("react-apple-tree", props.className)}>
+                <TreeList {...props} />
+              </div>
+            </DNDContextProvider>
+          </SearchContextProvider>
         </TreeDataContextProvider>
       </PropDataContextProvider>
     </DndProvider>

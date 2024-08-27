@@ -19,15 +19,18 @@ export function flattenNode<T>(
   const flatten = (
     node: TreeItem<T>,
     path: NumberOrStringArray = [],
-    parentKey: NodeKey | null
+    parentKey: NodeKey | null,
+    addToRenderList: boolean = true
   ): void => {
     const mapId = getNodeKey({ node });
     map[mapId] = node;
-    flattenedArray.push({ mapId, path: [...path, mapId], parentKey });
-
-    if (node.expanded && node.children) {
-      node.children.forEach((child) => flatten(child, [...path, mapId], mapId));
+    if (addToRenderList) {
+      flattenedArray.push({ mapId, path: [...path, mapId], parentKey });
     }
+
+    (node.children || []).forEach((child) =>
+      flatten(child, [...path, mapId], mapId, !!node.expanded)
+    );
   };
 
   treeData.forEach((node) => flatten(node, initialPath, parentKey));

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useMemo, useState } from "react";
 import { ContextProviderProps, FlatTreeItem, NodeKey, TreeMap } from "../types";
 import { PropDataContext } from "./PropDataContext";
 import {
@@ -30,7 +30,7 @@ const TreeDataContextProvider = (
   const [flatTree, setFlatTree] = useState<Array<FlatTreeItem>>([]);
   const { appleTreeProps } = useContext(PropDataContext);
 
-  useEffect(() => {
+  useMemo(() => {
     if (appleTreeProps && appleTreeProps.treeData) {
       const [map, flatArray] = flattenNode(
         appleTreeProps.treeData,
@@ -39,7 +39,7 @@ const TreeDataContextProvider = (
       setTreeMap({ ...map });
       setFlatTree([...flatArray]);
     }
-  }, [appleTreeProps]);
+  }, [appleTreeProps.treeData]);
 
   function expandOrCollapseNode(nodeKey: NodeKey) {
     if (!treeMap[nodeKey].expanded) {

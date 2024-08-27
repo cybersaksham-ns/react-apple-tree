@@ -1,26 +1,32 @@
-import { FlatDataItem, GetNodeKeyFn, TreeItem } from "../types";
+import { GetNodeKeyFn, TreeItem } from "../types";
 
 interface WalkFnProps<T> {
   treeData: Array<TreeItem<T>>;
-  getNodeKey: GetNodeKeyFn<T>;
-  callback: (data: FlatDataItem) => void;
+  getNodeKey?: GetNodeKeyFn<T>;
+  callback: (data: TreeItem) => void;
   ignoreCollapsed?: boolean;
+  onGoingInside?: (data: TreeItem) => void;
+  onGoingOutside?: (data: TreeItem) => void;
 }
 
-export function bfs<T>({
+export function dfs<T>({
   treeData,
-  getNodeKey,
   callback,
   ignoreCollapsed = false,
+  onGoingInside,
+  onGoingOutside,
 }: WalkFnProps<T>) {
-  let queue = [...treeData];
-  while (queue.length > 0) {
-    let node = queue.shift();
-    if (node) {
-      if ((!ignoreCollapsed || node.expanded) && node.children) {
-        queue.push(...node.children);
-      }
-      callback({ lowerSiblingCounts: [], node, parentNode: node, path: [] });
+  function _dfs(node: TreeItem) {
+    if (onGoingInside) {
+      onGoingInside(node);
+    }
+    callback(node);
+    if ((!ignoreCollapsed || node.expanded) && node.children) {
+      node.children.forEach(_dfs);
+    }
+    if (onGoingOutside) {
+      onGoingOutside(node);
     }
   }
+  treeData.forEach(_dfs);
 }

@@ -22,6 +22,7 @@ import DragHandle from "../../assets/DragHandle";
 import { DropZoneValues } from "./types";
 import { calculateNodeDepth } from "../../utils/node-operations";
 import { checkCanDragNode } from "../../utils/prop-utils";
+import { SearchContext } from "../../contexts/SearchContext";
 
 interface TreeItemComponentProps {
   style?: React.CSSProperties;
@@ -39,6 +40,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
     hoverNode,
     completeDrop,
   } = useContext(DNDContext);
+  const { searchedNodeMap } = useContext(SearchContext);
 
   const [depth, setDepth] = useState(calculateNodeDepth(node) - 1);
   const [treeNode, setTreeNode] = useState(treeMap[node.mapId]);
@@ -175,6 +177,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
           className={nodePropsData.className || ""}
           style={{ ...nodePropsData.style }}
           ref={(node) => dragPreview(node)}
+          $isSearchFocus={!!searchedNodeMap[node.mapId]}
           $isDragging={isDragging}
           $dropzone={
             node.dropSuccessNode

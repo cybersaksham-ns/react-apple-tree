@@ -21,6 +21,7 @@ export type NumberOrStringArray = Array<string | number>;
 export type ContextProviderProps = { children: React.JSX.Element };
 export type NodeKey = string | number;
 export type TreeMap = Record<NodeKey, TreeItem>;
+export type SearchedNodeMap = Record<NodeKey, boolean>;
 
 export type TreeItem<T = {}> = T & {
   title?: React.ReactNode | undefined;

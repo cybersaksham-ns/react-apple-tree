@@ -32,5 +32,6 @@ export const defaultAppleTreeProps: ReactAppleTreeProps = {
 
     return titleMatch || subtitleMatch;
   },
+  onlyExpandSearchedNodes: false,
   isVirtualized: true,
 };

@@ -1,3 +1,3 @@
-import { bfs } from "./walk";
+import { dfs } from "./walk";
 
-export const walk = bfs;
+export const walk = dfs;

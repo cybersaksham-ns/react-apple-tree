@@ -98,6 +98,12 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
   padding: 10px 10px 10px 0;
   position: absolute;
 
+  ${({ $isSearchFocus }) =>
+    $isSearchFocus &&
+    css`
+      border: 2px solid var(--ns-rat-search-node-outline-color);
+    `}
+
   ${({ $isDragging, $dropzone }) =>
     ($isDragging || $dropzone) &&
     css`
