@@ -7,7 +7,7 @@ import {
 import { PropDataContext } from "./PropDataContext";
 import { TreeDataContext } from "./TreeDataContext";
 import {
-  AppendDropNodeProps,
+  OnHoverNodeProps,
   DraggingNodeInformation,
   DropZoneInformation,
   NodeAppendDirection,
@@ -25,7 +25,7 @@ interface DNDContextProps {
   draggingNodeInformation: DraggingNodeInformation | null;
   dropzoneInformation: DropZoneInformation | null;
   startDrag: (params: StartDragProps) => void;
-  appendDropNode: (params: AppendDropNodeProps) => void;
+  hoverNode: (params: OnHoverNodeProps) => void;
   completeDrop: () => void;
 }
 
@@ -33,7 +33,7 @@ const DNDContext = createContext<DNDContextProps>({
   draggingNodeInformation: null,
   dropzoneInformation: null,
   startDrag: (params: StartDragProps) => {},
-  appendDropNode: (params: AppendDropNodeProps) => {},
+  hoverNode: (params: OnHoverNodeProps) => {},
   completeDrop: () => {},
 });
 
@@ -73,7 +73,7 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
   }
 
   // When dragging node is hovering over some node
-  function appendDropNode(params: AppendDropNodeProps) {
+  function hoverNode(params: OnHoverNodeProps) {
     if (!draggingNodeInformation) return;
     const flatNode = flatTree[params.nodeIndex];
 
@@ -292,7 +292,7 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
         draggingNodeInformation,
         dropzoneInformation,
         startDrag,
-        appendDropNode,
+        hoverNode,
         completeDrop,
       }}
     >

@@ -36,7 +36,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
     draggingNodeInformation,
     dropzoneInformation,
     startDrag,
-    appendDropNode,
+    hoverNode,
     completeDrop,
   } = useContext(DNDContext);
 
@@ -126,7 +126,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
     nodeElement,
     shouldRunHoverFunction:
       !node.draggingNode && !node.dropSuccessNode && !node.dropErrorNode,
-    appendDropNode,
+    hoverNode,
     completeDrop,
   });
 

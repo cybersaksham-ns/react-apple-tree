@@ -7,6 +7,8 @@ export const defaultAppleTreeProps: ReactAppleTreeProps = {
   getNodeKey: () => {
     return -1;
   },
+  canDrag: true,
+  canDrop: () => true,
   searchMethod: ({ node, searchQuery }) => {
     let titleMatch: boolean = false;
     let subtitleMatch = false;
@@ -31,5 +33,4 @@ export const defaultAppleTreeProps: ReactAppleTreeProps = {
     return titleMatch || subtitleMatch;
   },
   isVirtualized: true,
-  canDrag: true,
 };

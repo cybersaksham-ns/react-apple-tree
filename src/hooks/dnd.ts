@@ -1,7 +1,7 @@
 import { useDrag, useDrop } from "react-dnd";
 import { FlatTreeItem } from "../types";
 import {
-  AppendDropNodeProps,
+  OnHoverNodeProps,
   NodeAppendDirection,
 } from "../contexts/DNDContextTypes";
 import { useState } from "react";
@@ -18,7 +18,7 @@ interface DropHookProps {
   listNode: FlatTreeItem;
   nodeElement: React.MutableRefObject<null>;
   shouldRunHoverFunction?: boolean;
-  appendDropNode: (params: AppendDropNodeProps) => void;
+  hoverNode: (params: OnHoverNodeProps) => void;
   completeDrop: () => void;
 }
 
@@ -47,7 +47,7 @@ export const useDropHook = ({
   listNode,
   nodeElement,
   shouldRunHoverFunction = true,
-  appendDropNode,
+  hoverNode,
   completeDrop,
 }: DropHookProps) => {
   const [hoveredDepth, setHoveredDepth] = useState<number | null>(null);
@@ -82,14 +82,14 @@ export const useDropHook = ({
           if (hoveredDepth !== depth) {
             setHoveredDepth(depth);
             if (offsetY * 2 < targetHeight) {
-              appendDropNode({
+              hoverNode({
                 depth,
                 direction: NodeAppendDirection.Below,
                 nodeIndex,
                 flatNode: listNode,
               });
             } else {
-              appendDropNode({
+              hoverNode({
                 depth,
                 direction: NodeAppendDirection.Above,
                 nodeIndex,

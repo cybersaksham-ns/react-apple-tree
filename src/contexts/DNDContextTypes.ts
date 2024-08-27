@@ -36,7 +36,7 @@ export interface StartDragProps {
   flatNode: FlatTreeItem;
 }
 
-export interface AppendDropNodeProps {
+export interface OnHoverNodeProps {
   nodeIndex: number;
   flatNode: FlatTreeItem;
   direction: NodeAppendDirection;
