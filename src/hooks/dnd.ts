@@ -11,12 +11,14 @@ export const DND_TYPE = "REACT_APPLE_TREE_ITEM";
 interface DragHookProps {
   nodeIndex: number;
   listNode: FlatTreeItem;
+  dndType?: string;
 }
 
 interface DropHookProps {
   nodeIndex: number;
   listNode: FlatTreeItem;
   nodeElement: React.MutableRefObject<null>;
+  dndType?: string;
   shouldRunHoverFunction?: boolean;
   hoverNode: (params: OnHoverNodeProps) => void;
   completeDrop: () => void;
@@ -26,9 +28,13 @@ interface DropHookReturnProps {
   isOver: boolean;
 }
 
-export const useDragHook = ({ nodeIndex, listNode }: DragHookProps) => {
+export const useDragHook = ({
+  nodeIndex,
+  listNode,
+  dndType,
+}: DragHookProps) => {
   const [{ isDragging }, dragRef, dragPreview] = useDrag({
-    type: DND_TYPE,
+    type: dndType || DND_TYPE,
     item: { nodeIndex, listNode },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -46,6 +52,7 @@ export const useDropHook = ({
   nodeIndex,
   listNode,
   nodeElement,
+  dndType,
   shouldRunHoverFunction = true,
   hoverNode,
   completeDrop,
@@ -57,7 +64,7 @@ export const useDropHook = ({
     any,
     DropHookReturnProps
   >({
-    accept: DND_TYPE,
+    accept: dndType || DND_TYPE,
     drop: (item, monitor) => {
       completeDrop();
     },

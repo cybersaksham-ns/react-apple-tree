@@ -1,5 +1,6 @@
 import { getReactElementText } from "./common";
 import { ReactAppleTreeProps } from "../types";
+import { DND_TYPE } from "../hooks/dnd";
 
 export const defaultAppleTreeProps: ReactAppleTreeProps = {
   treeData: [],
@@ -33,5 +34,6 @@ export const defaultAppleTreeProps: ReactAppleTreeProps = {
     return titleMatch || subtitleMatch;
   },
   onlyExpandSearchedNodes: false,
+  dndType: DND_TYPE,
   isVirtualized: true,
 };

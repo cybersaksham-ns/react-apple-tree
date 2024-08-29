@@ -253,7 +253,7 @@ export interface ReactAppleTreeProps<T = {}> extends ThemeTreeProps<T> {
   searchFocusOffset?: SearchFocusOffset; //
   onlyExpandSearchedNodes?: OnlyExpandSearchedNodes; //
   searchFinishCallback?: SearchFinishCallbackFn<T>; //
-  dndType?: DNDType;
+  dndType?: DNDType; //
   shouldCopyOnOutsideDrop?: ShouldCopyOnOutsideDropFn<T>;
   className?: Classname; //
   isVirtualized?: IsVirtualized; //
