@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   ContextProviderProps,
   FlatTreeItem,
+  NodeData,
   NumberOrStringArray,
   SearchedNodeMap,
   TreeItem,
@@ -14,6 +15,7 @@ import {
   collapseTree,
   expandNodeOneLevelUtils,
 } from "../utils/node-operations";
+import { cloneDeep } from "lodash";
 
 interface SearchContextProps {
   searchedNodeMap: SearchedNodeMap;
@@ -33,6 +35,7 @@ const SearchContextProvider = (
   const [searchedNodeMap, setSearchedNodeMap] = useState<SearchedNodeMap>({});
 
   useEffect(() => {
+    let searchedNodesList: Array<NodeData> = [];
     let newTreeMap: TreeMap = { ...treeMap };
     let newFlatArray: Array<FlatTreeItem> = [...flatTree];
     if (
@@ -66,11 +69,16 @@ const SearchContextProvider = (
             searchMatch = appleTreeProps.searchMethod({
               node,
               treeIndex: treeIndexStack[treeIndexStack.length - 1],
-              path,
+              path: cloneDeep(path),
               searchQuery: appleTreeProps.searchQuery,
             });
             const key = appleTreeProps.getNodeKey({ node });
             if (searchMatch) {
+              searchedNodesList.push({
+                node,
+                path: cloneDeep(path),
+                treeIndex: treeIndexStack[treeIndexStack.length - 1],
+              });
               newSearchedNodeMap[key] = true;
               path.slice(0, path.length - 1).forEach((nodeKey) => {
                 const [map, flatArray] = expandNodeOneLevelUtils(
@@ -132,6 +140,10 @@ const SearchContextProvider = (
       setSearchedNodeMap({ ...newSearchedNodeMap });
     } else {
       setSearchedNodeMap({});
+      searchedNodesList = [];
+    }
+    if (appleTreeProps.searchFinishCallback) {
+      appleTreeProps.searchFinishCallback(searchedNodesList);
     }
     setFlatTree(newFlatArray);
     setTreeMap({ ...newTreeMap });
