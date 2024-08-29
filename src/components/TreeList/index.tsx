@@ -42,40 +42,36 @@ export default function TreeList<T>(props: ReactAppleTreeProps<T>) {
     }
   }, [searchedNodeIndex]);
 
-  return (
-    <div>
-      {appleTreeProps.isVirtualized ? (
-        <List
-          ref={virtualListRef}
-          height={500}
-          width={"100%"}
-          itemSize={33}
-          itemCount={flatTree.length}
-          itemData={flatTree}
-          itemKey={(index, data) => {
-            return data[index].mapId;
+  return appleTreeProps.isVirtualized ? (
+    <List
+      ref={virtualListRef}
+      height={500}
+      width={"100%"}
+      itemSize={33}
+      itemCount={flatTree.length}
+      itemData={flatTree}
+      itemKey={(index, data) => {
+        return data[index].mapId;
+      }}
+    >
+      {ItemRenderer}
+    </List>
+  ) : (
+    <StyledNormalList ref={normalListRef}>
+      {flatTree.map((node, i) => (
+        <TreeItem
+          key={node.mapId}
+          node={node}
+          nodeIndex={i}
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 33 * i,
+            height: "33px",
+            width: "100%",
           }}
-        >
-          {ItemRenderer}
-        </List>
-      ) : (
-        <StyledNormalList ref={normalListRef}>
-          {flatTree.map((node, i) => (
-            <TreeItem
-              key={node.mapId}
-              node={node}
-              nodeIndex={i}
-              style={{
-                position: "absolute",
-                left: 0,
-                top: 33 * i,
-                height: "33px",
-                width: "100%",
-              }}
-            />
-          ))}
-        </StyledNormalList>
-      )}
-    </div>
+        />
+      ))}
+    </StyledNormalList>
   );
 }

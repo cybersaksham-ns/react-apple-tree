@@ -36,4 +36,7 @@ export const defaultAppleTreeProps: ReactAppleTreeProps = {
   onlyExpandSearchedNodes: false,
   dndType: DND_TYPE,
   isVirtualized: true,
+  rowHeight: 62,
+  scaffoldBlockPxWidth: 44,
+  slideRegionSize: 100,
 };
