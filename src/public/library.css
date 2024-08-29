@@ -5,6 +5,7 @@
   --ns-rat-special-line-color: blue;
   --ns-rat-tree-lines-color: #c0c0c0;
   --ns-rat-search-node-outline-color: #0080ff;
+  --ns-rat-search-focus-outline-color: #fc6421;
 
   width: 100%;
   height: 100%;

@@ -19,10 +19,12 @@ import { cloneDeep } from "lodash";
 
 interface SearchContextProps {
   searchedNodeMap: SearchedNodeMap;
+  searchedNodeIndex: number | null;
 }
 
 const SearchContext = createContext<SearchContextProps>({
   searchedNodeMap: {},
+  searchedNodeIndex: null,
 });
 
 const SearchContextProvider = (
@@ -33,124 +35,143 @@ const SearchContextProvider = (
     useContext(TreeDataContext);
 
   const [searchedNodeMap, setSearchedNodeMap] = useState<SearchedNodeMap>({});
+  const [searchedNodeIndex, setSearchedNodeIndex] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     let searchedNodesList: Array<NodeData> = [];
     let newTreeMap: TreeMap = { ...treeMap };
     let newFlatArray: Array<FlatTreeItem> = [...flatTree];
-    if (
-      appleTreeProps.onlyExpandSearchedNodes &&
-      appleTreeProps.searchQuery === ""
-    ) {
-      newFlatArray = collapseTree(
-        appleTreeProps.treeData,
-        treeMap,
-        flatTree,
-        appleTreeProps.getNodeKey
-      );
-    }
-    if (appleTreeProps.searchQuery && appleTreeProps.searchMethod) {
-      let newSearchedNodeMap: SearchedNodeMap = {};
-      let treeIndexStack: Array<number> = [-1];
-      let siblingStack: Array<number> = [];
-      let lastDepth = 1;
-      let path: NumberOrStringArray = [];
-      dfs({
-        treeData: appleTreeProps.treeData,
-        callback: (node: TreeItem) => {
-          const isNodeExpanded =
-            !!node.expanded && !appleTreeProps.onlyExpandSearchedNodes;
-          const parentKey = path.length > 1 ? path[path.length - 2] : null;
-          const isParentExpanded = parentKey
-            ? !!treeMap[parentKey].expanded
-            : false;
-          let searchMatch = false;
-          if (appleTreeProps.searchMethod) {
-            searchMatch = appleTreeProps.searchMethod({
-              node,
-              treeIndex: treeIndexStack[treeIndexStack.length - 1],
-              path: cloneDeep(path),
-              searchQuery: appleTreeProps.searchQuery,
-            });
-            const key = appleTreeProps.getNodeKey({ node });
-            if (searchMatch) {
-              searchedNodesList.push({
-                node,
-                path: cloneDeep(path),
-                treeIndex: treeIndexStack[treeIndexStack.length - 1],
-              });
-              newSearchedNodeMap[key] = true;
-              path.slice(0, path.length - 1).forEach((nodeKey) => {
-                const [map, flatArray] = expandNodeOneLevelUtils(
-                  nodeKey,
-                  newTreeMap[nodeKey],
-                  newTreeMap,
-                  newFlatArray,
-                  appleTreeProps.getNodeKey
-                );
-                newTreeMap = { ...newTreeMap, ...map };
-                newFlatArray = [...flatArray];
-              });
-            } else {
-              newSearchedNodeMap[key] = false;
-            }
-          }
-          if (
-            (isNodeExpanded && !appleTreeProps.onlyExpandSearchedNodes) ||
-            (isParentExpanded && !appleTreeProps.onlyExpandSearchedNodes) ||
-            searchMatch ||
-            lastDepth === path.length
-          ) {
-            if (treeIndexStack.length > 1) {
-              treeIndexStack = Array.from(
-                treeIndexStack,
-                () => treeIndexStack[treeIndexStack.length - 1]
-              );
-              siblingStack = Array.from(siblingStack, () => 0);
-            }
-            lastDepth = path.length;
-          }
-        },
-        ignoreCollapsed: false,
-        onGoingInside: (node: TreeItem) => {
-          path.push(appleTreeProps.getNodeKey({ node }));
-          siblingStack = siblingStack.slice(0, path.length);
-          if (siblingStack.length < path.length) {
-            siblingStack.push(1);
-          } else {
-            siblingStack[siblingStack.length - 1] += 1;
-          }
-          if (treeIndexStack.length === 1 && treeIndexStack[0] !== 0) {
-            treeIndexStack.push(treeIndexStack[0] + 1);
-          } else {
-            treeIndexStack.push(
-              treeIndexStack[treeIndexStack.length - 1] +
-                siblingStack[path.length - 1]
-            );
-          }
-        },
-        onGoingOutside: (node: TreeItem) => {
-          treeIndexStack.pop();
-          if (lastDepth >= path.length) {
-            lastDepth = path.length;
-          }
-          path.pop();
-        },
-      });
-      setSearchedNodeMap({ ...newSearchedNodeMap });
-    } else {
+    if (appleTreeProps.searchQuery === false) {
+      setSearchedNodeIndex(null);
       setSearchedNodeMap({});
-      searchedNodesList = [];
+    } else {
+      if (
+        appleTreeProps.onlyExpandSearchedNodes &&
+        appleTreeProps.searchQuery === ""
+      ) {
+        newFlatArray = collapseTree(
+          appleTreeProps.treeData,
+          treeMap,
+          flatTree,
+          appleTreeProps.getNodeKey
+        );
+      }
+      if (appleTreeProps.searchQuery && appleTreeProps.searchMethod) {
+        let newSearchedNodeMap: SearchedNodeMap = {};
+        let treeIndexStack: Array<number> = [-1];
+        let siblingStack: Array<number> = [];
+        let lastDepth = 1;
+        let path: NumberOrStringArray = [];
+        dfs({
+          treeData: appleTreeProps.treeData,
+          callback: (node: TreeItem) => {
+            const isNodeExpanded =
+              !!node.expanded && !appleTreeProps.onlyExpandSearchedNodes;
+            const parentKey = path.length > 1 ? path[path.length - 2] : null;
+            const isParentExpanded = parentKey
+              ? !!treeMap[parentKey].expanded
+              : false;
+            let searchMatch = false;
+            if (appleTreeProps.searchMethod) {
+              searchMatch = appleTreeProps.searchMethod({
+                node,
+                treeIndex: treeIndexStack[treeIndexStack.length - 1],
+                path: cloneDeep(path),
+                searchQuery: appleTreeProps.searchQuery,
+              });
+              const key = appleTreeProps.getNodeKey({ node });
+              if (searchMatch) {
+                searchedNodesList.push({
+                  node,
+                  path: cloneDeep(path),
+                  treeIndex: treeIndexStack[treeIndexStack.length - 1],
+                });
+                newSearchedNodeMap[key] = true;
+                path.slice(0, path.length - 1).forEach((nodeKey) => {
+                  const [map, flatArray] = expandNodeOneLevelUtils(
+                    nodeKey,
+                    newTreeMap[nodeKey],
+                    newTreeMap,
+                    newFlatArray,
+                    appleTreeProps.getNodeKey
+                  );
+                  newTreeMap = { ...newTreeMap, ...map };
+                  newFlatArray = [...flatArray];
+                });
+              } else {
+                newSearchedNodeMap[key] = false;
+              }
+            }
+            if (
+              (isNodeExpanded && !appleTreeProps.onlyExpandSearchedNodes) ||
+              (isParentExpanded && !appleTreeProps.onlyExpandSearchedNodes) ||
+              searchMatch ||
+              lastDepth === path.length
+            ) {
+              if (treeIndexStack.length > 1) {
+                treeIndexStack = Array.from(
+                  treeIndexStack,
+                  () => treeIndexStack[treeIndexStack.length - 1]
+                );
+                siblingStack = Array.from(siblingStack, () => 0);
+              }
+              lastDepth = path.length;
+            }
+          },
+          ignoreCollapsed: false,
+          onGoingInside: (node: TreeItem) => {
+            path.push(appleTreeProps.getNodeKey({ node }));
+            siblingStack = siblingStack.slice(0, path.length);
+            if (siblingStack.length < path.length) {
+              siblingStack.push(1);
+            } else {
+              siblingStack[siblingStack.length - 1] += 1;
+            }
+            if (treeIndexStack.length === 1 && treeIndexStack[0] !== 0) {
+              treeIndexStack.push(treeIndexStack[0] + 1);
+            } else {
+              treeIndexStack.push(
+                treeIndexStack[treeIndexStack.length - 1] +
+                  siblingStack[path.length - 1]
+              );
+            }
+          },
+          onGoingOutside: (node: TreeItem) => {
+            treeIndexStack.pop();
+            if (lastDepth >= path.length) {
+              lastDepth = path.length;
+            }
+            path.pop();
+          },
+        });
+        setSearchedNodeMap({ ...newSearchedNodeMap });
+      } else {
+        setSearchedNodeMap({});
+        searchedNodesList = [];
+      }
+      if (
+        typeof appleTreeProps.searchFocusOffset === "number" &&
+        appleTreeProps.searchFocusOffset >= 0 &&
+        searchedNodesList.length > appleTreeProps.searchFocusOffset
+      ) {
+        const highlightedNodeIndex =
+          searchedNodesList[appleTreeProps.searchFocusOffset].treeIndex;
+        setSearchedNodeIndex(highlightedNodeIndex);
+      } else {
+        setSearchedNodeIndex(null);
+      }
+      if (appleTreeProps.searchFinishCallback) {
+        appleTreeProps.searchFinishCallback(searchedNodesList);
+      }
+      setFlatTree(newFlatArray);
+      setTreeMap({ ...newTreeMap });
     }
-    if (appleTreeProps.searchFinishCallback) {
-      appleTreeProps.searchFinishCallback(searchedNodesList);
-    }
-    setFlatTree(newFlatArray);
-    setTreeMap({ ...newTreeMap });
   }, [appleTreeProps.searchQuery]);
 
   return (
-    <SearchContext.Provider value={{ searchedNodeMap }}>
+    <SearchContext.Provider value={{ searchedNodeMap, searchedNodeIndex }}>
       {props.children}
     </SearchContext.Provider>
   );

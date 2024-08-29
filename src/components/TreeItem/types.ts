@@ -16,5 +16,6 @@ export enum DropZoneValues {
 export interface RowMainContentWrapperProps {
   $isDragging?: boolean;
   $dropzone?: DropZoneValues;
+  $isSearchedNode?: boolean;
   $isSearchFocus?: boolean;
 }

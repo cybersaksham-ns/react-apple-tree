@@ -40,7 +40,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
     hoverNode,
     completeDrop,
   } = useContext(DNDContext);
-  const { searchedNodeMap } = useContext(SearchContext);
+  const { searchedNodeMap, searchedNodeIndex } = useContext(SearchContext);
 
   const [depth, setDepth] = useState(calculateNodeDepth(node) - 1);
   const [treeNode, setTreeNode] = useState(treeMap[node.mapId]);
@@ -177,7 +177,10 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
           className={nodePropsData.className || ""}
           style={{ ...nodePropsData.style }}
           ref={(node) => dragPreview(node)}
-          $isSearchFocus={!!searchedNodeMap[node.mapId]}
+          $isSearchedNode={!!searchedNodeMap[node.mapId]}
+          $isSearchFocus={
+            !!searchedNodeMap[node.mapId] && searchedNodeIndex === nodeIndex
+          }
           $isDragging={isDragging}
           $dropzone={
             node.dropSuccessNode
