@@ -27,7 +27,6 @@ export default function TreeList<T>(props: ReactAppleTreeProps<T>) {
   };
 
   const scrollNormalList = (index: number) => {
-    console.log("data:: list", normalListRef.current);
     if (normalListRef.current) {
       normalListRef.current.scrollTo({
         top: 33 * index,
