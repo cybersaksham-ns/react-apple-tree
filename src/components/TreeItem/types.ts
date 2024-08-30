@@ -1,10 +1,10 @@
 import { RowDirection } from "../../types";
 
-export interface TreeItemRowProps {
+export interface StyledTreeItemRowProps {
   $rowDirection?: RowDirection;
 }
 
-export interface RowMainButtonProps {
+export interface StyledRowMainButtonProps {
   $isCollapsed: boolean;
 }
 
@@ -13,7 +13,7 @@ export enum DropZoneValues {
   Allow = "allow",
   Disallow = "disallow",
 }
-export interface RowMainContentWrapperProps {
+export interface StyledRowMainContentWrapperProps {
   $isDragging?: boolean;
   $dropzone?: DropZoneValues;
   $isSearchedNode?: boolean;

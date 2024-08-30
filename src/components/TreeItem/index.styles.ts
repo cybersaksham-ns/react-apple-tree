@@ -1,12 +1,12 @@
 import styled, { css } from "styled-components";
 import {
   DropZoneValues,
-  RowMainButtonProps,
-  RowMainContentWrapperProps,
-  TreeItemRowProps,
+  StyledRowMainButtonProps,
+  StyledRowMainContentWrapperProps,
+  StyledTreeItemRowProps,
 } from "./types";
 
-export const TreeItemRow = styled.div<TreeItemRowProps>`
+export const StyledTreeItemRow = styled.div<StyledTreeItemRowProps>`
   min-height: 43px;
   display: flex;
   flex-direction: ${({ $rowDirection }) =>
@@ -14,11 +14,11 @@ export const TreeItemRow = styled.div<TreeItemRowProps>`
   white-space: nowrap;
 `;
 
-export const TreeItemIndentation = styled.div`
+export const StyledTreeItemIndentation = styled.div`
   display: flex;
 `;
 
-const LineBlock = styled.div`
+const StyledLineBlock = styled.div`
   width: 40px;
   height: 100%;
   position: relative;
@@ -35,9 +35,9 @@ const LineBlock = styled.div`
   }
 `;
 
-export const EmptyBlock = styled(LineBlock)``;
+export const StyledEmptyBlock = styled(StyledLineBlock)``;
 
-export const VerticalLineBlock = styled(LineBlock)`
+export const StyledVerticalLineBlock = styled(StyledLineBlock)`
   &::after {
     width: 1px;
     height: 100%;
@@ -46,7 +46,7 @@ export const VerticalLineBlock = styled(LineBlock)`
   }
 `;
 
-export const HorizontalLineBlock = styled(LineBlock)`
+export const StyledHorizontalLineBlock = styled(StyledLineBlock)`
   &::before {
     height: 1px;
     width: 50%;
@@ -55,7 +55,7 @@ export const HorizontalLineBlock = styled(LineBlock)`
   }
 `;
 
-export const VerticalAndHorizontalLineBlock = styled(LineBlock)`
+export const StyledVerticalAndHorizontalLineBlock = styled(StyledLineBlock)`
   &::after {
     width: 1px;
     height: 100%;
@@ -70,7 +70,7 @@ export const VerticalAndHorizontalLineBlock = styled(LineBlock)`
   }
 `;
 
-export const RowMainButton = styled.div<RowMainButtonProps>`
+export const StyledRowMainButton = styled.div<StyledRowMainButtonProps>`
   height: 100%;
   position: relative;
   cursor: pointer;
@@ -91,7 +91,7 @@ export const RowMainButton = styled.div<RowMainButtonProps>`
   }
 `;
 
-export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
+export const StyledRowMainContentWrapper = styled.div<StyledRowMainContentWrapperProps>`
   height: 80%;
   display: flex;
   align-items: center;
@@ -137,7 +137,7 @@ export const RowMainContentWrapper = styled.div<RowMainContentWrapperProps>`
     `}
 `;
 
-export const RowDragIcon = styled.div`
+export const StyledRowDragIcon = styled.div`
   padding: 5px 2px;
   display: flex;
   align-items: center;
@@ -149,12 +149,12 @@ export const RowDragIcon = styled.div`
   }
 `;
 
-export const RowTitleContentWrapper = styled.div`
+export const StyledRowTitleContentWrapper = styled.div`
   font-weight: 600;
   margin-left: 10px;
 `;
 
-export const RowButtonsWrapper = styled.div`
+export const StyledRowButtonsWrapper = styled.div`
   height: 100%;
   display: flex;
   align-items: center;
@@ -162,13 +162,13 @@ export const RowButtonsWrapper = styled.div`
   gap: 10px;
 `;
 
-export const TreeItemContent = styled.div`
+export const StyledTreeItemContent = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
 
-  &:hover ${RowMainContentWrapper} {
+  &:hover ${StyledRowMainContentWrapper} {
     background-color: var(--ns-rat-node-hover-color);
   }
 `;

@@ -1,17 +1,17 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
-  EmptyBlock,
-  HorizontalLineBlock,
-  RowButtonsWrapper,
-  RowDragIcon,
-  RowMainButton,
-  RowMainContentWrapper,
-  RowTitleContentWrapper,
-  TreeItemContent,
-  TreeItemIndentation,
-  TreeItemRow,
-  VerticalAndHorizontalLineBlock,
-  VerticalLineBlock,
+  StyledEmptyBlock,
+  StyledHorizontalLineBlock,
+  StyledRowButtonsWrapper,
+  StyledRowDragIcon,
+  StyledRowMainButton,
+  StyledRowMainContentWrapper,
+  StyledRowTitleContentWrapper,
+  StyledTreeItemContent,
+  StyledTreeItemIndentation,
+  StyledTreeItemRow,
+  StyledVerticalAndHorizontalLineBlock,
+  StyledVerticalLineBlock,
 } from "./index.styles";
 import { TreeDataContext } from "../../contexts/TreeDataContext";
 import { PropDataContext } from "../../contexts/PropDataContext";
@@ -147,33 +147,33 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
   }, [isDragging]);
 
   return (
-    <TreeItemRow
+    <StyledTreeItemRow
       style={{ ...style }}
       $rowDirection={appleTreeProps.rowDirection}
       ref={(node) => dropRef(node)}
     >
-      <TreeItemIndentation>
-        {depth > 0 ? <EmptyBlock /> : <></>}
+      <StyledTreeItemIndentation>
+        {depth > 0 ? <StyledEmptyBlock /> : <></>}
         {depth > 0 &&
           Array.from(new Array(depth - 1)).map((el, i) => (
-            <VerticalLineBlock
+            <StyledVerticalLineBlock
               key={`rat_item_indentation_${node.mapId}_${i}`}
             />
           ))}
         {depth === 0 ? (
-          <HorizontalLineBlock />
+          <StyledHorizontalLineBlock />
         ) : (
-          <VerticalAndHorizontalLineBlock />
+          <StyledVerticalAndHorizontalLineBlock />
         )}
-      </TreeItemIndentation>
-      <TreeItemContent ref={nodeElement}>
+      </StyledTreeItemIndentation>
+      <StyledTreeItemContent ref={nodeElement}>
         {treeNode.children && treeNode.children.length > 0 && (
-          <RowMainButton
+          <StyledRowMainButton
             $isCollapsed={!treeNode.expanded}
             onClick={() => expandOrCollapseNode(node.mapId)}
           />
         )}
-        <RowMainContentWrapper
+        <StyledRowMainContentWrapper
           className={nodePropsData.className || ""}
           style={{ ...nodePropsData.style }}
           ref={(node) => dragPreview(node)}
@@ -191,25 +191,25 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
           }
         >
           {canDragNode && (
-            <RowDragIcon ref={(node) => dragRef(node)}>
+            <StyledRowDragIcon ref={(node) => dragRef(node)}>
               <DragHandle />
-            </RowDragIcon>
+            </StyledRowDragIcon>
           )}
-          <RowTitleContentWrapper>
+          <StyledRowTitleContentWrapper>
             {nodePropsData.title ? (
               nodePropsData.title()
             ) : (
               <div>{treeNode.title || ""}</div>
             )}
-          </RowTitleContentWrapper>
+          </StyledRowTitleContentWrapper>
           {nodePropsData.buttons && (
-            <RowButtonsWrapper>
+            <StyledRowButtonsWrapper>
               {nodePropsData.buttons.map((btn) => btn)}
-            </RowButtonsWrapper>
+            </StyledRowButtonsWrapper>
           )}
-        </RowMainContentWrapper>
-      </TreeItemContent>
-    </TreeItemRow>
+        </StyledRowMainContentWrapper>
+      </StyledTreeItemContent>
+    </StyledTreeItemRow>
   );
 };
 
