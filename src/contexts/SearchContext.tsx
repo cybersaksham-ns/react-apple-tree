@@ -8,7 +8,7 @@ import {
   TreeItem,
   TreeMap,
 } from "../types";
-import { dfs } from "../utils/walk";
+import { dfs } from "../utils/tree-traversal";
 import { PropDataContext } from "./PropDataContext";
 import { TreeDataContext } from "./TreeDataContext";
 import {

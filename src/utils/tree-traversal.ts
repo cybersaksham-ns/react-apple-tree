@@ -1,6 +1,6 @@
 import { GetNodeKeyFn, TreeItem } from "../types";
 
-interface WalkFnProps<T> {
+interface DFSProps<T> {
   treeData: Array<TreeItem<T>>;
   getNodeKey?: GetNodeKeyFn<T>;
   callback: (data: TreeItem) => void;
@@ -15,7 +15,7 @@ export function dfs<T>({
   ignoreCollapsed = false,
   onGoingInside,
   onGoingOutside,
-}: WalkFnProps<T>) {
+}: DFSProps<T>) {
   function _dfs(node: TreeItem) {
     if (onGoingInside) {
       onGoingInside(node);
