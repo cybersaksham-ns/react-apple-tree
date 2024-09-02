@@ -1,34 +1,17 @@
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import "./public/library.css";
 
 import { ReactAppleTreeProps } from "./types";
 
-import { TreeDataContextProvider } from "./contexts/TreeDataContext";
-import { PropDataContextProvider } from "./contexts/PropDataContext";
-import { DNDContextProvider } from "./contexts/DNDContext";
-
-import TreeList from "./components/TreeList";
-import { classnames } from "./utils/common";
-import { SearchContextProvider } from "./contexts/SearchContext";
+import ReactAppleTreeWithoutDndContext from "./ReactAppleTreeWithoutDNDContext";
 
 export default function ReactAppleTree<T>(
   props: React.PropsWithChildren<ReactAppleTreeProps<T>>
 ) {
   return (
     <DndProvider backend={HTML5Backend}>
-      <PropDataContextProvider>
-        <TreeDataContextProvider>
-          <SearchContextProvider>
-            <DNDContextProvider>
-              <div className={classnames("react-apple-tree", props.className)}>
-                <TreeList {...props} />
-              </div>
-            </DNDContextProvider>
-          </SearchContextProvider>
-        </TreeDataContextProvider>
-      </PropDataContextProvider>
+      <ReactAppleTreeWithoutDndContext {...props} />
     </DndProvider>
   );
 }
