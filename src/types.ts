@@ -290,3 +290,23 @@ export interface GetVisibleNodeInfoAtIndexFnParams<T> {
   getNodeKey: GetNodeKeyFn<T>;
 }
 export type GetVisibleNodeInfoAtIndexFnReturnType<T> = NodeData<T> | null;
+
+export interface WalkDescendantsFnParams<T> {
+  node: TreeItem<T>;
+  currentIndex: number;
+  parentNode?: TreeItem<T> | null;
+  path: NumberOrStringArray;
+  lowerSiblingCounts: number[];
+  getNodeKey: GetNodeKeyFn<T>;
+  callback: any;
+  ignoreCollapsed?: boolean;
+  isPseudoRoot?: boolean;
+}
+
+export interface WalkFnParams<T> {
+  treeData: Array<TreeItem<T>>;
+  getNodeKey: GetNodeKeyFn<T>;
+  callback: (data: NodeData<T>) => void;
+  ignoreCollapsed?: boolean;
+}
+export type WalkFnReturnType = void;

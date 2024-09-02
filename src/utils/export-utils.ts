@@ -2,11 +2,15 @@ import {
   GetDescendantCountFnParams,
   GetDescendantCountFnReturnType,
   GetNodeDataAtTreeIndexOrNextIndexFnParams,
+  GetNodeKeyFn,
   GetVisibleNodeCountFnParams,
   GetVisibleNodeCountFnReturnType,
   GetVisibleNodeInfoAtIndexFnParams,
   GetVisibleNodeInfoAtIndexFnReturnType,
   TreeItem,
+  WalkDescendantsFnParams,
+  WalkFnParams,
+  WalkFnReturnType,
 } from "../types";
 
 /**
@@ -166,4 +170,105 @@ export function getVisibleNodeInfoAtIndex<T>({
   }
 
   return null;
+}
+
+function walkDescendants<T>({
+  callback,
+  getNodeKey,
+  ignoreCollapsed,
+  isPseudoRoot = false,
+  node,
+  parentNode = null,
+  currentIndex,
+  path = [],
+  lowerSiblingCounts = [],
+}: WalkDescendantsFnParams<T>): any {
+  // The pseudo-root is not considered in the path
+  const selfPath = isPseudoRoot
+    ? []
+    : [...path, getNodeKey({ node, treeIndex: currentIndex })];
+  const selfInfo = isPseudoRoot
+    ? null
+    : {
+        node,
+        parentNode,
+        path: selfPath,
+        lowerSiblingCounts,
+        treeIndex: currentIndex,
+      };
+
+  if (!isPseudoRoot) {
+    const callbackResult = callback(selfInfo);
+
+    // Cut walk short if the callback returned false
+    if (callbackResult === false) {
+      return false;
+    }
+  }
+
+  // Return self on nodes with no children or hidden children
+  if (
+    !node.children ||
+    (node.expanded !== true && ignoreCollapsed && !isPseudoRoot)
+  ) {
+    return currentIndex;
+  }
+
+  // Get all descendants
+  let childIndex: number | false = currentIndex;
+  const childCount = node.children.length;
+  if (typeof node.children !== "function") {
+    for (let i = 0; i < childCount; i += 1) {
+      childIndex = walkDescendants({
+        callback,
+        getNodeKey,
+        ignoreCollapsed,
+        node: node.children[i],
+        parentNode: isPseudoRoot ? null : node,
+        currentIndex: childIndex + 1,
+        lowerSiblingCounts: [...lowerSiblingCounts, childCount - i - 1],
+        path: selfPath,
+      });
+
+      // Cut walk short if the callback returned false
+      if (childIndex === false) {
+        return false;
+      }
+    }
+  }
+
+  return childIndex;
+}
+
+/**
+ * Walks through the tree data and performs a callback function on each node.
+ *
+ * @template T - The type of the tree node.
+ * @param {WalkFnParams<T>} params - The parameters for the walk function.
+ * @param {Array<TreeItem>} params.treeData - The tree data to walk through.
+ * @param {GetNodeKeyFn} params.getNodeKey - The function to get the key of a tree node.
+ * @param {Function} params.callback - The callback function to be performed on each node.
+ * @param {boolean} [params.ignoreCollapsed=true] - Whether to ignore collapsed nodes.
+ * @returns {void} - Returns nothing.
+ */
+export function walk<T>({
+  treeData,
+  getNodeKey,
+  callback,
+  ignoreCollapsed = true,
+}: WalkFnParams<T>): WalkFnReturnType {
+  if (!treeData || treeData.length < 1) {
+    return;
+  }
+
+  walkDescendants({
+    callback,
+    getNodeKey,
+    ignoreCollapsed,
+    isPseudoRoot: true,
+    node: { children: treeData } as TreeItem<T>,
+    currentIndex: -1,
+    path: [],
+    lowerSiblingCounts: [],
+  });
 }
