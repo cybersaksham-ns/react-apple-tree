@@ -2,6 +2,7 @@ import { RowDirection } from "../../types";
 
 export interface StyledTreeItemRowProps {
   $rowDirection?: RowDirection;
+  $rowHeight: number;
 }
 
 export interface StyledRowMainButtonProps {

@@ -1,6 +1,6 @@
 import React from "react";
 
-const DragHandle = ({ fill = "#000000", height = "18", width = "18" }) => (
+const DragHandle = ({ fill = "#000000", height = "14", width = "14" }) => (
   <svg
     version="1.1"
     id="drag_handle"

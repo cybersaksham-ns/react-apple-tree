@@ -23,6 +23,7 @@ import { DropZoneValues } from "./types";
 import { calculateNodeDepth } from "../../utils/node-operations";
 import { checkCanDragNode } from "../../utils/prop-utils";
 import { SearchContext } from "../../contexts/SearchContext";
+import { DefaultRowHeight } from "../../utils/default-props";
 
 interface TreeItemComponentProps {
   style?: React.CSSProperties;
@@ -150,6 +151,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
     <StyledTreeItemRow
       style={{ ...style }}
       $rowDirection={appleTreeProps.rowDirection}
+      $rowHeight={appleTreeProps.rowHeight || DefaultRowHeight}
       ref={(node) => dropRef(node)}
     >
       <StyledTreeItemIndentation>

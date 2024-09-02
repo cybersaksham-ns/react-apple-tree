@@ -7,7 +7,7 @@ import {
 } from "./types";
 
 export const StyledTreeItemRow = styled.div<StyledTreeItemRowProps>`
-  min-height: 43px;
+  min-height: ${({ $rowHeight }) => $rowHeight + 10}px;
   display: flex;
   flex-direction: ${({ $rowDirection }) =>
     $rowDirection ? ($rowDirection === "rtl" ? "row-reverse" : "row") : "row"};
