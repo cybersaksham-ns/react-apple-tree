@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import {
   DropZoneValues,
+  StyledLineBlockProps,
   StyledRowMainButtonProps,
   StyledRowMainContentWrapperProps,
   StyledTreeItemRowProps,
@@ -18,8 +19,8 @@ export const StyledTreeItemIndentation = styled.div`
   display: flex;
 `;
 
-const StyledLineBlock = styled.div`
-  width: 40px;
+const StyledLineBlock = styled.div<StyledLineBlockProps>`
+  width: ${({ $scaffoldWidth }) => $scaffoldWidth}px;
   height: 100%;
   position: relative;
 
@@ -87,7 +88,7 @@ export const StyledRowMainButton = styled.div<StyledRowMainButtonProps>`
     ${({ $isCollapsed }) => ($isCollapsed ? "content: '►';" : "content: '▼';")}
     font-size: 10px;
     top: calc(50% - 6px);
-    left: -25.5px;
+    left: -${({ $scaffoldWidth }) => 6 + $scaffoldWidth / 2}px;
   }
 `;
 

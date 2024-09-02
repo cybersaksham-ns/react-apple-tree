@@ -60,7 +60,10 @@ const PropDataContextProvider = (
         appleTreeProps,
         setAppleTreeProps: (props: ReactAppleTreeProps) => {
           let cloneProps: any = cloneDeep(props);
-          let mergedTheme: ThemeProps = mergeThemeProps(cloneProps);
+          let mergedTheme: ThemeProps = mergeThemeProps({
+            ...appleTreeProps,
+            ...cloneProps,
+          });
           setAppleTreeProps({
             ...appleTreeProps,
             ...cloneProps,

@@ -5,8 +5,13 @@ export interface StyledTreeItemRowProps {
   $rowHeight: number;
 }
 
+export interface StyledLineBlockProps {
+  $scaffoldWidth: number;
+}
+
 export interface StyledRowMainButtonProps {
   $isCollapsed: boolean;
+  $scaffoldWidth: number;
 }
 
 export enum DropZoneValues {

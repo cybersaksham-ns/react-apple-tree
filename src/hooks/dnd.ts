@@ -4,7 +4,9 @@ import {
   OnHoverNodeProps,
   NodeAppendDirection,
 } from "../contexts/DNDContextTypes";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { PropDataContext } from "../contexts/PropDataContext";
+import { DefaultScaffoldBlockPxWidth } from "../utils/default-props";
 
 export const DND_TYPE = "REACT_APPLE_TREE_ITEM";
 
@@ -58,6 +60,7 @@ export const useDropHook = ({
   completeDrop,
 }: DropHookProps) => {
   const [hoveredDepth, setHoveredDepth] = useState<number | null>(null);
+  const { appleTreeProps } = useContext(PropDataContext);
 
   const [{ isOver }, dropRef] = useDrop<
     DragHookProps,
@@ -82,7 +85,11 @@ export const useDropHook = ({
           const offsetX = clientOffset.x - targetRect.left;
           const offsetY = clientOffset.y - targetRect.top;
           const targetHeight = targetRect.height;
-          let depth = Math.sign(offsetX) * Math.floor(Math.abs(offsetX / 34));
+          const oneBlockWidth =
+            (appleTreeProps.scaffoldBlockPxWidth ||
+              DefaultScaffoldBlockPxWidth) - 5;
+          let depth =
+            Math.sign(offsetX) * Math.floor(Math.abs(offsetX / oneBlockWidth));
           if (depth === -0) {
             depth = 0;
           }

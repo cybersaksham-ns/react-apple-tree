@@ -23,7 +23,10 @@ import { DropZoneValues } from "./types";
 import { calculateNodeDepth } from "../../utils/node-operations";
 import { checkCanDragNode } from "../../utils/prop-utils";
 import { SearchContext } from "../../contexts/SearchContext";
-import { DefaultRowHeight } from "../../utils/default-props";
+import {
+  DefaultRowHeight,
+  DefaultScaffoldBlockPxWidth,
+} from "../../utils/default-props";
 
 interface TreeItemComponentProps {
   style?: React.CSSProperties;
@@ -155,23 +158,46 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
       ref={(node) => dropRef(node)}
     >
       <StyledTreeItemIndentation>
-        {depth > 0 ? <StyledEmptyBlock /> : <></>}
+        {depth > 0 ? (
+          <StyledEmptyBlock
+            $scaffoldWidth={
+              appleTreeProps.scaffoldBlockPxWidth || DefaultScaffoldBlockPxWidth
+            }
+          />
+        ) : (
+          <></>
+        )}
         {depth > 0 &&
           Array.from(new Array(depth - 1)).map((el, i) => (
             <StyledVerticalLineBlock
               key={`rat_item_indentation_${node.mapId}_${i}`}
+              $scaffoldWidth={
+                appleTreeProps.scaffoldBlockPxWidth ||
+                DefaultScaffoldBlockPxWidth
+              }
             />
           ))}
         {depth === 0 ? (
-          <StyledHorizontalLineBlock />
+          <StyledHorizontalLineBlock
+            $scaffoldWidth={
+              appleTreeProps.scaffoldBlockPxWidth || DefaultScaffoldBlockPxWidth
+            }
+          />
         ) : (
-          <StyledVerticalAndHorizontalLineBlock />
+          <StyledVerticalAndHorizontalLineBlock
+            $scaffoldWidth={
+              appleTreeProps.scaffoldBlockPxWidth || DefaultScaffoldBlockPxWidth
+            }
+          />
         )}
       </StyledTreeItemIndentation>
       <StyledTreeItemContent ref={nodeElement}>
         {treeNode.children && treeNode.children.length > 0 && (
           <StyledRowMainButton
             $isCollapsed={!treeNode.expanded}
+            $scaffoldWidth={
+              appleTreeProps.scaffoldBlockPxWidth || DefaultScaffoldBlockPxWidth
+            }
             onClick={() => expandOrCollapseNode(node.mapId)}
           />
         )}
