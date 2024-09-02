@@ -261,13 +261,20 @@ export interface ReactAppleTreeProps<T = {}> extends ThemeTreeProps<T> {
 }
 
 // Export Utility Fucntions
-export interface GetNodeDataAtTreeIndexOrNextIndexFn {
+
+export interface GetNodeDataAtTreeIndexOrNextIndexFnParams<T> {
   targetIndex: number;
   currentIndex: number;
-  node: TreeItem;
-  getNodeKey: GetNodeKeyFn;
+  node: TreeItem<T>;
+  getNodeKey: GetNodeKeyFn<T>;
   path?: NumberOrStringArray;
   lowerSiblingCounts?: number[];
   ignoreCollapsed?: boolean;
   isPseudoRoot?: boolean;
 }
+
+export interface GetDescendantCountFnParams<T> {
+  node: TreeItem<T>;
+  ignoreCollapsed?: boolean;
+}
+export type GetDescendantCountFnReturnType = number;

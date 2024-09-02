@@ -1,10 +1,14 @@
-import { GetNodeDataAtTreeIndexOrNextIndexFn } from "../types";
+import {
+  GetDescendantCountFnParams,
+  GetDescendantCountFnReturnType,
+  GetNodeDataAtTreeIndexOrNextIndexFnParams,
+} from "../types";
 
 /**
  * Performs a depth-first traversal over all of the node descendants,
  * incrementing currentIndex by 1 for each
  */
-function getNodeDataAtTreeIndexOrNextIndex({
+function getNodeDataAtTreeIndexOrNextIndex<T>({
   targetIndex,
   node,
   currentIndex,
@@ -13,7 +17,7 @@ function getNodeDataAtTreeIndexOrNextIndex({
   lowerSiblingCounts = [],
   ignoreCollapsed = true,
   isPseudoRoot = false,
-}: GetNodeDataAtTreeIndexOrNextIndexFn): any {
+}: GetNodeDataAtTreeIndexOrNextIndexFnParams<T>): any {
   // The pseudo-root is not considered in the path
   const selfPath = !isPseudoRoot
     ? [...path, getNodeKey({ node, treeIndex: currentIndex })]
@@ -57,4 +61,29 @@ function getNodeDataAtTreeIndexOrNextIndex({
 
   // If the target node is not found, return the farthest traversed index
   return { nextIndex: childIndex };
+}
+
+/**
+ * Calculates the number of descendants for a given node.
+ *
+ * @template T - The type of the node.
+ * @param {GetDescendantCountFnParams<T>} params - The parameters for calculating the descendant count.
+ * @param {T} params.node - The node for which to calculate the descendant count.
+ * @param {boolean} [params.ignoreCollapsed=true] - Whether to ignore collapsed nodes.
+ * @returns {number} - The number of descendants for the given node.
+ */
+export function getDescendantCount<T>({
+  node,
+  ignoreCollapsed = true,
+}: GetDescendantCountFnParams<T>): GetDescendantCountFnReturnType {
+  if (!node.children || (ignoreCollapsed && node.expanded !== true)) {
+    return 0;
+  }
+  let count = node.children.length;
+  if (!ignoreCollapsed || node.expanded) {
+    node.children.forEach((child) => {
+      count += getDescendantCount({ node: child, ignoreCollapsed });
+    });
+  }
+  return count;
 }
