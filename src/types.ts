@@ -189,7 +189,7 @@ interface ThemeTreeProps<T = {}> {
   style?: React.CSSProperties | undefined;
   innerStyle?: React.CSSProperties | undefined;
   reactVirtualizedListProps?: Partial<ListProps> | undefined;
-  scaffoldBlockPxWidth?: number | undefined;
+  scaffoldBlockPxWidth?: number | undefined; //
   slideRegionSize?: number | undefined;
   rowHeight?: number | undefined; //
   nodeContentRenderer?: NodeRenderer<T> | undefined;
