@@ -202,7 +202,7 @@ export interface ThemeProps<T = {}> extends ThemeTreeProps<T> {
 
 // Prop Functions
 export type OnChangeFn<T> = (treeData: Array<TreeItem<T>>) => void;
-export type GetNodeKeyFn<T = {}> = (data: TreeNode<T>) => NodeKey;
+export type GetNodeKeyFn<T = {}> = (data: TreeNode<T> | TreeIndex) => NodeKey;
 export type GenerateNodePropsFn<T> = (
   data: ExtendedNodeData<T>
 ) => ExtendedNodeProps;
@@ -258,4 +258,16 @@ export interface ReactAppleTreeProps<T = {}> extends ThemeTreeProps<T> {
   className?: Classname; //
   isVirtualized?: IsVirtualized; //
   dragDropManager?: any; //
+}
+
+// Export Utility Fucntions
+export interface GetNodeDataAtTreeIndexOrNextIndexFn {
+  targetIndex: number;
+  currentIndex: number;
+  node: TreeItem;
+  getNodeKey: GetNodeKeyFn;
+  path?: NumberOrStringArray;
+  lowerSiblingCounts?: number[];
+  ignoreCollapsed?: boolean;
+  isPseudoRoot?: boolean;
 }

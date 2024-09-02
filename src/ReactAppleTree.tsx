@@ -4,7 +4,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 
 import { ReactAppleTreeProps } from "./types";
 
-import ReactAppleTreeWithoutDndContext from "./ReactAppleTreeWithoutDNDContext";
+import ReactAppleTreeWithoutDndContext from "./ReactAppleTreeWithoutDndContext";
 
 export default function ReactAppleTree<T>(
   props: React.PropsWithChildren<ReactAppleTreeProps<T>>
