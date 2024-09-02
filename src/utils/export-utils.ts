@@ -7,6 +7,9 @@ import {
   GetVisibleNodeCountFnReturnType,
   GetVisibleNodeInfoAtIndexFnParams,
   GetVisibleNodeInfoAtIndexFnReturnType,
+  MapDescendantsFnParams,
+  MapFnParams,
+  MapFnReturnType,
   TreeItem,
   WalkDescendantsFnParams,
   WalkFnParams,
@@ -271,4 +274,100 @@ export function walk<T>({
     path: [],
     lowerSiblingCounts: [],
   });
+}
+
+function mapDescendants<T>({
+  callback,
+  getNodeKey,
+  ignoreCollapsed,
+  isPseudoRoot = false,
+  node,
+  parentNode = null,
+  currentIndex,
+  path = [],
+  lowerSiblingCounts = [],
+}: MapDescendantsFnParams<T>): any {
+  const nextNode = { ...node };
+
+  // The pseudo-root is not considered in the path
+  const selfPath = isPseudoRoot
+    ? []
+    : [...path, getNodeKey({ node: nextNode, treeIndex: currentIndex })];
+  const selfInfo = {
+    node: nextNode,
+    parentNode,
+    path: selfPath,
+    lowerSiblingCounts,
+    treeIndex: currentIndex,
+  };
+
+  // Return self on nodes with no children or hidden children
+  if (
+    !nextNode.children ||
+    (nextNode.expanded !== true && ignoreCollapsed && !isPseudoRoot)
+  ) {
+    return {
+      treeIndex: currentIndex,
+      node: callback(selfInfo),
+    };
+  }
+
+  // Get all descendants
+  let childIndex = currentIndex;
+  const childCount = nextNode.children.length;
+  if (typeof nextNode.children !== "function") {
+    nextNode.children = nextNode.children.map((child, i) => {
+      const mapResult = mapDescendants({
+        callback,
+        getNodeKey,
+        ignoreCollapsed,
+        node: child,
+        parentNode: isPseudoRoot ? null : nextNode,
+        currentIndex: childIndex + 1,
+        lowerSiblingCounts: [...lowerSiblingCounts, childCount - i - 1],
+        path: selfPath,
+      });
+      childIndex = mapResult.treeIndex;
+
+      return mapResult.node;
+    });
+  }
+
+  return {
+    node: callback(selfInfo),
+    treeIndex: childIndex,
+  };
+}
+
+/**
+ * Maps over the tree data and returns an array of mapped values.
+ *
+ * @template T - The type of the tree data.
+ * @param {MapFnParams<T>} params - The parameters for the map function.
+ * @param {Array<TreeItem>} params.treeData - The tree data to be mapped.
+ * @param {GetNodeKeyFn} params.getNodeKey - The function to get the unique key of each node.
+ * @param {Function} params.callback - The callback function to be called for each node.
+ * @param {boolean} [params.ignoreCollapsed=true] - Whether to ignore collapsed nodes.
+ * @returns {Array<T>} - The array of mapped values.
+ */
+export function map<T>({
+  treeData,
+  getNodeKey,
+  callback,
+  ignoreCollapsed = true,
+}: MapFnParams<T>): MapFnReturnType {
+  if (!treeData || treeData.length < 1) {
+    return [];
+  }
+
+  return mapDescendants({
+    callback,
+    getNodeKey,
+    ignoreCollapsed,
+    isPseudoRoot: true,
+    node: { children: treeData } as TreeItem<T>,
+    currentIndex: -1,
+    path: [],
+    lowerSiblingCounts: [],
+  }).node.children;
 }

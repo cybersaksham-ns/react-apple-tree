@@ -310,3 +310,22 @@ export interface WalkFnParams<T> {
   ignoreCollapsed?: boolean;
 }
 export type WalkFnReturnType = void;
+
+export interface MapDescendantsFnParams<T> {
+  node: TreeItem<T>;
+  currentIndex: number;
+  parentNode?: TreeItem<T> | null;
+  path: NumberOrStringArray;
+  lowerSiblingCounts: number[];
+  getNodeKey: GetNodeKeyFn<T>;
+  callback: any;
+  ignoreCollapsed?: boolean;
+  isPseudoRoot?: boolean;
+}
+export interface MapFnParams<T> {
+  treeData: Array<TreeItem<T>>;
+  getNodeKey: GetNodeKeyFn<T>;
+  callback: (data: NodeData<T>) => void;
+  ignoreCollapsed?: boolean;
+}
+export type MapFnReturnType = Array<TreeItem>;
