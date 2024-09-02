@@ -3,6 +3,9 @@ import {
   GetDescendantCountFnReturnType,
   GetNodeDataAtTreeIndexOrNextIndexFnParams,
   GetVisibleNodeCountFnParams,
+  GetVisibleNodeCountFnReturnType,
+  GetVisibleNodeInfoAtIndexFnParams,
+  GetVisibleNodeInfoAtIndexFnReturnType,
   TreeItem,
 } from "../types";
 
@@ -100,7 +103,7 @@ export function getDescendantCount<T>({
  */
 export function getVisibleNodeCount<T>({
   treeData,
-}: GetVisibleNodeCountFnParams<T>): GetDescendantCountFnReturnType {
+}: GetVisibleNodeCountFnParams<T>): GetVisibleNodeCountFnReturnType {
   function traverse(node: TreeItem<T>): number {
     if (
       !node.children ||
@@ -123,4 +126,44 @@ export function getVisibleNodeCount<T>({
     (total, currentNode) => total + traverse(currentNode),
     0
   );
+}
+
+/**
+ * Retrieves information about a visible node at a specific index in the tree.
+ *
+ * @template T - The type of the tree node.
+ * @param {GetVisibleNodeInfoAtIndexFnParams<T>} params - The parameters for retrieving the visible node information.
+ * @param {T[]} params.treeData - The array of tree data.
+ * @param {number} params.index - The index of the target node.
+ * @param {GetNodeKeyFn<T>} params.getNodeKey - The function to get the unique key of a tree node.
+ * @returns {GetVisibleNodeInfoAtIndexFnReturnType<T> | null} - The information about the visible node at the specified index, or null if not found.
+ */
+export function getVisibleNodeInfoAtIndex<T>({
+  treeData,
+  index: targetIndex,
+  getNodeKey,
+}: GetVisibleNodeInfoAtIndexFnParams<T>): GetVisibleNodeInfoAtIndexFnReturnType<T> {
+  if (!treeData || treeData.length < 1) {
+    return null;
+  }
+
+  // Call the tree traversal with a pseudo-root node
+  const result = getNodeDataAtTreeIndexOrNextIndex({
+    targetIndex,
+    getNodeKey,
+    node: {
+      children: treeData,
+      expanded: true,
+    } as TreeItem<T>,
+    currentIndex: -1,
+    path: [],
+    lowerSiblingCounts: [],
+    isPseudoRoot: true,
+  });
+
+  if (result.node) {
+    return result;
+  }
+
+  return null;
 }

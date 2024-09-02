@@ -283,3 +283,10 @@ export interface GetVisibleNodeCountFnParams<T> {
   treeData: Array<TreeItem<T>>;
 }
 export type GetVisibleNodeCountFnReturnType = number;
+
+export interface GetVisibleNodeInfoAtIndexFnParams<T> {
+  treeData: Array<TreeItem<T>>;
+  index: number;
+  getNodeKey: GetNodeKeyFn<T>;
+}
+export type GetVisibleNodeInfoAtIndexFnReturnType<T> = NodeData<T> | null;
