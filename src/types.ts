@@ -278,3 +278,8 @@ export interface GetDescendantCountFnParams<T> {
   ignoreCollapsed?: boolean;
 }
 export type GetDescendantCountFnReturnType = number;
+
+export interface GetVisibleNodeCountFnParams<T> {
+  treeData: Array<TreeItem<T>>;
+}
+export type GetVisibleNodeCountFnReturnType = number;

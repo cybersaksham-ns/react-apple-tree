@@ -2,6 +2,8 @@ import {
   GetDescendantCountFnParams,
   GetDescendantCountFnReturnType,
   GetNodeDataAtTreeIndexOrNextIndexFnParams,
+  GetVisibleNodeCountFnParams,
+  TreeItem,
 } from "../types";
 
 /**
@@ -68,7 +70,7 @@ function getNodeDataAtTreeIndexOrNextIndex<T>({
  *
  * @template T - The type of the node.
  * @param {GetDescendantCountFnParams<T>} params - The parameters for calculating the descendant count.
- * @param {T} params.node - The node for which to calculate the descendant count.
+ * @param {TreeItem} params.node - The node for which to calculate the descendant count.
  * @param {boolean} [params.ignoreCollapsed=true] - Whether to ignore collapsed nodes.
  * @returns {number} - The number of descendants for the given node.
  */
@@ -86,4 +88,39 @@ export function getDescendantCount<T>({
     });
   }
   return count;
+}
+
+/**
+ * Calculates the count of visible nodes in a tree data structure.
+ *
+ * @template T - The type of the tree node.
+ * @param {GetVisibleNodeCountFnParams<T>} params - The parameters for calculating the visible node count.
+ * @param {Array<TreeItem<T>>} params.treeData - The array representing tree data.
+ * @returns {GetDescendantCountFnReturnType} - The count of visible nodes in the tree.
+ */
+export function getVisibleNodeCount<T>({
+  treeData,
+}: GetVisibleNodeCountFnParams<T>): GetDescendantCountFnReturnType {
+  function traverse(node: TreeItem<T>): number {
+    if (
+      !node.children ||
+      node.expanded !== true ||
+      typeof node.children === "function"
+    ) {
+      return 1;
+    }
+
+    return (
+      1 +
+      node.children.reduce(
+        (total, currentNode) => total + traverse(currentNode),
+        0
+      )
+    );
+  }
+
+  return treeData.reduce(
+    (total, currentNode) => total + traverse(currentNode),
+    0
+  );
 }
