@@ -1,4 +1,6 @@
 import {
+  ChangeNodeAtPathFnParams,
+  ChangeNodeAtPathFnReturnType,
   GetDescendantCountFnParams,
   GetDescendantCountFnReturnType,
   GetNodeDataAtTreeIndexOrNextIndexFnParams,
@@ -356,7 +358,7 @@ export function map<T>({
   getNodeKey,
   callback,
   ignoreCollapsed = true,
-}: MapFnParams<T>): MapFnReturnType {
+}: MapFnParams<T>): MapFnReturnType<T> {
   if (!treeData || treeData.length < 1) {
     return [];
   }
@@ -385,11 +387,111 @@ export function map<T>({
 export function toggleExpandedForAll<T>({
   treeData,
   expanded = true,
-}: ToggleExpandedForAllFnParams<T>): ToggleExpandedForAllFnReturnType {
+}: ToggleExpandedForAllFnParams<T>): ToggleExpandedForAllFnReturnType<T> {
   return map({
     treeData,
     callback: ({ node }) => ({ ...node, expanded }),
     getNodeKey: ({ treeIndex }) => treeIndex,
     ignoreCollapsed: false,
   });
+}
+
+/**
+ * Changes a node at a specific path in a tree data structure.
+ *
+ * @template T - The type of the node.
+ * @param {ChangeNodeAtPathFnParams<T>} options - The options for changing the node.
+ * @param {Array<TreeItem>} options.treeData - The tree data structure.
+ * @param {NumberOrStringArray} options.path - The path to the node.
+ * @param {TreeItem | ((params: { node: TreeItem, treeIndex: number }) => TreeItem)} options.newNode - The new node or a function that returns the new node.
+ * @param {GetNodeKeyFn} options.getNodeKey - The function to get the key of a node.
+ * @param {boolean} [options.ignoreCollapsed=true] - Whether to ignore collapsed nodes.
+ * @returns {Array<TreeItem>} - The updated tree data structure.
+ * @throws {Error} - If the path references children of a node with no children or if no node is found at the given path.
+ */
+export function changeNodeAtPath<T>({
+  treeData,
+  path,
+  newNode,
+  getNodeKey,
+  ignoreCollapsed = true,
+}: ChangeNodeAtPathFnParams<T>): ChangeNodeAtPathFnReturnType<T> {
+  const RESULT_MISS = "RESULT_MISS";
+  const traverse = ({
+    isPseudoRoot = false,
+    node,
+    currentTreeIndex,
+    pathIndex,
+  }: any): any => {
+    if (
+      !isPseudoRoot &&
+      getNodeKey({ node, treeIndex: currentTreeIndex }) !== path[pathIndex]
+    ) {
+      return RESULT_MISS;
+    }
+
+    if (pathIndex >= path.length - 1) {
+      // If this is the final location in the path, return its changed form
+      return typeof newNode === "function"
+        ? newNode({ node, treeIndex: currentTreeIndex })
+        : newNode;
+    }
+    if (!node.children) {
+      // If this node is part of the path, but has no children, return the unchanged node
+      throw new Error("Path referenced children of node with no children.");
+    }
+
+    let nextTreeIndex = currentTreeIndex + 1;
+    for (let i = 0; i < node.children.length; i += 1) {
+      const result = traverse({
+        node: node.children[i],
+        currentTreeIndex: nextTreeIndex,
+        pathIndex: pathIndex + 1,
+      });
+
+      // If the result went down the correct path
+      if (result !== RESULT_MISS) {
+        if (result) {
+          // If the result was truthy (in this case, an object),
+          //  pass it to the next level of recursion up
+          return {
+            ...node,
+            children: [
+              ...node.children.slice(0, i),
+              result,
+              ...node.children.slice(i + 1),
+            ],
+          };
+        }
+        // If the result was falsy (returned from the newNode function), then
+        //  delete the node from the array.
+        return {
+          ...node,
+          children: [
+            ...node.children.slice(0, i),
+            ...node.children.slice(i + 1),
+          ],
+        };
+      }
+
+      nextTreeIndex +=
+        1 + getDescendantCount({ node: node.children[i], ignoreCollapsed });
+    }
+
+    return RESULT_MISS;
+  };
+
+  // Use a pseudo-root node in the beginning traversal
+  const result = traverse({
+    node: { children: treeData },
+    currentTreeIndex: -1,
+    pathIndex: -1,
+    isPseudoRoot: true,
+  });
+
+  if (result === RESULT_MISS) {
+    throw new Error("No node found at the given path.");
+  }
+
+  return result.children;
 }

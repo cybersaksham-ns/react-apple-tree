@@ -328,10 +328,19 @@ export interface MapFnParams<T> {
   callback: (data: NodeData<T>) => void;
   ignoreCollapsed?: boolean;
 }
-export type MapFnReturnType = Array<TreeItem>;
+export type MapFnReturnType<T> = Array<TreeItem<T>>;
 
 export interface ToggleExpandedForAllFnParams<T> {
   treeData: Array<TreeItem<T>>;
   expanded?: boolean;
 }
-export type ToggleExpandedForAllFnReturnType = Array<TreeItem>;
+export type ToggleExpandedForAllFnReturnType<T> = Array<TreeItem<T>>;
+
+export interface ChangeNodeAtPathFnParams<T> {
+  treeData: Array<TreeItem<T>>;
+  path: NumberOrStringArray;
+  newNode: TreeItem<T> | ((data: any) => TreeItem<T>);
+  getNodeKey: GetNodeKeyFn<T>;
+  ignoreCollapsed?: boolean;
+}
+export type ChangeNodeAtPathFnReturnType<T> = Array<TreeItem<T>>;
