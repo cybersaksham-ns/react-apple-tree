@@ -424,3 +424,10 @@ export type InsertNodeFnReturnType<T> = {
   path?: NumberOrStringArray;
   parentNode?: TreeItem<T> | null;
 };
+
+export interface GetFlatDataFromTreeFnParams<T> {
+  treeData: Array<TreeItem<T>>;
+  getNodeKey: GetNodeKeyFn<T>;
+  ignoreCollapsed?: boolean;
+}
+export type GetFlatDataFromTreeFnReturnType<T> = Array<TreeNode<T>>;

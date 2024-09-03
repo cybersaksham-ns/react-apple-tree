@@ -7,6 +7,8 @@ import {
   ChangeNodeAtPathFnReturnType,
   GetDescendantCountFnParams,
   GetDescendantCountFnReturnType,
+  GetFlatDataFromTreeFnParams,
+  GetFlatDataFromTreeFnReturnType,
   GetNodeAtPathFnParams,
   GetNodeAtPathFnReturnType,
   GetNodeDataAtTreeIndexOrNextIndexFnParams,
@@ -27,6 +29,7 @@ import {
   ToggleExpandedForAllFnParams,
   ToggleExpandedForAllFnReturnType,
   TreeItem,
+  TreeNode,
   WalkDescendantsFnParams,
   WalkFnParams,
   WalkFnReturnType,
@@ -947,4 +950,36 @@ export function insertNode<T>({
     ],
     parentNode: insertResult.parentNode,
   };
+}
+
+/**
+ * Get tree data flattened.
+ *
+ * @template T - The type of data stored in the tree nodes.
+ * @param {GetFlatDataFromTreeFnParams<T>} params - The parameters for retrieving flat data from the tree.
+ * @param {Array<TreeItem<T>>} params.treeData - The tree data to retrieve flat data from.
+ * @param {GetNodeKeyFn<T>} params.getNodeKey - The function to get the unique key of each node in the tree.
+ * @param {boolean} [params.ignoreCollapsed=true] - Whether to ignore collapsed nodes.
+ * @returns {GetFlatDataFromTreeFnReturnType<T>} - The flat data retrieved from the tree.
+ */
+export function getFlatDataFromTree<T>({
+  treeData,
+  getNodeKey,
+  ignoreCollapsed = true,
+}: GetFlatDataFromTreeFnParams<T>): GetFlatDataFromTreeFnReturnType<T> {
+  if (!treeData || treeData.length < 1) {
+    return [];
+  }
+
+  const flattened: Array<TreeNode<T>> = [];
+  walk({
+    treeData,
+    getNodeKey,
+    ignoreCollapsed,
+    callback: (nodeInfo) => {
+      flattened.push(nodeInfo);
+    },
+  });
+
+  return flattened;
 }
