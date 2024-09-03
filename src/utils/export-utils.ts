@@ -1,4 +1,6 @@
 import {
+  AddNodeUnderParentFnParams,
+  AddNodeUnderParentFnReturnType,
   ChangeNodeAtPathFnParams,
   ChangeNodeAtPathFnReturnType,
   GetDescendantCountFnParams,
@@ -604,4 +606,106 @@ export function getNodeAtPath<T>({
   }
 
   return foundNodeInfo;
+}
+
+/**
+ * Adds a new node under a parent node in a tree data.
+ *
+ * @template T - The type of the tree node.
+ * @param {AddNodeUnderParentFnParams<T>} params - The parameters for adding the node.
+ * @param {Array<TreeItem<T>>} params.treeData - The array representing the tree data.
+ * @param {TreeItem<T>} params.newNode - The new node to be added.
+ * @param {NumberOrStringArray} [params.parentKey=null] - The key of the parent node. If null, the new node will be added as the root node.
+ * @param {GetNodeKeyFn<T>} params.getNodeKey - The function to get the key of a node.
+ * @param {boolean} [params.ignoreCollapsed=true] - Whether to ignore collapsed nodes.
+ * @param {boolean} [params.expandParent=false] - Whether to expand the parent node after adding the new node.
+ * @param {boolean} [params.addAsFirstChild=false] - Whether to add the new node as the first child of the parent node.
+ * @returns {AddNodeUnderParentFnReturnType<T>} - The updated tree data and the index of the inserted node.
+ * @throws {Error} - If no node is found with the given parent key.
+ * @throws {Error} - If trying to add to children defined by a function.
+ */
+export function addNodeUnderParent<T>({
+  treeData,
+  newNode,
+  parentKey = null,
+  getNodeKey,
+  ignoreCollapsed = true,
+  expandParent = false,
+  addAsFirstChild = false,
+}: AddNodeUnderParentFnParams<T>): AddNodeUnderParentFnReturnType<T> {
+  if (parentKey === null) {
+    return addAsFirstChild
+      ? {
+          treeData: [newNode, ...(treeData || [])],
+          treeIndex: 0,
+        }
+      : {
+          treeData: [...(treeData || []), newNode],
+          treeIndex: (treeData || []).length,
+        };
+  }
+
+  let insertedTreeIndex = null;
+  let hasBeenAdded = false;
+  const changedTreeData = map({
+    treeData,
+    getNodeKey,
+    ignoreCollapsed,
+    callback: ({ node, treeIndex, path }) => {
+      const key = path ? path[path.length - 1] : null;
+      // Return nodes that are not the parent as-is
+      if (hasBeenAdded || key !== parentKey) {
+        return node;
+      }
+      hasBeenAdded = true;
+
+      const parentNode = {
+        ...node,
+      };
+
+      if (expandParent) {
+        parentNode.expanded = true;
+      }
+
+      // If no children exist yet, just add the single newNode
+      if (!parentNode.children) {
+        insertedTreeIndex = treeIndex + 1;
+        return {
+          ...parentNode,
+          children: [newNode],
+        };
+      }
+
+      if (typeof parentNode.children === "function") {
+        throw new Error("Cannot add to children defined by a function");
+      }
+
+      let nextTreeIndex = treeIndex + 1;
+      for (let i = 0; i < parentNode.children.length; i += 1) {
+        nextTreeIndex +=
+          1 +
+          getDescendantCount({ node: parentNode.children[i], ignoreCollapsed });
+      }
+
+      insertedTreeIndex = nextTreeIndex;
+
+      const children = addAsFirstChild
+        ? [newNode, ...parentNode.children]
+        : [...parentNode.children, newNode];
+
+      return {
+        ...parentNode,
+        children,
+      };
+    },
+  });
+
+  if (!hasBeenAdded) {
+    throw new Error("No node found with the given key.");
+  }
+
+  return {
+    treeData: changedTreeData,
+    treeIndex: insertedTreeIndex,
+  };
 }

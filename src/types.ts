@@ -372,3 +372,17 @@ export interface GetNodeAtPathFnParams<T> {
   ignoreCollapsed?: boolean;
 }
 export type GetNodeAtPathFnReturnType<T> = NodeData<T> | null;
+
+export interface AddNodeUnderParentFnParams<T> {
+  treeData: Array<TreeItem<T>>;
+  parentKey: NodeKey | null;
+  newNode: TreeItem<T>;
+  getNodeKey: GetNodeKeyFn<T>;
+  ignoreCollapsed?: boolean;
+  expandParent?: boolean;
+  addAsFirstChild?: boolean;
+}
+export type AddNodeUnderParentFnReturnType<T> = {
+  treeData: Array<TreeItem<T>>;
+  treeIndex: number | null;
+};
