@@ -1056,3 +1056,26 @@ export function isDescendant<T>(
     )
   );
 }
+
+/**
+ * Get the maximum depth of the children (the depth of the root node is 0).
+ *
+ * @param {TreeItem<T>} node - Node in the tree
+ * @param {?number} depth - The current depth
+ *
+ * @returns {number} maxDepth - The deepest depth in the tree
+ */
+export function getDepth<T>(node: TreeItem<T>, depth: number = 0): number {
+  if (!node.children) {
+    return depth;
+  }
+
+  if (typeof node.children === "function") {
+    return depth + 1;
+  }
+
+  return node.children.reduce(
+    (deepest, child) => Math.max(deepest, getDepth(child, depth + 1)),
+    depth
+  );
+}
