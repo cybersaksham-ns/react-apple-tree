@@ -440,3 +440,23 @@ export interface GetTreeFromFlatDataFnParams<T> {
   rootKey: NodeKey;
 }
 export type GetTreeFromFlatDataFnReturnType<T> = Array<TreeItem<T>>;
+
+export interface FindFnParams<T> {
+  treeData: Array<TreeItem<T>>;
+  getNodeKey: GetNodeKeyFn<T>;
+  searchQuery: SearchQuery;
+  searchMethod: SearchMethodFn<T>;
+  searchFocusOffset?: SearchFocusOffset;
+  expandAllMatchPaths?: boolean;
+  expandFocusMatchPaths?: boolean;
+}
+export type FindFnReturnType<T> = {
+  matches: Array<NodeData<T>>;
+  treeData: Array<TreeItem<T>>;
+};
+export interface FindFnTraverseParams<T> {
+  node: TreeItem<T>;
+  currentIndex: number;
+  path?: NumberOrStringArray;
+  isPseudoRoot?: boolean;
+}
