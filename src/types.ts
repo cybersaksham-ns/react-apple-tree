@@ -386,3 +386,41 @@ export type AddNodeUnderParentFnReturnType<T> = {
   treeData: Array<TreeItem<T>>;
   treeIndex: number | null;
 };
+
+export interface AddNodeAtDepthAndIndexFnParams<T> {
+  node: TreeItem<T>;
+  path?: NumberOrStringArray;
+  newNode: TreeItem<T>;
+  getNodeKey: GetNodeKeyFn<T>;
+  currentIndex: number;
+  currentDepth: number;
+  targetDepth: number;
+  minimumTreeIndex: number;
+  ignoreCollapsed: boolean;
+  expandParent: boolean;
+  isPseudoRoot?: boolean;
+  isLastChild: boolean;
+}
+export type AddNodeAtDepthAndIndexFnReturnType<T> = {
+  node: TreeItem<T>;
+  nextIndex: number;
+  insertedTreeIndex?: number | null;
+  parentPath?: NumberOrStringArray;
+  parentNode?: TreeItem<T> | null;
+};
+
+export interface InsertNodeFnParams<T> {
+  treeData: Array<TreeItem<T>>;
+  depth: number;
+  minimumTreeIndex: number;
+  newNode: TreeItem<T>;
+  getNodeKey: GetNodeKeyFn<T>;
+  ignoreCollapsed?: boolean;
+  expandParent?: boolean;
+}
+export type InsertNodeFnReturnType<T> = {
+  treeData?: Array<TreeItem<T>>;
+  treeIndex?: number | null;
+  path?: NumberOrStringArray;
+  parentNode?: TreeItem<T> | null;
+};

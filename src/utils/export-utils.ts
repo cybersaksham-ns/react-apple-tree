@@ -1,4 +1,6 @@
 import {
+  AddNodeAtDepthAndIndexFnParams,
+  AddNodeAtDepthAndIndexFnReturnType,
   AddNodeUnderParentFnParams,
   AddNodeUnderParentFnReturnType,
   ChangeNodeAtPathFnParams,
@@ -12,9 +14,12 @@ import {
   GetVisibleNodeCountFnReturnType,
   GetVisibleNodeInfoAtIndexFnParams,
   GetVisibleNodeInfoAtIndexFnReturnType,
+  InsertNodeFnParams,
+  InsertNodeFnReturnType,
   MapDescendantsFnParams,
   MapFnParams,
   MapFnReturnType,
+  NumberOrStringArray,
   RemoveNodeAtPathFnParams,
   RemoveNodeAtPathFnReturnType,
   RemoveNodeFnParams,
@@ -707,5 +712,239 @@ export function addNodeUnderParent<T>({
   return {
     treeData: changedTreeData,
     treeIndex: insertedTreeIndex,
+  };
+}
+
+function addNodeAtDepthAndIndex<T>({
+  targetDepth,
+  minimumTreeIndex,
+  newNode,
+  ignoreCollapsed,
+  expandParent,
+  isPseudoRoot = false,
+  isLastChild,
+  node,
+  currentIndex,
+  currentDepth,
+  getNodeKey,
+  path = [],
+}: AddNodeAtDepthAndIndexFnParams<T>): AddNodeAtDepthAndIndexFnReturnType<T> {
+  const selfPath = (node: TreeItem<T>) =>
+    isPseudoRoot
+      ? []
+      : [...path, getNodeKey({ node, treeIndex: currentIndex })];
+
+  // If the current position is the only possible place to add, add it
+  if (
+    currentIndex >= minimumTreeIndex - 1 ||
+    (isLastChild && !(node.children && node.children.length))
+  ) {
+    if (typeof node.children === "function") {
+      throw new Error("Cannot add to children defined by a function");
+    } else {
+      const extraNodeProps = expandParent ? { expanded: true } : {};
+      const nextNode = {
+        ...node,
+        ...extraNodeProps,
+        children: node.children ? [newNode, ...node.children] : [newNode],
+      };
+
+      return {
+        node: nextNode,
+        nextIndex: currentIndex + 2,
+        insertedTreeIndex: currentIndex + 1,
+        parentPath: selfPath(nextNode),
+        parentNode: isPseudoRoot ? null : nextNode,
+      };
+    }
+  }
+
+  // If this is the target depth for the insertion,
+  // i.e., where the newNode can be added to the current node's children
+  if (currentDepth >= targetDepth - 1) {
+    // Skip over nodes with no children or hidden children
+    if (
+      !node.children ||
+      typeof node.children === "function" ||
+      (node.expanded !== true && ignoreCollapsed && !isPseudoRoot)
+    ) {
+      return { node, nextIndex: currentIndex + 1 };
+    }
+
+    // Scan over the children to see if there's a place among them that fulfills
+    // the minimumTreeIndex requirement
+    let childIndex = currentIndex + 1;
+    let insertedTreeIndex = null;
+    let insertIndex = null;
+    for (let i = 0; i < node.children.length; i += 1) {
+      // If a valid location is found, mark it as the insertion location and
+      // break out of the loop
+      if (childIndex >= minimumTreeIndex) {
+        insertedTreeIndex = childIndex;
+        insertIndex = i;
+        break;
+      }
+
+      // Increment the index by the child itself plus the number of descendants it has
+      childIndex +=
+        1 + getDescendantCount({ node: node.children[i], ignoreCollapsed });
+    }
+
+    // If no valid indices to add the node were found
+    if (insertIndex === null) {
+      // If the last position in this node's children is less than the minimum index
+      // and there are more children on the level of this node, return without insertion
+      if (childIndex < minimumTreeIndex && !isLastChild) {
+        return { node, nextIndex: childIndex };
+      }
+
+      // Use the last position in the children array to insert the newNode
+      insertedTreeIndex = childIndex;
+      insertIndex = node.children.length;
+    }
+
+    // Insert the newNode at the insertIndex
+    const nextNode = {
+      ...node,
+      children: [
+        ...node.children.slice(0, insertIndex),
+        newNode,
+        ...node.children.slice(insertIndex),
+      ],
+    };
+
+    // Return node with successful insert result
+    return {
+      node: nextNode,
+      nextIndex: childIndex,
+      insertedTreeIndex,
+      parentPath: selfPath(nextNode),
+      parentNode: isPseudoRoot ? null : nextNode,
+    };
+  }
+
+  // Skip over nodes with no children or hidden children
+  if (
+    !node.children ||
+    typeof node.children === "function" ||
+    (node.expanded !== true && ignoreCollapsed && !isPseudoRoot)
+  ) {
+    return { node, nextIndex: currentIndex + 1 };
+  }
+
+  // Get all descendants
+  let insertedTreeIndex: number | null | undefined = null;
+  let pathFragment: NumberOrStringArray | null | undefined = null;
+  let parentNode = null;
+  let childIndex = currentIndex + 1;
+  let newChildren = node.children;
+  if (typeof newChildren !== "function") {
+    newChildren = newChildren.map((child, i) => {
+      if (insertedTreeIndex !== null) {
+        return child;
+      }
+
+      const mapResult = addNodeAtDepthAndIndex({
+        targetDepth,
+        minimumTreeIndex,
+        newNode,
+        ignoreCollapsed,
+        expandParent,
+        isLastChild: isLastChild && i === newChildren.length - 1,
+        node: child,
+        currentIndex: childIndex,
+        currentDepth: currentDepth + 1,
+        getNodeKey,
+        path: [], // Cannot determine the parent path until the children have been processed
+      });
+
+      if ("insertedTreeIndex" in mapResult) {
+        ({
+          insertedTreeIndex,
+          parentNode,
+          parentPath: pathFragment,
+        } = mapResult);
+      }
+
+      childIndex = mapResult.nextIndex;
+
+      return mapResult.node;
+    });
+  }
+
+  const nextNode = { ...node, children: newChildren };
+  const result: AddNodeAtDepthAndIndexFnReturnType<T> = {
+    node: nextNode,
+    nextIndex: childIndex,
+  };
+
+  if (insertedTreeIndex !== null) {
+    result.insertedTreeIndex = insertedTreeIndex;
+    result.parentPath = [...selfPath(nextNode), ...(pathFragment || [])];
+    result.parentNode = parentNode;
+  }
+
+  return result;
+}
+
+/**
+ * Inserts a node into a tree data at the given depth, after the minimum index.
+ *
+ * @template T - The type of the tree node.
+ * @param {InsertNodeFnParams<T>} params - The parameters for inserting the node.
+ * @param {Array<TreeItem<T>>} params.treeData - The array representing the tree data.
+ * @param {number} params.depth - The depth at which to insert the node.
+ * @param {number} params.minimumTreeIndex - The minimum tree index.
+ * @param {TreeItem<T>} params.newNode - The new node to be inserted.
+ * @param {GetNodeKeyFn<T>} params.getNodeKey - The function to get the key of a node.
+ * @param {boolean} [params.ignoreCollapsed=true] - Whether to ignore collapsed nodes.
+ * @param {boolean} [params.expandParent=false] - Whether to expand the parent node.
+ * @returns {InsertNodeFnReturnType<T>} - The result of inserting the node.
+ */
+export function insertNode<T>({
+  treeData,
+  depth: targetDepth,
+  minimumTreeIndex,
+  newNode,
+  getNodeKey,
+  ignoreCollapsed = true,
+  expandParent = false,
+}: InsertNodeFnParams<T>): InsertNodeFnReturnType<T> {
+  if (!treeData && targetDepth === 0) {
+    return {
+      treeData: [newNode],
+      treeIndex: 0,
+      path: [getNodeKey({ node: newNode, treeIndex: 0 })],
+      parentNode: null,
+    };
+  }
+
+  const insertResult = addNodeAtDepthAndIndex({
+    targetDepth,
+    minimumTreeIndex,
+    newNode,
+    ignoreCollapsed,
+    expandParent,
+    getNodeKey,
+    isPseudoRoot: true,
+    isLastChild: true,
+    node: { children: treeData } as TreeItem<T>,
+    currentIndex: -1,
+    currentDepth: -1,
+  });
+
+  if (!("insertedTreeIndex" in insertResult)) {
+    throw new Error("No suitable position found to insert.");
+  }
+
+  const treeIndex = insertResult.insertedTreeIndex;
+  return {
+    treeData: insertResult.node.children,
+    treeIndex,
+    path: [
+      ...(insertResult.parentPath || []),
+      getNodeKey({ node: newNode, treeIndex: treeIndex || -1 }),
+    ],
+    parentNode: insertResult.parentNode,
   };
 }
