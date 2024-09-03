@@ -22,7 +22,7 @@ export function flattenNode<T>(
     parentKey: NodeKey | null,
     addToRenderList: boolean = true
   ): void => {
-    const mapId = getNodeKey({ node });
+    const mapId = getNodeKey({ node, treeIndex: -1 });
     map[mapId] = node;
     if (addToRenderList) {
       flattenedArray.push({ mapId, path: [...path, mapId], parentKey });
@@ -98,7 +98,12 @@ export function collapseTree<T>(
 ): Array<FlatTreeItem> {
   treeData.forEach((node) => {
     if (node.expanded) {
-      flatTree = collapseNode(getNodeKey({ node }), node, treeMap, flatTree);
+      flatTree = collapseNode(
+        getNodeKey({ node, treeIndex: -1 }),
+        node,
+        treeMap,
+        flatTree
+      );
     }
   });
   return flatTree;
@@ -153,7 +158,9 @@ export function moveNodeToDifferentParent(
   // Removing from previous parent
   let prevParent = prevParentKey ? treeMap[prevParentKey] : null;
   let prevChildren = prevParent ? prevParent.children || [] : treeData;
-  let idx = prevChildren.findIndex((node) => nodeKey === getNodeKey({ node }));
+  let idx = prevChildren.findIndex(
+    (node) => nodeKey === getNodeKey({ node, treeIndex: -1 })
+  );
   prevChildren = [
     ...prevChildren.slice(0, idx),
     ...prevChildren.slice(idx + 1),

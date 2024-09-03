@@ -81,7 +81,10 @@ const SearchContextProvider = (
                 path: cloneDeep(path),
                 searchQuery: appleTreeProps.searchQuery,
               });
-              const key = appleTreeProps.getNodeKey({ node });
+              const key = appleTreeProps.getNodeKey({
+                node,
+                treeIndex: treeIndexStack[treeIndexStack.length - 1],
+              });
               if (searchMatch) {
                 searchedNodesList.push({
                   node,
@@ -122,9 +125,8 @@ const SearchContextProvider = (
           },
           ignoreCollapsed: false,
           onGoingInside: (node: TreeItem) => {
-            path.push(appleTreeProps.getNodeKey({ node }));
-            siblingStack = siblingStack.slice(0, path.length);
-            if (siblingStack.length < path.length) {
+            siblingStack = siblingStack.slice(0, path.length + 1);
+            if (siblingStack.length < path.length + 1) {
               siblingStack.push(1);
             } else {
               siblingStack[siblingStack.length - 1] += 1;
@@ -134,9 +136,15 @@ const SearchContextProvider = (
             } else {
               treeIndexStack.push(
                 treeIndexStack[treeIndexStack.length - 1] +
-                  siblingStack[path.length - 1]
+                  siblingStack[path.length]
               );
             }
+            path.push(
+              appleTreeProps.getNodeKey({
+                node,
+                treeIndex: treeIndexStack[treeIndexStack.length - 1],
+              })
+            );
           },
           onGoingOutside: (node: TreeItem) => {
             treeIndexStack.pop();

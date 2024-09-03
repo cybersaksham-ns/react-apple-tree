@@ -2,7 +2,6 @@ import {
   GetDescendantCountFnParams,
   GetDescendantCountFnReturnType,
   GetNodeDataAtTreeIndexOrNextIndexFnParams,
-  GetNodeKeyFn,
   GetVisibleNodeCountFnParams,
   GetVisibleNodeCountFnReturnType,
   GetVisibleNodeInfoAtIndexFnParams,
@@ -10,6 +9,8 @@ import {
   MapDescendantsFnParams,
   MapFnParams,
   MapFnReturnType,
+  ToggleExpandedForAllFnParams,
+  ToggleExpandedForAllFnReturnType,
   TreeItem,
   WalkDescendantsFnParams,
   WalkFnParams,
@@ -370,4 +371,25 @@ export function map<T>({
     path: [],
     lowerSiblingCounts: [],
   }).node.children;
+}
+
+/**
+ * Toggles the expanded state for all nodes in the tree data.
+ *
+ * @template T - The type of the tree data nodes.
+ * @param {ToggleExpandedForAllFnParams<T>} params - The parameters for toggling the expanded state.
+ * @param {Array<TreeItem>} params.treeData - The tree data containing the nodes.
+ * @param {boolean} [params.expanded=true] - The desired expanded state. Defaults to `true`.
+ * @returns {ToggleExpandedForAllFnReturnType} - The updated tree data with the expanded state toggled.
+ */
+export function toggleExpandedForAll<T>({
+  treeData,
+  expanded = true,
+}: ToggleExpandedForAllFnParams<T>): ToggleExpandedForAllFnReturnType {
+  return map({
+    treeData,
+    callback: ({ node }) => ({ ...node, expanded }),
+    getNodeKey: ({ treeIndex }) => treeIndex,
+    ignoreCollapsed: false,
+  });
 }
