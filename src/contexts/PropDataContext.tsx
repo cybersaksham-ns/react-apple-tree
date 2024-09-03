@@ -5,7 +5,7 @@ import {
   ThemeProps,
 } from "../types";
 import { defaultAppleTreeProps } from "../utils/default-props";
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash.clonedeep";
 
 interface PropDataContextProps {
   appleTreeProps: ReactAppleTreeProps;

@@ -1,6 +1,6 @@
 {
   "name": "@newtonschool/react-apple-tree",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "keywords": [
     "Newton School",
@@ -36,12 +36,12 @@
     "react": "^18.3.1"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.7",
+    "@types/lodash.clonedeep": "^4.5.9",
     "@types/react": "^18.3.3",
     "@types/react-window": "^1.8.8",
     "babel-plugin-lodash": "^3.3.4",
     "copyfiles": "^2.4.1",
-    "lodash": "^4.17.21",
+    "lodash.clonedeep": "^4.5.0",
     "nodemon": "^3.1.4",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",

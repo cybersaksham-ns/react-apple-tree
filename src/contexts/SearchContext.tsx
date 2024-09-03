@@ -15,7 +15,7 @@ import {
   collapseTree,
   expandNodeOneLevelUtils,
 } from "../utils/node-operations";
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash.clonedeep";
 
 interface SearchContextProps {
   searchedNodeMap: SearchedNodeMap;
