@@ -1037,3 +1037,22 @@ export function getTreeFromFlatData<T>({
 
   return childrenToParents[rootKey].map((child) => trav(child));
 }
+
+/**
+ * Checks if a tree item is a descendant of another tree item.
+ * @param older - Potential ancestor of younger node
+ * @param younger - Potential descendant of older node
+ * @returns A boolean indicating whether the younger tree item is a descendant of the older tree item.
+ */
+export function isDescendant<T>(
+  older: TreeItem<T>,
+  younger: TreeItem<T>
+): boolean {
+  return (
+    !!older.children &&
+    typeof older.children !== "function" &&
+    older.children.some(
+      (child) => child === younger || isDescendant(child, younger)
+    )
+  );
+}
