@@ -48,7 +48,7 @@ const SearchContextProvider = (
       setSearchedNodeMap({});
     } else {
       if (
-        appleTreeProps.onlyExpandSearchedNodes &&
+        appleTreeProps.onlyExpandSearchedNodes ||
         appleTreeProps.searchQuery === ""
       ) {
         newFlatArray = collapseTree(
