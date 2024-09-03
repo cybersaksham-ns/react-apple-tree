@@ -203,6 +203,7 @@ export interface ThemeProps<T = {}> extends ThemeTreeProps<T> {
 // Prop Functions
 export type OnChangeFn<T> = (treeData: Array<TreeItem<T>>) => void;
 export type GetNodeKeyFn<T = {}> = (data: TreeNode<T> & TreeIndex) => NodeKey;
+export type GetFlatNodeKeyFn<T = {}> = (node: TreeItem<T> | any) => NodeKey;
 export type GenerateNodePropsFn<T> = (
   data: ExtendedNodeData<T>
 ) => ExtendedNodeProps;
@@ -431,3 +432,11 @@ export interface GetFlatDataFromTreeFnParams<T> {
   ignoreCollapsed?: boolean;
 }
 export type GetFlatDataFromTreeFnReturnType<T> = Array<TreeNode<T>>;
+
+export interface GetTreeFromFlatDataFnParams<T> {
+  flatData: Array<TreeItem<T>>;
+  getKey: GetFlatNodeKeyFn<T>;
+  getParentKey: GetFlatNodeKeyFn<T>;
+  rootKey: NodeKey;
+}
+export type GetTreeFromFlatDataFnReturnType<T> = Array<TreeItem<T>>;

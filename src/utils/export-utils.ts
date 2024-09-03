@@ -12,6 +12,8 @@ import {
   GetNodeAtPathFnParams,
   GetNodeAtPathFnReturnType,
   GetNodeDataAtTreeIndexOrNextIndexFnParams,
+  GetTreeFromFlatDataFnParams,
+  GetTreeFromFlatDataFnReturnType,
   GetVisibleNodeCountFnParams,
   GetVisibleNodeCountFnReturnType,
   GetVisibleNodeInfoAtIndexFnParams,
@@ -21,6 +23,7 @@ import {
   MapDescendantsFnParams,
   MapFnParams,
   MapFnReturnType,
+  NodeKey,
   NumberOrStringArray,
   RemoveNodeAtPathFnParams,
   RemoveNodeAtPathFnReturnType,
@@ -982,4 +985,55 @@ export function getFlatDataFromTree<T>({
   });
 
   return flattened;
+}
+
+/**
+ * Converts flat data into a tree structure.
+ *
+ * @template T - The type of the data in the tree.
+ * @param {GetTreeFromFlatDataFnParams<T>} options - The options for converting the flat data into a tree.
+ * @param {Array<TreeItem<T>>} options.flatData - The flat data to be converted.
+ * @param {GetFlatNodeKeyFn} [options.getKey] - The function to get the key of a node. Defaults to using the `id` property of the node.
+ * @param {GetFlatNodeKeyFn} [options.getParentKey] - The function to get the parent key of a node. Defaults to using the `parentId` property of the node.
+ * @param {NodeKey} [options.rootKey="0"] - The root key of the tree. Defaults to "0".
+ * @returns {GetTreeFromFlatDataFnReturnType<T>} - The tree structure generated from the flat data.
+ */
+export function getTreeFromFlatData<T>({
+  flatData,
+  getKey = (node) => node.id,
+  getParentKey = (node) => node.parentId,
+  rootKey = "0",
+}: GetTreeFromFlatDataFnParams<T>): GetTreeFromFlatDataFnReturnType<T> {
+  if (!flatData) {
+    return [];
+  }
+
+  const childrenToParents: Record<NodeKey, Array<TreeItem<T>>> = {};
+  flatData.forEach((child) => {
+    const parentKey = getParentKey(child);
+
+    if (parentKey in childrenToParents) {
+      childrenToParents[parentKey].push(child);
+    } else {
+      childrenToParents[parentKey] = [child];
+    }
+  });
+
+  if (rootKey !== null && !(rootKey in childrenToParents)) {
+    return [];
+  }
+
+  const trav = (parent: TreeItem<T>): TreeItem<T> => {
+    const parentKey = getKey(parent);
+    if (parentKey in childrenToParents) {
+      return {
+        ...parent,
+        children: childrenToParents[parentKey].map((child) => trav(child)),
+      };
+    }
+
+    return { ...parent };
+  };
+
+  return childrenToParents[rootKey].map((child) => trav(child));
 }
