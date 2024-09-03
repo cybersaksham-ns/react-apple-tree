@@ -159,17 +159,9 @@ const SearchContextProvider = (
         setSearchedNodeMap({});
         searchedNodesList = [];
       }
-      if (
-        typeof appleTreeProps.searchFocusOffset === "number" &&
-        appleTreeProps.searchFocusOffset >= 0 &&
-        searchedNodesList.length > appleTreeProps.searchFocusOffset
-      ) {
-        const highlightedNodeIndex =
-          searchedNodesList[appleTreeProps.searchFocusOffset].treeIndex;
-        setSearchedNodeIndex(highlightedNodeIndex);
-      } else {
-        setSearchedNodeIndex(null);
-      }
+      const highlightedNodeIndex =
+        searchedNodesList[appleTreeProps.searchFocusOffset || 0]?.treeIndex;
+      setSearchedNodeIndex(highlightedNodeIndex);
       if (appleTreeProps.searchFinishCallback) {
         appleTreeProps.searchFinishCallback(searchedNodesList);
       }

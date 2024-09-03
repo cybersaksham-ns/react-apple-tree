@@ -207,7 +207,9 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
           ref={(node) => dragPreview(node)}
           $isSearchedNode={!!searchedNodeMap[node.mapId]}
           $isSearchFocus={
-            !!searchedNodeMap[node.mapId] && searchedNodeIndex === nodeIndex
+            typeof appleTreeProps.searchFocusOffset === "number" &&
+            !!searchedNodeMap[node.mapId] &&
+            searchedNodeIndex === nodeIndex
           }
           $isDragging={isDragging}
           $dropzone={
