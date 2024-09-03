@@ -339,7 +339,7 @@ export type ToggleExpandedForAllFnReturnType<T> = Array<TreeItem<T>>;
 export interface ChangeNodeAtPathFnParams<T> {
   treeData: Array<TreeItem<T>>;
   path: NumberOrStringArray;
-  newNode: TreeItem<T> | ((data: any) => TreeItem<T>) | null;
+  newNode: TreeItem<T> | ((data: any) => TreeItem<T> | null) | null;
   getNodeKey: GetNodeKeyFn<T>;
   ignoreCollapsed?: boolean;
 }
@@ -352,3 +352,15 @@ export interface RemoveNodeAtPathFnParams<T> {
   ignoreCollapsed?: boolean;
 }
 export type RemoveNodeAtPathFnReturnType<T> = Array<TreeItem<T>>;
+
+export interface RemoveNodeFnParams<T> {
+  treeData: Array<TreeItem<T>>;
+  path: NumberOrStringArray;
+  getNodeKey: GetNodeKeyFn<T>;
+  ignoreCollapsed?: boolean;
+}
+export type RemoveNodeFnReturnType<T> = {
+  treeData: Array<TreeItem<T>>;
+  node?: TreeItem<T> | null;
+  treeIndex?: number | null;
+};

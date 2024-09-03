@@ -13,6 +13,8 @@ import {
   MapFnReturnType,
   RemoveNodeAtPathFnParams,
   RemoveNodeAtPathFnReturnType,
+  RemoveNodeFnParams,
+  RemoveNodeFnReturnType,
   ToggleExpandedForAllFnParams,
   ToggleExpandedForAllFnReturnType,
   TreeItem,
@@ -522,4 +524,45 @@ export function removeNodeAtPath<T>({
     ignoreCollapsed,
     newNode: null,
   });
+}
+
+/**
+ * Removes a node from the tree data and return information about new treedata and removed node.
+ *
+ * @template T - The type of the tree node.
+ * @param {RemoveNodeFnParams<T>} params - The parameters for removing the node.
+ * @param {Array<TreeItem<T>>} params.treeData - The tree data.
+ * @param {NumberOrStringArray} params.path - The path to the node to be removed.
+ * @param {GetNodeKeyFn<T>} params.getNodeKey - The function to get the key of a node.
+ * @param {boolean} [params.ignoreCollapsed=true] - Whether to ignore collapsed nodes.
+ * @returns {RemoveNodeFnReturnType<T>} - The result of removing the node.
+ * @property {Array<TreeItem<T>>} treeData - The updated tree data after removing the node.
+ * @property {TreeItem<T>} node - The removed node.
+ * @property {number} treeIndex - The index of the removed node in the tree.
+ */
+export function removeNode<T>({
+  treeData,
+  path,
+  getNodeKey,
+  ignoreCollapsed = true,
+}: RemoveNodeFnParams<T>): RemoveNodeFnReturnType<T> {
+  let removedNode = null;
+  let removedTreeIndex = null;
+  const nextTreeData = changeNodeAtPath({
+    treeData,
+    path,
+    getNodeKey,
+    ignoreCollapsed,
+    newNode: ({ node, treeIndex }) => {
+      removedNode = node;
+      removedTreeIndex = treeIndex;
+      return null;
+    },
+  });
+
+  return {
+    treeData: nextTreeData,
+    node: removedNode,
+    treeIndex: removedTreeIndex,
+  };
 }
