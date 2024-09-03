@@ -11,6 +11,8 @@ import {
   MapDescendantsFnParams,
   MapFnParams,
   MapFnReturnType,
+  RemoveNodeAtPathFnParams,
+  RemoveNodeAtPathFnReturnType,
   ToggleExpandedForAllFnParams,
   ToggleExpandedForAllFnReturnType,
   TreeItem,
@@ -494,4 +496,30 @@ export function changeNodeAtPath<T>({
   }
 
   return result.children;
+}
+
+/**
+ * Removes a node at the specified path in the tree data.
+ *
+ * @template T - The type of the tree data.
+ * @param {RemoveNodeAtPathFnParams<T>} params - The parameters for removing a node.
+ * @param {Array<TreeItem<T>>} params.treeData - The tree data.
+ * @param {NumberOrStringArray} params.path - The path to the node to be removed.
+ * @param {GetNodeKeyFn<T>} params.getNodeKey - The function to get the key of a node.
+ * @param {boolean} [params.ignoreCollapsed=true] - Whether to ignore collapsed nodes.
+ * @returns {RemoveNodeAtPathFnReturnType<T>} - The updated tree data after removing the node.
+ */
+export function removeNodeAtPath<T>({
+  treeData,
+  path,
+  getNodeKey,
+  ignoreCollapsed = true,
+}: RemoveNodeAtPathFnParams<T>): RemoveNodeAtPathFnReturnType<T> {
+  return changeNodeAtPath({
+    treeData,
+    path,
+    getNodeKey,
+    ignoreCollapsed,
+    newNode: null,
+  });
 }
