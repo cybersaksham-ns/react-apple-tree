@@ -3,6 +3,8 @@ import {
   ChangeNodeAtPathFnReturnType,
   GetDescendantCountFnParams,
   GetDescendantCountFnReturnType,
+  GetNodeAtPathFnParams,
+  GetNodeAtPathFnReturnType,
   GetNodeDataAtTreeIndexOrNextIndexFnParams,
   GetVisibleNodeCountFnParams,
   GetVisibleNodeCountFnReturnType,
@@ -565,4 +567,41 @@ export function removeNode<T>({
     node: removedNode,
     treeIndex: removedTreeIndex,
   };
+}
+
+/**
+ * Retrieves the node at the specified path in the tree data.
+ *
+ * @template T - The type of the tree node.
+ * @param {GetNodeAtPathFnParams<T>} params - The parameters for retrieving the node.
+ * @param {NumberOrStringArray} params.path - The path to the node in the tree data.
+ * @param {Array<TreeItem<T>>} params.treeData - The tree data.
+ * @param {GetNodeKeyFn<T>} params.getNodeKey - The function to get the key of a node.
+ * @param {boolean} [params.ignoreCollapsed=true] - Whether to ignore collapsed nodes.
+ * @returns {NodeData<T> | null} - The found node information or null if not found.
+ */
+export function getNodeAtPath<T>({
+  treeData,
+  path,
+  getNodeKey,
+  ignoreCollapsed = true,
+}: GetNodeAtPathFnParams<T>): GetNodeAtPathFnReturnType<T> {
+  let foundNodeInfo = null;
+
+  try {
+    changeNodeAtPath({
+      treeData,
+      path,
+      getNodeKey,
+      ignoreCollapsed,
+      newNode: ({ node, treeIndex }) => {
+        foundNodeInfo = { node, treeIndex };
+        return node;
+      },
+    });
+  } catch (err) {
+    return null;
+  }
+
+  return foundNodeInfo;
 }

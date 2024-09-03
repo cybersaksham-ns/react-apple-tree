@@ -364,3 +364,11 @@ export type RemoveNodeFnReturnType<T> = {
   node?: TreeItem<T> | null;
   treeIndex?: number | null;
 };
+
+export interface GetNodeAtPathFnParams<T> {
+  treeData: Array<TreeItem<T>>;
+  path: NumberOrStringArray;
+  getNodeKey: GetNodeKeyFn<T>;
+  ignoreCollapsed?: boolean;
+}
+export type GetNodeAtPathFnReturnType<T> = NodeData<T> | null;
