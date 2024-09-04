@@ -54,6 +54,7 @@ export default function TreeList<T>(props: ReactAppleTreeProps<T>) {
       itemKey={(index, data) => {
         return data[index].mapId;
       }}
+      {...appleTreeProps.reactVirtualizedListProps}
     >
       {ItemRenderer}
     </List>
