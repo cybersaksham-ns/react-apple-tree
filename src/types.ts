@@ -186,11 +186,38 @@ export interface TreeRendererProps<T = {}> {
 }
 
 interface ThemeTreeProps<T = {}> {
+  /**
+   * The style for the tree.
+   * @type {React.CSSProperties}
+   */
   style?: React.CSSProperties | undefined;
+  /**
+   * The style for the inner tree.
+   * @type {React.CSSProperties}
+   */
   innerStyle?: React.CSSProperties | undefined;
+  /**
+   * The props for the virtualized list.
+   * @type {Partial<ListProps>}
+   */
   reactVirtualizedListProps?: Partial<ListProps> | undefined;
+  /**
+   * The width of the scaffold block.
+   * @type {number}
+   * @default 44
+   */
   scaffoldBlockPxWidth?: number | undefined; //
+  /**
+   * The size of the slide region.
+   * @type {number}
+   * @default 100
+   */
   slideRegionSize?: number | undefined;
+  /**
+   * The height of the row.
+   * @type {number}
+   * @default 62
+   */
   rowHeight?: number | undefined; //
   nodeContentRenderer?: NodeRenderer<T> | undefined;
   placeholderRenderer?: PlaceholderRenderer<T> | undefined;
@@ -236,29 +263,240 @@ export type Classname = string | undefined;
 export type IsVirtualized = boolean | undefined;
 
 export interface ReactAppleTreeProps<T = {}> extends ThemeTreeProps<T> {
-  treeData: Array<TreeItem<T>>; //
-  onChange: OnChangeFn<T>; //
-  getNodeKey: GetNodeKeyFn<T>; //
-  generateNodeProps?: GenerateNodePropsFn<T>; //
-  onMoveNode?: OnMoveNodeFn<T>; //
-  onVisibilityToggle?: OnVisibilityToggleFn<T>; //
+  /**
+   * The array of tree items in the form of a tree data structure.
+   *
+   * @type {Array<TreeItem<T>>}
+   */
+  treeData: Array<TreeItem<T>>;
+
+  /**
+   * The callback function triggered when the tree data changes.
+   *
+   * @type {OnChangeFn<T>}
+   * @param {Array<TreeItem<T>>} treeData - The updated tree data.
+   * @returns {void}
+   */
+  onChange: OnChangeFn<T>;
+
+  /**
+   * A function that returns the unique key for each tree node.
+   *
+   * @type {GetNodeKeyFn<T>}
+   * @param {TreeNode & TreeIndex} data - The data of the node.
+   * @property {TreeItem<T>} data.node - The tree node.
+   * @property {number} data.treeIndex - The index of the node in the tree.
+   * @returns {string | number} - The unique key for the node.
+   */
+  getNodeKey: GetNodeKeyFn<T>;
+
+  /**
+   * A function that generates additional props for each tree node.
+   *
+   * @type {GenerateNodePropsFn<T>}
+   * @param {ExtendedNodeData<T>} data - The data of the node.
+   * @property {TreeItem<T>} data.node - The tree node.
+   * @property {number} data.treeIndex - The index of the node in the tree.
+   * @property {NumberOrStringArray} data.path - The path of the node.
+   * @property {TreeItem<T>} data.parentNode - The parent node of the node.
+   * @property {number[]} data.lowerSiblingCounts - The number of siblings below each ancestor of the node.
+   * @property {boolean} data.isSearchMatch - Whether the node is a search match.
+   * @property {boolean} data.isSearchFocus - Whether the node is the search focus.
+   * @returns {ExtendedNodeProps} props - Additional props for the node.
+   * @property {React.ReactNode[]} props.buttons - The buttons for the node.
+   * @property {()=>React.ReactNode} props.title - The title for the node.
+   * @property {React.CSSProperties} props.style - The style for the node.
+   * @property {string} props.className - The class name for the node.
+   */
+  generateNodeProps?: GenerateNodePropsFn<T>;
+
+  /**
+   * A function that is called when a node is moved within the tree.
+   *
+   * @type {OnMoveNodeFn<T>}
+   * @param {NodeData<T> & FullTree<T> & OnMovePreviousAndNextLocation<T>} data - The data of the moved node.
+   * @property {TreeItem<T>} data.node - The moved node.
+   * @property {number} data.treeIndex - The index of the moved node in the tree.
+   * @property {NumberOrStringArray} data.path - The path of the moved node.
+   * @property {Array<TreeItem<T>>} treeData - The updated tree data.
+   * @property {number} data.prevTreeIndex - The previous index of the moved node.
+   * @property {NumberOrStringArray} data.prevPath - The previous path of the moved node.
+   * @property {number} data.nextTreeIndex - The next index of the moved node.
+   * @property {NumberOrStringArray} data.nextPath - The next path of the moved node.
+   * @property {TreeItem<T>} data.nextParentNode - The parent node of the moved node.
+   * @returns {void}
+   */
+  onMoveNode?: OnMoveNodeFn<T>;
+
+  /**
+   * A function that is called when a node's visibility is toggled.
+   *
+   * @type {OnVisibilityToggleFn<T>}
+   * @param {OnVisibilityToggleData<T>} data - The data of the toggled node.
+   * @property {Array<TreeItem<T>>} data.treeData - The updated tree data.
+   * @property {TreeItem<T>} data.node - The toggled node.
+   * @property {boolean} data.expanded - Whether the node is expanded.
+   * @returns {void}
+   */
+  onVisibilityToggle?: OnVisibilityToggleFn<T>;
+
+  /**
+   * A function that is called when the drag state changes for a node.
+   *
+   * @type {OnDragStateChangedFn<T>}
+   * @param {OnDragStateChangedData<T>} data - The data of the drag state.
+   * @property {boolean} data.isDragging - Whether a node is being dragged.
+   * @property {TreeItem<T>} data.draggedNode - The dragged node.
+   * @returns {void}
+   */
   onDragStateChanged?: OnDragStateChangedFn<T>;
+
+  /**
+   * The maximum depth of the tree.
+   *
+   * @type {number}
+   */
   maxDepth?: MaxDepth;
-  rowDirection?: RowDirection; //
-  canDrag?: CanDragFn; //
-  canDrop?: CanDropFn<T>; //
+
+  /**
+   * The direction in which the rows of the tree are rendered.
+   *
+   * @type {RowDirection}
+   * @default "ltr"
+   */
+  rowDirection?: RowDirection;
+
+  /**
+   * A function that determines if a node can be dragged.
+   *
+   * @type {CanDragFn}
+   * @param {ExtendedNodeData} data - The data of the node.
+   * @property {TreeItem<T>} data.node - The tree node.
+   * @property {number} data.treeIndex - The index of the node in the tree.
+   * @property {NumberOrStringArray} data.path - The path of the node.
+   * @property {TreeItem<T>} data.parentNode - The parent node of the node.
+   * @property {number[]} data.lowerSiblingCounts - The number of siblings below each ancestor of the node.
+   * @property {boolean} data.isSearchMatch - Whether the node is a search match.
+   * @property {boolean} data.isSearchFocus - Whether the node is the search focus.
+   * @returns {boolean} - Whether the node can be dragged.
+   */
+  canDrag?: CanDragFn;
+
+  /**
+   * A function that determines if a node can accept a drop.
+   *
+   * @type {CanDropFn<T>}
+   * @param {OnDragPreviousAndNextLocation<T> & NodeData<T>} data - The data of the drop.
+   * @property {TreeItem<T>} data.node - The tree node.
+   * @property {number} data.treeIndex - The index of the node in the tree.
+   * @property {NumberOrStringArray} data.path - The path of the node.
+   * @property {TreeItem<T>} data.prevParent - The parent node of the node before the drop.
+   * @property {TreeItem<T>} data.nextParent - The parent node of the node after the drop.
+   * @returns {boolean} - Whether the node can accept the drop.
+   */
+  canDrop?: CanDropFn<T>;
+
+  /**
+   * A function that determines if a node can have children.
+   *
+   * @type {CanNodeHaveChildrenFn<T>}
+   * @param {TreeItem<T>} node - The tree node.
+   * @returns {boolean} - Whether the node can have children.
+   */
   canNodeHaveChildren?: CanNodeHaveChildrenFn<T>;
+
+  /**
+   * The theme configuration for the tree.
+   *
+   * @type {ThemeProps<T> | undefined}
+   */
   theme?: ThemeProps<T> | undefined;
-  searchMethod?: SearchMethodFn<T>; //
-  searchQuery?: SearchQuery; //
-  searchFocusOffset?: SearchFocusOffset; //
-  onlyExpandSearchedNodes?: OnlyExpandSearchedNodes; //
-  searchFinishCallback?: SearchFinishCallbackFn<T>; //
-  dndType?: DNDType; //
+
+  /**
+   * A function that defines the search method for filtering nodes.
+   *
+   * @type {SearchMethodFn<T>}
+   * @param {SearchData<T>} data - The data of the search.
+   * @property {TreeItem<T>} data.node - The tree node.
+   * @property {number} data.treeIndex - The index of the node in the tree.
+   * @property {NumberOrStringArray} data.path - The path of the node.
+   * @property {string | any} data.searchQuery - The search query.
+   * @returns {boolean} - Whether the node matches the search query.
+   */
+  searchMethod?: SearchMethodFn<T>;
+
+  /**
+   * The search query used to filter nodes.
+   *
+   * @type {string}
+   */
+  searchQuery?: SearchQuery;
+
+  /**
+   * The index of searched items to focus on.
+   *
+   * @type {number}
+   */
+  searchFocusOffset?: SearchFocusOffset;
+
+  /**
+   * Whether only the searched nodes should be expanded.
+   *
+   * @type {boolean}
+   */
+  onlyExpandSearchedNodes?: OnlyExpandSearchedNodes;
+
+  /**
+   * A callback function that is called when the search finishes.
+   *
+   * @type {SearchFinishCallbackFn<T>}
+   * @param {Array<NodeData<T>>} matches - The nodes that match the search query.
+   * @returns {void}
+   */
+  searchFinishCallback?: SearchFinishCallbackFn<T>;
+
+  /**
+   * The type of drag and drop operation.
+   *
+   * @type {DNDType}
+   * @default "REACT_APPLE_TREE_ITEM"
+   */
+  dndType?: DNDType;
+
+  /**
+   * A function that determines if a node should be copied on an outside drop.
+   *
+   * @type {ShouldCopyOnOutsideDropFn<T> | boolean}
+   * @param {ShouldCopyData<T>} data - The data of the node.
+   * @property {TreeNode<T>} data.node - The tree node.
+   * @property {NumberOrStringArray} data.prevPath - The previous path of the node.
+   * @property {number} data.prevTreeIndex - The previous index of the node.
+   * @returns {boolean} - Whether the node should be copied on an outside drop.
+   * @default false
+   */
   shouldCopyOnOutsideDrop?: ShouldCopyOnOutsideDropFn<T>;
-  className?: Classname; //
-  isVirtualized?: IsVirtualized; //
-  dragDropManager?: any; //
+
+  /**
+   * The CSS class name for the component.
+   *
+   * @type {string}
+   */
+  className?: Classname;
+
+  /**
+   * Whether the tree should be virtualized for improved performance.
+   *
+   * @type {boolean}
+   * @default true
+   */
+  isVirtualized?: IsVirtualized;
+
+  /**
+   * The drag and drop manager.
+   *
+   * @type {any}
+   */
+  dragDropManager?: any;
 }
 
 // Export Utility Fucntions
