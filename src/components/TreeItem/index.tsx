@@ -130,8 +130,6 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
     nodeIndex,
     listNode: node,
     nodeElement,
-    shouldRunHoverFunction:
-      !node.draggingNode && !node.dropSuccessNode && !node.dropErrorNode,
     hoverNode,
     completeDrop,
   });
