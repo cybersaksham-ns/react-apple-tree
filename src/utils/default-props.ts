@@ -1,10 +1,11 @@
 import { getReactElementText } from "./common";
 import { ReactAppleTreeProps } from "../types";
-import { DND_TYPE } from "../hooks/dnd";
-
-export const DefaultRowHeight = 62;
-export const DefaultScaffoldBlockPxWidth = 44;
-export const DefaultSlideRegionSize = 100;
+import {
+  DEFAULT_ROW_HEIGHT,
+  DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH,
+  DEFAULT_SLIDE_REGION_SIZE,
+  DEFAULT_DND_TYPE,
+} from "../constants";
 
 export const defaultAppleTreeProps: ReactAppleTreeProps = {
   treeData: [],
@@ -38,9 +39,9 @@ export const defaultAppleTreeProps: ReactAppleTreeProps = {
     return titleMatch || subtitleMatch;
   },
   onlyExpandSearchedNodes: false,
-  dndType: DND_TYPE,
+  dndType: DEFAULT_DND_TYPE,
   isVirtualized: true,
-  rowHeight: DefaultRowHeight,
-  scaffoldBlockPxWidth: DefaultScaffoldBlockPxWidth,
-  slideRegionSize: DefaultSlideRegionSize,
+  rowHeight: DEFAULT_ROW_HEIGHT,
+  scaffoldBlockPxWidth: DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH,
+  slideRegionSize: DEFAULT_SLIDE_REGION_SIZE,
 };

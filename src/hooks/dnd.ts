@@ -12,9 +12,10 @@ import {
 } from "../contexts/DNDContextTypes";
 import { useContext, useState } from "react";
 import { PropDataContext } from "../contexts/PropDataContext";
-import { DefaultScaffoldBlockPxWidth } from "../utils/default-props";
-
-export const DND_TYPE = "REACT_APPLE_TREE_ITEM";
+import {
+  DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH,
+  DEFAULT_DND_TYPE,
+} from "../constants";
 
 interface DragHookProps {
   nodeIndex: number;
@@ -64,7 +65,7 @@ export const useDragHook = ({
   dndType,
 }: DragHookProps): UseDragHookReturnProps => {
   const [{ isDragging }, dragRef, dragPreview] = useDrag({
-    type: dndType || DND_TYPE,
+    type: dndType || DEFAULT_DND_TYPE,
     item: { nodeIndex, listNode },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -108,7 +109,7 @@ export const useDropHook = ({
     any,
     DropHookReturnProps
   >({
-    accept: dndType || DND_TYPE,
+    accept: dndType || DEFAULT_DND_TYPE,
     drop: (item, monitor) => {
       completeDrop();
     },
@@ -128,7 +129,7 @@ export const useDropHook = ({
           const targetHeight = targetRect.height;
           const oneBlockWidth =
             (appleTreeProps.scaffoldBlockPxWidth ||
-              DefaultScaffoldBlockPxWidth) - 5;
+              DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH) - 5;
           let depth =
             Math.sign(offsetX) * Math.floor(Math.abs(offsetX / oneBlockWidth));
           if (depth === -0) {

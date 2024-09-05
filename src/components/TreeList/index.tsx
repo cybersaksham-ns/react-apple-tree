@@ -8,7 +8,7 @@ import ItemRenderer from "./ItemRenderer";
 import TreeItem from "../TreeItem";
 import { SearchContext } from "../../contexts/SearchContext";
 import { StyledNormalList } from "./index.styles";
-import { DefaultRowHeight } from "../../utils/default-props";
+import { DEFAULT_ROW_HEIGHT } from "../../constants";
 
 export default function TreeList<T>(props: ReactAppleTreeProps<T>) {
   const { appleTreeProps, setAppleTreeProps } = useContext(PropDataContext);
@@ -48,7 +48,7 @@ export default function TreeList<T>(props: ReactAppleTreeProps<T>) {
       ref={virtualListRef}
       height={500}
       width={"100%"}
-      itemSize={appleTreeProps.rowHeight || DefaultRowHeight}
+      itemSize={appleTreeProps.rowHeight || DEFAULT_ROW_HEIGHT}
       itemCount={flatTree.length}
       itemData={flatTree}
       itemKey={(index, data) => {
@@ -68,8 +68,8 @@ export default function TreeList<T>(props: ReactAppleTreeProps<T>) {
           style={{
             position: "absolute",
             left: 0,
-            top: (appleTreeProps.rowHeight || DefaultRowHeight) * i,
-            height: `${appleTreeProps.rowHeight || DefaultRowHeight}px`,
+            top: (appleTreeProps.rowHeight || DEFAULT_ROW_HEIGHT) * i,
+            height: `${appleTreeProps.rowHeight || DEFAULT_ROW_HEIGHT}px`,
             width: "100%",
           }}
         />
