@@ -38,6 +38,8 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
   const { appleTreeProps } = useContext(PropDataContext);
   const { treeMap, expandOrCollapseNode } = useContext(TreeDataContext);
   const {
+    isDraggingNode,
+    setIsDraggingNode,
     draggingNodeInformation,
     dropzoneInformation,
     startDrag,
@@ -141,12 +143,28 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
       if (
         dropzoneInformation &&
         draggingNodeInformation &&
+        !draggingNodeInformation.externalDrag &&
         node.mapId === draggingNodeInformation.flatNode.mapId
       ) {
         completeDrop();
+        setIsDraggingNode(false);
       }
     }
   }, [isDragging]);
+
+  useEffect(() => {
+    if (isDraggingNode) {
+    } else {
+      if (
+        dropzoneInformation &&
+        draggingNodeInformation &&
+        draggingNodeInformation.externalDrag &&
+        node.mapId === draggingNodeInformation.flatNode.mapId
+      ) {
+        completeDrop(true);
+      }
+    }
+  }, [isDraggingNode]);
 
   return (
     <StyledTreeItemRow

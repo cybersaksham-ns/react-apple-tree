@@ -17,6 +17,7 @@ export type DraggingNodeInformation = {
   dragStartIndex: number;
   dragStartDepth: number;
   initialExpanded?: boolean;
+  externalDrag?: boolean;
 };
 
 export type DropZoneInformation = {
@@ -41,4 +42,5 @@ export interface OnHoverNodeProps {
   flatNode: FlatTreeItem;
   direction: NodeAppendDirection;
   depth: number;
+  draggingNodeInformation?: DraggingNodeInformation;
 }

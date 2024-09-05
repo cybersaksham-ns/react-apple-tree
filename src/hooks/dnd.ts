@@ -9,6 +9,7 @@ import { FlatTreeItem } from "../types";
 import {
   OnHoverNodeProps,
   NodeAppendDirection,
+  DraggingNodeInformation,
 } from "../contexts/DNDContextTypes";
 import { useContext, useState } from "react";
 import { PropDataContext } from "../contexts/PropDataContext";
@@ -16,11 +17,14 @@ import {
   DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH,
   DEFAULT_DND_TYPE,
 } from "../constants";
+import { DNDContext } from "../contexts/DNDContext";
+import cloneDeep from "lodash.clonedeep";
 
 interface DragHookProps {
   nodeIndex: number;
   listNode: FlatTreeItem;
   dndType?: string;
+  draggingNodeInformation?: DraggingNodeInformation;
 }
 
 interface UseDragHookReturnProps {
@@ -64,9 +68,20 @@ export const useDragHook = ({
   listNode,
   dndType,
 }: DragHookProps): UseDragHookReturnProps => {
+  const { getDraggingNodeInformationFromNodeIndex } = useContext(DNDContext);
+  const draggingNodeInformation =
+    getDraggingNodeInformationFromNodeIndex(nodeIndex);
+
   const [{ isDragging }, dragRef, dragPreview] = useDrag({
     type: dndType || DEFAULT_DND_TYPE,
-    item: { nodeIndex, listNode },
+    item: {
+      nodeIndex,
+      listNode,
+      draggingNodeInformation: cloneDeep({
+        ...draggingNodeInformation,
+        externalDrag: true,
+      }),
+    },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -143,6 +158,7 @@ export const useDropHook = ({
                 direction: NodeAppendDirection.Below,
                 nodeIndex,
                 flatNode: listNode,
+                draggingNodeInformation: item.draggingNodeInformation,
               });
             } else {
               hoverNode({
@@ -150,6 +166,7 @@ export const useDropHook = ({
                 direction: NodeAppendDirection.Above,
                 nodeIndex,
                 flatNode: listNode,
+                draggingNodeInformation: item.draggingNodeInformation,
               });
             }
           } else {
