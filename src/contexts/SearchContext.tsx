@@ -56,11 +56,11 @@ const SearchContextProvider = (
         );
       }
       if (appleTreeProps.searchQuery && appleTreeProps.searchMethod) {
-        let newSearchedNodeMap: SearchedNodeMap = {};
+        const newSearchedNodeMap: SearchedNodeMap = {};
         let treeIndexStack: Array<number> = [-1];
         let siblingStack: Array<number> = [];
         let lastDepth = 1;
-        let path: NumberOrStringArray = [];
+        const path: NumberOrStringArray = [];
         dfs({
           treeData: appleTreeProps.treeData,
           callback: (node: TreeItem) => {

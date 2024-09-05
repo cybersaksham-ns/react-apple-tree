@@ -49,7 +49,7 @@ export function expandNode<T>(
   flatTree: Array<FlatTreeItem>,
   getNodeKey: GetNodeKeyFn<T>
 ): [TreeMap, Array<FlatTreeItem>] {
-  let idx = flatTree.findIndex((el) => el.mapId === nodeKey);
+  const idx = flatTree.findIndex((el) => el.mapId === nodeKey);
   if (idx !== -1 && !node.expanded) {
     node.expanded = true;
     const [map, flatArray] = flattenTreeData(
@@ -70,14 +70,14 @@ export function collapseNode<T>(
   treeMap: TreeMap,
   flatTree: Array<FlatTreeItem>
 ): Array<FlatTreeItem> {
-  let idx = flatTree.findIndex((el) => el.mapId === nodeKey);
+  const idx = flatTree.findIndex((el) => el.mapId === nodeKey);
   if (idx !== -1 && node.expanded) {
     node.expanded = false;
-    let nodeData = flatTree[idx];
-    let start = idx;
+    const nodeData = flatTree[idx];
+    const start = idx;
     let end = idx + 1;
     while (end < flatTree.length) {
-      let child = flatTree[end];
+      const child = flatTree[end];
       if (calculateNodeDepth(child) > calculateNodeDepth(nodeData)) {
         treeMap[child.mapId].expanded = false;
         end += 1;
@@ -121,15 +121,15 @@ export function getParentKeyAndSiblingCountFromList(
   flatTree: Array<FlatTreeItem>,
   nodeIndex: number
 ): [NodeKey | null, number] {
-  let flatNode = flatTree[nodeIndex];
-  let nodeDepth = calculateNodeDepth(flatNode);
+  const flatNode = flatTree[nodeIndex];
+  const nodeDepth = calculateNodeDepth(flatNode);
 
   let parentKey: NodeKey | null = null;
   let siblingCount = 0;
 
   let start = nodeIndex - 1;
   while (start >= 0) {
-    let sibling = flatTree[start];
+    const sibling = flatTree[start];
     if (calculateNodeDepth(sibling) === nodeDepth) {
       siblingCount++;
     } else if (calculateNodeDepth(sibling) < nodeDepth) {
@@ -153,12 +153,12 @@ export function moveNodeToDifferentParent(
   siblingIndex: number,
   getNodeKey: GetNodeKeyFn
 ): Array<TreeItem> {
-  let treeNode = treeMap[nodeKey];
+  const treeNode = treeMap[nodeKey];
 
   // Removing given node from previous parent
-  let prevParent = prevParentKey ? treeMap[prevParentKey] : null;
+  const prevParent = prevParentKey ? treeMap[prevParentKey] : null;
   let prevChildren = prevParent ? prevParent.children || [] : treeData;
-  let idx = prevChildren.findIndex(
+  const idx = prevChildren.findIndex(
     (node) => nodeKey === getNodeKey({ node, treeIndex: -1 })
   );
   prevChildren = removeItemAtGivenIndexFromArray(prevChildren, idx);
@@ -169,7 +169,7 @@ export function moveNodeToDifferentParent(
   }
 
   // Appendig to next parent
-  let nextParent = nextParentKey ? treeMap[nextParentKey] : null;
+  const nextParent = nextParentKey ? treeMap[nextParentKey] : null;
   let nextChildren: Array<TreeItem> = nextParent
     ? nextParent.children || []
     : treeData;

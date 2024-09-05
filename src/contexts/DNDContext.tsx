@@ -130,7 +130,7 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
       tmpDropIndex = 0;
       dropNodeDepth = 1;
     } else {
-      let prevDepth = calculateNodeDepth(flatTree[tmpDropIndex - 1]);
+      const prevDepth = calculateNodeDepth(flatTree[tmpDropIndex - 1]);
       if (dropNodeDepth <= prevDepth) {
         dropNodeDepth = prevDepth;
       } else {
@@ -138,12 +138,12 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
       }
     }
 
-    let hoverDropDepth = dropNodeDepth;
+    const hoverDropDepth = dropNodeDepth;
 
     // Expanding previous node
     if (hoverDropIndex > 0) {
-      let prevNode = newFlatList[hoverDropIndex - 1];
-      let prevTreeNode = treeMap[prevNode.mapId];
+      const prevNode = newFlatList[hoverDropIndex - 1];
+      const prevTreeNode = treeMap[prevNode.mapId];
       if (calculateNodeDepth(prevNode) < hoverDropDepth) {
         const [map, updatedFlatList] = expandNode(
           prevNode.mapId,
@@ -189,7 +189,7 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
     let nextParentPath: NumberOrStringArray = [];
     if (parentKey) {
       nextParent = treeMap[parentKey];
-      let nextParentIndex = newFlatList.findIndex(
+      const nextParentIndex = newFlatList.findIndex(
         (node) => node.mapId === parentKey
       );
       if (nextParentIndex !== -1) {
@@ -197,7 +197,7 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
       }
     }
 
-    let moveNodeData = {
+    const moveNodeData = {
       node: draggingNodeInformation.treeNode,
       path: [...nextParentPath, draggingNodeInformation.flatNode.mapId],
       treeIndex: draggingNodeInformation.dragStartIndex,
@@ -213,7 +213,7 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
     }
 
     // Creating new dropzone node
-    let newFlatNode: FlatTreeItem = {
+    const newFlatNode: FlatTreeItem = {
       ...draggingNodeInformation.flatNode,
       forcedDepth: hoverDropDepth,
     };
@@ -254,7 +254,7 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
   // Node is dropped
   function completeDrop() {
     if (draggingNodeInformation && dropzoneInformation) {
-      let newTree = moveNodeToDifferentParent(
+      const newTree = moveNodeToDifferentParent(
         appleTreeProps.treeData,
         treeMap,
         draggingNodeInformation.flatNode.mapId,
