@@ -2,6 +2,12 @@ export function classnames(...classes: Array<string | undefined>): string {
   return classes.filter((el) => el).join(" ");
 }
 
+/**
+ * Generates a unique ID.
+ *
+ * @param length - The length of the generated ID. Default is 16.
+ * @returns A string representing the generated unique ID.
+ */
 export function generateUniqueId(length = 16): string {
   const characters =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -17,6 +23,12 @@ export function generateUniqueId(length = 16): string {
   return timestamp + id;
 }
 
+/**
+ * Retrieves the text content of a React element.
+ *
+ * @param parent - The parent React element.
+ * @returns The text content of the React element.
+ */
 export function getReactElementText(parent: any): string {
   if (typeof parent === "string") {
     return parent;
