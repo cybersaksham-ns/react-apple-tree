@@ -6,6 +6,10 @@ import {
   TreeItem,
   TreeMap,
 } from "../types";
+import {
+  insertItemIntoArrayAtGivenIndex,
+  removeItemAtGivenIndexFromArray,
+} from "./common";
 
 export function flattenNode<T>(
   treeData: Array<TreeItem<T>>,
@@ -155,16 +159,13 @@ export function moveNodeToDifferentParent(
 ): Array<TreeItem> {
   let treeNode = treeMap[nodeKey];
 
-  // Removing from previous parent
+  // Removing given node from previous parent
   let prevParent = prevParentKey ? treeMap[prevParentKey] : null;
   let prevChildren = prevParent ? prevParent.children || [] : treeData;
   let idx = prevChildren.findIndex(
     (node) => nodeKey === getNodeKey({ node, treeIndex: -1 })
   );
-  prevChildren = [
-    ...prevChildren.slice(0, idx),
-    ...prevChildren.slice(idx + 1),
-  ];
+  prevChildren = removeItemAtGivenIndexFromArray(prevChildren, idx);
   if (prevParent) {
     prevParent.children = prevChildren;
   } else {
@@ -176,11 +177,11 @@ export function moveNodeToDifferentParent(
   let nextChildren: Array<TreeItem> = nextParent
     ? nextParent.children || []
     : treeData;
-  nextChildren = [
-    ...nextChildren.slice(0, siblingIndex),
+  nextChildren = insertItemIntoArrayAtGivenIndex(
+    nextChildren,
     treeNode,
-    ...nextChildren.slice(siblingIndex),
-  ];
+    siblingIndex
+  );
   if (nextParent) {
     nextParent.children = nextChildren;
   } else {

@@ -20,6 +20,7 @@ import {
   getParentKeyAndSiblingCountFromList,
   moveNodeToDifferentParent,
 } from "../utils/node-operations";
+import { removeItemAtGivenIndexFromArray } from "../utils/common";
 
 interface DNDContextProps {
   draggingNodeInformation: DraggingNodeInformation | null;
@@ -46,16 +47,6 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
     useState<DraggingNodeInformation | null>(null);
   const [dropzoneInformation, setDropzoneInformation] =
     useState<DropZoneInformation | null>(null);
-
-  function removeNodeFromFlatList(
-    nodeIndex: number,
-    initialList: Array<FlatTreeItem>
-  ) {
-    return [
-      ...initialList.slice(0, nodeIndex),
-      ...initialList.slice(nodeIndex + 1),
-    ];
-  }
 
   // When drag start on any node
   function startDrag(params: StartDragProps) {
@@ -91,9 +82,9 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
       newFlatList[draggingNodeInformation.dragStartIndex].mapId ===
       draggingNodeInformation.flatNode.mapId
     ) {
-      newFlatList = removeNodeFromFlatList(
-        draggingNodeInformation.dragStartIndex,
-        newFlatList
+      newFlatList = removeItemAtGivenIndexFromArray(
+        newFlatList,
+        draggingNodeInformation.dragStartIndex
       );
       if (hoverDropIndex > draggingNodeInformation.dragStartIndex) {
         hoverDropIndex -= 1;
@@ -107,9 +98,9 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
       newFlatList[dropzoneInformation.dropIndex].mapId ===
         dropzoneInformation.flatNode.mapId
     ) {
-      newFlatList = removeNodeFromFlatList(
-        dropzoneInformation.dropIndex,
-        newFlatList
+      newFlatList = removeItemAtGivenIndexFromArray(
+        newFlatList,
+        dropzoneInformation.dropIndex
       );
       if (hoverDropIndex > dropzoneInformation.dropIndex) {
         hoverDropIndex -= 1;
