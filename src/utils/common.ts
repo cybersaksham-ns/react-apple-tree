@@ -1,3 +1,9 @@
+/**
+ * Concatenates the provided class names into a single string.
+ *
+ * @param classes - An array of class names to be concatenated.
+ * @returns A string containing all the non-empty class names separated by a space.
+ */
 export function classnames(...classes: Array<string | undefined>): string {
   return classes.filter((el) => el).join(" ");
 }
@@ -77,20 +83,20 @@ export function removeItemAtGivenIndexFromArray<T>(
  *
  * @template T - The type of the array elements.
  * @param {T[]} array - The array to insert the item into.
- * @param {T} item - The item to insert into the array.
  * @param {number} index - The index at which to insert the item.
+ * @param {T} items - The items to insert into the array.
  * @returns {T[]} - The updated array with the item inserted.
  */
-export function insertItemIntoArrayAtGivenIndex<T>(
+export function insertItemsIntoArrayAtGivenIndex<T>(
   array: T[],
-  item: T,
-  index: number
+  index: number,
+  ...items: T[]
 ): T[] {
   if (index === null || index === undefined || index > array.length) {
-    return [...array, item];
+    return [...array, ...items];
   }
   if (index < 0) {
-    return [item, ...array];
+    return [...items, ...array];
   }
-  return [...array.slice(0, index), item, ...array.slice(index)];
+  return [...array.slice(0, index), ...items, ...array.slice(index)];
 }

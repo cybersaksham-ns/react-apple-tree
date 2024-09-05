@@ -16,7 +16,7 @@ import {
 import {
   calculateNodeDepth,
   collapseNode,
-  expandNodeOneLevelUtils,
+  expandNode,
   getParentKeyAndSiblingCountFromList,
   moveNodeToDifferentParent,
 } from "../utils/node-operations";
@@ -145,7 +145,7 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
       let prevNode = newFlatList[hoverDropIndex - 1];
       let prevTreeNode = treeMap[prevNode.mapId];
       if (calculateNodeDepth(prevNode) < hoverDropDepth) {
-        const [map, updatedFlatList] = expandNodeOneLevelUtils(
+        const [map, updatedFlatList] = expandNode(
           prevNode.mapId,
           prevTreeNode,
           treeMap,

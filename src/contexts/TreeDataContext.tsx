@@ -3,8 +3,8 @@ import { ContextProviderProps, FlatTreeItem, NodeKey, TreeMap } from "../types";
 import { PropDataContext } from "./PropDataContext";
 import {
   collapseNode,
-  expandNodeOneLevelUtils,
-  flattenNode,
+  expandNode,
+  flattenTreeData,
 } from "../utils/node-operations";
 
 interface TreeContextProps {
@@ -32,7 +32,7 @@ const TreeDataContextProvider = (
 
   useMemo(() => {
     if (appleTreeProps && appleTreeProps.treeData) {
-      const [map, flatArray] = flattenNode(
+      const [map, flatArray] = flattenTreeData(
         appleTreeProps.treeData,
         appleTreeProps.getNodeKey
       );
@@ -43,7 +43,7 @@ const TreeDataContextProvider = (
 
   function expandOrCollapseNode(nodeKey: NodeKey) {
     if (!treeMap[nodeKey].expanded) {
-      const [map, flatArray] = expandNodeOneLevelUtils(
+      const [map, flatArray] = expandNode(
         nodeKey,
         treeMap[nodeKey],
         treeMap,

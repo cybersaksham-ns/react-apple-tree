@@ -7,11 +7,11 @@ import {
   TreeMap,
 } from "../types";
 import {
-  insertItemIntoArrayAtGivenIndex,
+  insertItemsIntoArrayAtGivenIndex,
   removeItemAtGivenIndexFromArray,
 } from "./common";
 
-export function flattenNode<T>(
+export function flattenTreeData<T>(
   treeData: Array<TreeItem<T>>,
   getNodeKey: GetNodeKeyFn<T>,
   initialPath: NumberOrStringArray = [],
@@ -20,7 +20,7 @@ export function flattenNode<T>(
   const flattenedArray: Array<FlatTreeItem> = [];
   const map: TreeMap = {};
 
-  const flatten = (
+  const flattenNode = (
     node: TreeItem<T>,
     path: NumberOrStringArray = [],
     parentKey: NodeKey | null,
@@ -33,16 +33,16 @@ export function flattenNode<T>(
     }
 
     (node.children || []).forEach((child) =>
-      flatten(child, [...path, mapId], mapId, !!node.expanded)
+      flattenNode(child, [...path, mapId], mapId, !!node.expanded)
     );
   };
 
-  treeData.forEach((node) => flatten(node, initialPath, parentKey));
+  treeData.forEach((node) => flattenNode(node, initialPath, parentKey));
 
   return [map, flattenedArray];
 }
 
-export function expandNodeOneLevelUtils<T>(
+export function expandNode<T>(
   nodeKey: NodeKey,
   node: TreeItem<T>,
   treeMap: TreeMap,
@@ -52,18 +52,14 @@ export function expandNodeOneLevelUtils<T>(
   let idx = flatTree.findIndex((el) => el.mapId === nodeKey);
   if (idx !== -1 && !node.expanded) {
     node.expanded = true;
-    const [map, flatArray] = flattenNode(
+    const [map, flatArray] = flattenTreeData(
       [node],
       getNodeKey,
       flatTree[idx].path.slice(0, -1),
       flatTree[idx].parentKey
     );
     treeMap = { ...treeMap, ...map };
-    flatTree = [
-      ...flatTree.slice(0, idx),
-      ...flatArray,
-      ...flatTree.slice(idx + 1),
-    ];
+    flatTree = insertItemsIntoArrayAtGivenIndex(flatTree, idx, ...flatArray);
   }
   return [treeMap, flatTree];
 }
@@ -177,10 +173,10 @@ export function moveNodeToDifferentParent(
   let nextChildren: Array<TreeItem> = nextParent
     ? nextParent.children || []
     : treeData;
-  nextChildren = insertItemIntoArrayAtGivenIndex(
+  nextChildren = insertItemsIntoArrayAtGivenIndex(
     nextChildren,
-    treeNode,
-    siblingIndex
+    siblingIndex,
+    treeNode
   );
   if (nextParent) {
     nextParent.children = nextChildren;

@@ -11,10 +11,7 @@ import {
 import { dfs } from "../utils/tree-traversal";
 import { PropDataContext } from "./PropDataContext";
 import { TreeDataContext } from "./TreeDataContext";
-import {
-  collapseTree,
-  expandNodeOneLevelUtils,
-} from "../utils/node-operations";
+import { collapseTree, expandNode } from "../utils/node-operations";
 import cloneDeep from "lodash.clonedeep";
 
 interface SearchContextProps {
@@ -93,7 +90,7 @@ const SearchContextProvider = (
                 });
                 newSearchedNodeMap[key] = true;
                 path.slice(0, path.length - 1).forEach((nodeKey) => {
-                  const [map, flatArray] = expandNodeOneLevelUtils(
+                  const [map, flatArray] = expandNode(
                     nodeKey,
                     newTreeMap[nodeKey],
                     newTreeMap,
