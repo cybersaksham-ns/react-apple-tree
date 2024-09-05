@@ -59,7 +59,11 @@ export function expandNode<T>(
       flatTree[idx].parentKey
     );
     treeMap = { ...treeMap, ...map };
-    flatTree = insertItemsIntoArrayAtGivenIndex(flatTree, idx, ...flatArray);
+    flatTree = [
+      ...flatTree.slice(0, idx),
+      ...flatArray,
+      ...flatTree.slice(idx + 1),
+    ];
   }
   return [treeMap, flatTree];
 }
