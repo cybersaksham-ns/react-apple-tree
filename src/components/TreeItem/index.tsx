@@ -47,8 +47,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
   const [parentNode, setParentNode] = useState(
     treeMap[node.path[node.path.length - 1]]
   );
-
-  const extendedNodeData: ExtendedNodeData = {
+  const [extendedNodeData, setExtendedNodeData] = useState<ExtendedNodeData>({
     node: treeNode,
     isSearchFocus: false,
     isSearchMatch: false,
@@ -56,12 +55,26 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
     parentNode,
     path: node.path,
     treeIndex: nodeIndex,
-  };
+  });
   const [nodePropsData, setNodePropsData] = useState<ExtendedNodeProps>({});
-
   const [canDragNode, setCanDragNode] = useState(true);
 
-  const checkDrag = () => {
+  useEffect(() => {
+    setExtendedNodeData({
+      node: treeNode,
+      isSearchFocus:
+        typeof appleTreeProps.searchFocusOffset === "number" &&
+        !!searchedNodeMap[node.mapId] &&
+        searchedNodeIndex === nodeIndex,
+      isSearchMatch: !!searchedNodeMap[node.mapId],
+      lowerSiblingCounts: [],
+      parentNode,
+      path: node.path,
+      treeIndex: nodeIndex,
+    });
+  }, [treeNode, searchedNodeIndex, searchedNodeMap]);
+
+  useEffect(() => {
     if (typeof appleTreeProps.canDrag !== "undefined") {
       const checkDrag = checkCanDragNode(
         appleTreeProps.canDrag,
@@ -69,7 +82,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
       );
       setCanDragNode(checkDrag);
     }
-  };
+  }, [appleTreeProps.canDrag, extendedNodeData]);
 
   useEffect(() => {
     setTreeNode(treeMap[node.mapId]);
@@ -77,11 +90,10 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
   }, [node, treeMap]);
 
   useMemo(() => {
-    if (appleTreeProps.generateNodeProps && parentNode !== treeNode) {
+    if (appleTreeProps.generateNodeProps) {
       setNodePropsData(appleTreeProps.generateNodeProps(extendedNodeData));
     }
-    checkDrag();
-  }, [node, appleTreeProps, treeNode, nodeIndex, parentNode]);
+  }, [appleTreeProps.generateNodeProps, extendedNodeData]);
 
   useEffect(() => {
     if (appleTreeProps.onVisibilityToggle) {
