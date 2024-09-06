@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import {
   DropZoneValues,
+  StyledHighlightedLineBlockProps,
   StyledLineBlockProps,
   StyledRowMainButtonProps,
   StyledRowMainContentWrapperProps,
@@ -36,20 +37,7 @@ const StyledLineBlock = styled.div<StyledLineBlockProps>`
   }
 `;
 
-export const StyledEmptyBlock = styled(StyledLineBlock)`
-  ${({ $highlighted }) =>
-    $highlighted &&
-    css`
-      &::after {
-        background-color: var(--ns-rat-special-line-color);
-        width: 5px;
-        height: 100%;
-        top: 0;
-        left: calc(50% - 2px);
-        z-index: 1;
-      }
-    `}
-`;
+export const StyledEmptyBlock = styled(StyledLineBlock)``;
 
 export const StyledVerticalLineBlock = styled(StyledLineBlock)`
   &::after {
@@ -58,17 +46,6 @@ export const StyledVerticalLineBlock = styled(StyledLineBlock)`
     left: 50%;
     top: 0;
   }
-
-  ${({ $highlighted }) =>
-    $highlighted &&
-    css`
-      &::after {
-        background-color: var(--ns-rat-special-line-color);
-        width: 5px;
-        left: calc(50% - 2px);
-        z-index: 1;
-      }
-    `}
 `;
 
 export const StyledHorizontalLineBlock = styled(StyledLineBlock)`
@@ -78,16 +55,6 @@ export const StyledHorizontalLineBlock = styled(StyledLineBlock)`
     right: 0;
     top: 50%;
   }
-
-  ${({ $highlighted }) =>
-    $highlighted &&
-    css`
-      &::before {
-        background-color: var(--ns-rat-special-line-color);
-        height: 5px;
-        z-index: 1;
-      }
-    `}
 `;
 
 export const StyledVerticalAndHorizontalLineBlock = styled(StyledLineBlock)`
@@ -103,22 +70,56 @@ export const StyledVerticalAndHorizontalLineBlock = styled(StyledLineBlock)`
     right: 0;
     top: 50%;
   }
+`;
 
-  ${({ $highlighted }) =>
-    $highlighted &&
+export const StlyedHighlightedLineBlock = styled(
+  StyledLineBlock
+)<StyledHighlightedLineBlockProps>`
+  &::after {
+    z-index: 1;
+    background-color: var(--ns-rat-special-line-color);
+    width: 5px;
+    left: calc(50% - 2px);
+  }
+  &::before {
+    z-index: 1;
+    background-color: var(--ns-rat-special-line-color);
+    height: 5px;
+    right: 0;
+  }
+  ${({ $position }) =>
+    $position === "start" &&
     css`
       &::after {
-        background-color: var(--ns-rat-special-line-color);
-        width: 5px;
         height: 50%;
         top: 50%;
-        left: calc(50% - 2px);
-        z-index: 1;
       }
       &::before {
-        background-color: var(--ns-rat-special-line-color);
-        height: 5px;
-        z-index: 1;
+        width: 50%;
+        top: 50%;
+      }
+    `}
+  ${({ $position }) =>
+    $position === "mid" &&
+    css`
+      &::after {
+        height: 100%;
+        top: 0;
+      }
+      &::before {
+        width: 0;
+      }
+    `}
+  ${({ $position }) =>
+    $position === "end" &&
+    css`
+      &::after {
+        height: 100%;
+        top: 0;
+      }
+      &::before {
+        width: 50%;
+        bottom: 0;
       }
     `}
 `;

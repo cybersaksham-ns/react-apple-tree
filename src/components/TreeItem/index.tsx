@@ -1,17 +1,12 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
-  StyledEmptyBlock,
-  StyledHorizontalLineBlock,
   StyledRowButtonsWrapper,
   StyledRowDragIcon,
   StyledRowMainButton,
   StyledRowMainContentWrapper,
   StyledRowTitleContentWrapper,
   StyledTreeItemContent,
-  StyledTreeItemIndentation,
   StyledTreeItemRow,
-  StyledVerticalAndHorizontalLineBlock,
-  StyledVerticalLineBlock,
 } from "./index.styles";
 import { TreeDataContext } from "../../contexts/TreeDataContext";
 import { PropDataContext } from "../../contexts/PropDataContext";
@@ -20,14 +15,13 @@ import { ExtendedNodeData, ExtendedNodeProps, FlatTreeItem } from "../../types";
 import { useDragHook, useDropHook } from "../../hooks/dnd";
 import DragHandle from "../../assets/DragHandle";
 import { DropZoneValues } from "./types";
-import { calculateNodeDepth } from "../../utils/node-operations";
 import { checkCanDragNode } from "../../utils/prop-utils";
 import { SearchContext } from "../../contexts/SearchContext";
 import {
   DEFAULT_ROW_HEIGHT,
   DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH,
 } from "../../constants";
-import { getActualDropLineInformation } from "../../utils/node-style";
+import TreeItemIndentation from "./TreeItemIndentation";
 
 interface TreeItemComponentProps {
   style?: React.CSSProperties;
@@ -49,7 +43,6 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
   } = useContext(DNDContext);
   const { searchedNodeMap, searchedNodeIndex } = useContext(SearchContext);
 
-  const [depth, setDepth] = useState(calculateNodeDepth(node) - 1);
   const [treeNode, setTreeNode] = useState(treeMap[node.mapId]);
   const [parentNode, setParentNode] = useState(
     treeMap[node.path[node.path.length - 1]]
@@ -68,13 +61,6 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
 
   const [canDragNode, setCanDragNode] = useState(true);
 
-  const {
-    startActualDropLine,
-    midActualDropLine,
-    endActualDropLine,
-    actualDropLineDepth,
-  } = getActualDropLineInformation(nodeIndex, dropzoneInformation);
-
   const checkDrag = async () => {
     if (typeof appleTreeProps.canDrag !== "undefined") {
       const checkDrag = await checkCanDragNode(
@@ -86,7 +72,6 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
   };
 
   useEffect(() => {
-    setDepth(calculateNodeDepth(node) - 1);
     setTreeNode(treeMap[node.mapId]);
     setParentNode(treeMap[node.path[node.path.length - 2]]);
   }, [node, treeMap]);
@@ -159,52 +144,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
       $rowHeight={appleTreeProps.rowHeight || DEFAULT_ROW_HEIGHT}
       ref={(node) => dropRef(node)}
     >
-      <StyledTreeItemIndentation>
-        {depth > 0 ? (
-          <StyledEmptyBlock
-            $scaffoldWidth={
-              appleTreeProps.scaffoldBlockPxWidth ||
-              DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH
-            }
-            $highlighted={
-              actualDropLineDepth === 0 &&
-              (startActualDropLine || midActualDropLine || endActualDropLine)
-            }
-          />
-        ) : (
-          <></>
-        )}
-        {depth > 0 &&
-          Array.from(new Array(depth - 1)).map((el, i) => (
-            <StyledVerticalLineBlock
-              key={`rat_item_indentation_${node.mapId}_${i}`}
-              $scaffoldWidth={
-                appleTreeProps.scaffoldBlockPxWidth ||
-                DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH
-              }
-              $highlighted={
-                actualDropLineDepth === i + 1 &&
-                (startActualDropLine || midActualDropLine || endActualDropLine)
-              }
-            />
-          ))}
-        {depth === 0 ? (
-          <StyledHorizontalLineBlock
-            $scaffoldWidth={
-              appleTreeProps.scaffoldBlockPxWidth ||
-              DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH
-            }
-          />
-        ) : (
-          <StyledVerticalAndHorizontalLineBlock
-            $scaffoldWidth={
-              appleTreeProps.scaffoldBlockPxWidth ||
-              DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH
-            }
-            $highlighted={startActualDropLine}
-          />
-        )}
-      </StyledTreeItemIndentation>
+      <TreeItemIndentation nodeIndex={nodeIndex} node={node} />
       <StyledTreeItemContent ref={nodeElement}>
         {treeNode.children && treeNode.children.length > 0 && (
           <StyledRowMainButton

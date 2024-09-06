@@ -7,7 +7,12 @@ export interface StyledTreeItemRowProps {
 
 export interface StyledLineBlockProps {
   $scaffoldWidth: number;
-  $highlighted?: boolean | null;
+}
+
+export type highlightedLinePosition = "start" | "mid" | "end";
+
+export interface StyledHighlightedLineBlockProps {
+  $position: highlightedLinePosition;
 }
 
 export interface StyledRowMainButtonProps {
