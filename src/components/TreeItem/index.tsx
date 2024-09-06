@@ -61,9 +61,9 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
 
   const [canDragNode, setCanDragNode] = useState(true);
 
-  const checkDrag = async () => {
+  const checkDrag = () => {
     if (typeof appleTreeProps.canDrag !== "undefined") {
-      const checkDrag = await checkCanDragNode(
+      const checkDrag = checkCanDragNode(
         appleTreeProps.canDrag,
         extendedNodeData
       );
