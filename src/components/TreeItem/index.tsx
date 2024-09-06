@@ -27,6 +27,7 @@ import {
   DEFAULT_ROW_HEIGHT,
   DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH,
 } from "../../constants";
+import { getActualDropLineInformation } from "../../utils/node-style";
 
 interface TreeItemComponentProps {
   style?: React.CSSProperties;
@@ -67,27 +68,12 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
 
   const [canDragNode, setCanDragNode] = useState(true);
 
-  const showActualDropLines = dropzoneInformation
-    ? dropzoneInformation.actualDropIndex ||
-      -1 > dropzoneInformation.dropIndex + 1
-    : false;
-  const startActualDropLine =
-    showActualDropLines &&
-    dropzoneInformation &&
-    nodeIndex === dropzoneInformation.dropIndex;
-  const midActualDropLine =
-    showActualDropLines &&
-    dropzoneInformation &&
-    nodeIndex > dropzoneInformation.dropIndex &&
-    nodeIndex + 1 < (dropzoneInformation.actualDropIndex || -1);
-  const endActualDropLine =
-    showActualDropLines &&
-    dropzoneInformation &&
-    nodeIndex + 1 === dropzoneInformation.actualDropIndex;
-  const checkMultipleDropLine =
-    (startActualDropLine && midActualDropLine) ||
-    (startActualDropLine && endActualDropLine) ||
-    (midActualDropLine && endActualDropLine);
+  const {
+    startActualDropLine,
+    midActualDropLine,
+    endActualDropLine,
+    actualDropLineDepth,
+  } = getActualDropLineInformation(nodeIndex, dropzoneInformation);
 
   const checkDrag = async () => {
     if (typeof appleTreeProps.canDrag !== "undefined") {
@@ -180,6 +166,10 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
               appleTreeProps.scaffoldBlockPxWidth ||
               DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH
             }
+            $highlighted={
+              actualDropLineDepth === 0 &&
+              (startActualDropLine || midActualDropLine || endActualDropLine)
+            }
           />
         ) : (
           <></>
@@ -191,6 +181,10 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
               $scaffoldWidth={
                 appleTreeProps.scaffoldBlockPxWidth ||
                 DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH
+              }
+              $highlighted={
+                actualDropLineDepth === i + 1 &&
+                (startActualDropLine || midActualDropLine || endActualDropLine)
               }
             />
           ))}
@@ -207,6 +201,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
               appleTreeProps.scaffoldBlockPxWidth ||
               DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH
             }
+            $highlighted={startActualDropLine}
           />
         )}
       </StyledTreeItemIndentation>

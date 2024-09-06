@@ -7,6 +7,7 @@ export interface StyledTreeItemRowProps {
 
 export interface StyledLineBlockProps {
   $scaffoldWidth: number;
+  $highlighted?: boolean | null;
 }
 
 export interface StyledRowMainButtonProps {
