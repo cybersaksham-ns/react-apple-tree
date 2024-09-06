@@ -146,7 +146,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
         !draggingNodeInformation.externalDrag &&
         node.mapId === draggingNodeInformation.flatNode.mapId
       ) {
-        completeDrop();
+        completeDrop(true);
         setIsDraggingNode(false);
       }
     }
