@@ -143,8 +143,8 @@ export const useDropHook = ({
           const offsetY = clientOffset.y - targetRect.top;
           const targetHeight = targetRect.height;
           const oneBlockWidth =
-            (appleTreeProps.scaffoldBlockPxWidth ||
-              DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH) - 5;
+            appleTreeProps.scaffoldBlockPxWidth ||
+            DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH;
           let depth =
             Math.sign(offsetX) * Math.floor(Math.abs(offsetX / oneBlockWidth));
           if (depth === -0) {
