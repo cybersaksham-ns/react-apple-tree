@@ -1,6 +1,6 @@
 {
   "name": "@newtonschool/react-apple-tree",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "React Apple Tree is an updated version of the popular library react-sortable-tree.",
   "keywords": [
     "React Apple Tree",
@@ -29,7 +29,8 @@
   "dependencies": {
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "react-window": "^1.8.10"
+    "react-window": "^1.8.10",
+    "lodash.clonedeep": "^4.5.0"
   },
   "peerDependencies": {
     "react": "^18.3.1"
@@ -38,10 +39,14 @@
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/react": "^18.3.3",
     "@types/react-window": "^1.8.8",
-    "lodash.clonedeep": "^4.5.0",
     "nodemon": "^3.1.4",
     "prettier": "^3.3.3",
     "styled-components": "6.1.11",
     "typescript": "^4.9.5"
-  }
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ]
 }
