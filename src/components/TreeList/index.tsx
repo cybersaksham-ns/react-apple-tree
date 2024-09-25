@@ -54,12 +54,13 @@ export default function TreeList<T>(props: ReactAppleTreeProps<T>) {
       itemKey={(index, data) => {
         return data[index].mapId;
       }}
+      data-testid="virtualized-list"
       {...appleTreeProps.reactVirtualizedListProps}
     >
       {ItemRenderer}
     </List>
   ) : (
-    <StyledNormalList ref={normalListRef}>
+    <StyledNormalList ref={normalListRef} data-testid="non-virtualized-list">
       {flatTree.map((node, i) => (
         <TreeItem
           key={node.mapId}

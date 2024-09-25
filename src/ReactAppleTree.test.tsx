@@ -145,4 +145,11 @@ describe("ReactAppleTree", () => {
     expect(screen.queryByText("Node - Node 4")).not.toBeInTheDocument();
     expect(onVisibilityToggle).toHaveBeenCalled();
   });
+
+  // Non Virtualized List
+  it("should render non-virtualized list, isVirtualized false", () => {
+    render(<ReactAppleTree {...defaultProps} isVirtualized={false} />);
+    expect(screen.queryByTestId("virtualized-list")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("non-virtualized-list")).toBeInTheDocument();
+  });
 });
