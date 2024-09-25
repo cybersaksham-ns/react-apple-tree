@@ -156,6 +156,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
       $rowHeight={appleTreeProps.rowHeight || DEFAULT_ROW_HEIGHT}
       ref={(node) => dropRef(node)}
       role="row"
+      data-testid={`tree-item-${node.mapId}`}
     >
       <TreeItemIndentation nodeIndex={nodeIndex} node={node} />
       <StyledTreeItemContent ref={nodeElement}>
@@ -167,6 +168,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
               DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH
             }
             onClick={() => expandOrCollapseNode(node.mapId)}
+            data-testid={`tree-item-visibility-toggle-button-${node.mapId}`}
           />
         )}
         <StyledRowMainContentWrapper
@@ -189,7 +191,10 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
           }
         >
           {canDragNode && (
-            <StyledRowDragIcon ref={(node) => dragRef(node)}>
+            <StyledRowDragIcon
+              ref={(node) => dragRef(node)}
+              data-testid={`tree-item-drag-handle-${node.mapId}`}
+            >
               <DragHandle />
             </StyledRowDragIcon>
           )}
