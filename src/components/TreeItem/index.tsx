@@ -155,6 +155,7 @@ const TreeItem = ({ style, nodeIndex, node }: TreeItemComponentProps) => {
       $rowDirection={appleTreeProps.rowDirection}
       $rowHeight={appleTreeProps.rowHeight || DEFAULT_ROW_HEIGHT}
       ref={(node) => dropRef(node)}
+      role="row"
     >
       <TreeItemIndentation nodeIndex={nodeIndex} node={node} />
       <StyledTreeItemContent ref={nodeElement}>
