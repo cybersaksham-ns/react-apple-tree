@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import ReactAppleTree from "./ReactAppleTree";
 import { ReactAppleTreeProps } from "./types";
 
@@ -105,5 +105,44 @@ describe("ReactAppleTree", () => {
   it("should render nested, collapsed tree", () => {
     render(<ReactAppleTree {...defaultProps} treeData={treeData} />);
     expect(screen.queryAllByRole("row").length).toEqual(2);
+  });
+
+  // Expand/Collapse
+  it("should expand/collapse nodes", () => {
+    const onVisibilityToggle = jest.fn();
+
+    render(
+      <ReactAppleTree
+        {...defaultProps}
+        generateNodeProps={({ node }) => ({
+          title: () => "Node - " + node.name,
+        })}
+        treeData={treeData}
+        onVisibilityToggle={onVisibilityToggle}
+      />
+    );
+    expect(screen.queryAllByRole("row").length).toEqual(2);
+
+    // Expanding Node 1
+    fireEvent.click(screen.getByTestId("tree-item-visibility-toggle-button-1"));
+    expect(screen.queryAllByRole("row").length).toEqual(4);
+    expect(screen.getByText("Node - Node 2")).toBeInTheDocument();
+    expect(screen.queryByText("Node - Node 3")).not.toBeInTheDocument();
+    expect(screen.getByText("Node - Node 4")).toBeInTheDocument();
+    expect(onVisibilityToggle).toHaveBeenCalled();
+
+    // Expanding Node 2
+    fireEvent.click(screen.getByTestId("tree-item-visibility-toggle-button-2"));
+    expect(screen.queryAllByRole("row").length).toEqual(5);
+    expect(screen.getByText("Node - Node 3")).toBeInTheDocument();
+    expect(onVisibilityToggle).toHaveBeenCalled();
+
+    // Collapsing Node 1
+    fireEvent.click(screen.getByTestId("tree-item-visibility-toggle-button-1"));
+    expect(screen.queryAllByRole("row").length).toEqual(2);
+    expect(screen.queryByText("Node - Node 2")).not.toBeInTheDocument();
+    expect(screen.queryByText("Node - Node 3")).not.toBeInTheDocument();
+    expect(screen.queryByText("Node - Node 4")).not.toBeInTheDocument();
+    expect(onVisibilityToggle).toHaveBeenCalled();
   });
 });
