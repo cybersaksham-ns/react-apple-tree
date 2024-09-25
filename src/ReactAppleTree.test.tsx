@@ -164,4 +164,23 @@ describe("ReactAppleTree", () => {
       screen.getByTestId("tree-item-indentation-main-block-1")
     ).toHaveStyle("width: 50px");
   });
+
+  // Search Feature
+  it("should call searchFinishCallback on search", () => {
+    const searchFinishCallback = jest.fn();
+
+    render(
+      <ReactAppleTree
+        {...defaultProps}
+        searchMethod={({ node, searchQuery }) =>
+          searchQuery && node.name.indexOf(searchQuery) > -1
+        }
+        searchQuery="Node 1"
+        searchFinishCallback={searchFinishCallback}
+      />
+    );
+    expect(searchFinishCallback).toHaveBeenCalledWith([
+      { node: treeData[0], path: [1], treeIndex: 0 },
+    ]);
+  });
 });
