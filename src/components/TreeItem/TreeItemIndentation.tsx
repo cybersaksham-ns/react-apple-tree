@@ -103,6 +103,7 @@ const TreeItemIndentation = ({ nodeIndex, node }: TreeItemIndentationProps) => {
             appleTreeProps.scaffoldBlockPxWidth ||
             DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH
           }
+          data-testid={`tree-item-indentation-main-block-${node.mapId}`}
         />
       ) : (
         <StyledVerticalAndHorizontalLineBlock
@@ -110,6 +111,7 @@ const TreeItemIndentation = ({ nodeIndex, node }: TreeItemIndentationProps) => {
             appleTreeProps.scaffoldBlockPxWidth ||
             DEFAULT_SCAFFOLD_BLOCK_PX_WIDTH
           }
+          data-testid={`tree-item-indentation-main-block-${node.mapId}`}
         />
       )}
     </StyledTreeItemIndentation>

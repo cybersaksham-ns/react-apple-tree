@@ -152,4 +152,16 @@ describe("ReactAppleTree", () => {
     expect(screen.queryByTestId("virtualized-list")).not.toBeInTheDocument();
     expect(screen.queryByTestId("non-virtualized-list")).toBeInTheDocument();
   });
+
+  // Theme Props
+  it("should render with custom row height", () => {
+    render(<ReactAppleTree {...defaultProps} rowHeight={100} />);
+    expect(screen.getByTestId("tree-item-1")).toHaveStyle("min-height: 110px");
+  });
+  it("should render with custom scaffold width", () => {
+    render(<ReactAppleTree {...defaultProps} scaffoldBlockPxWidth={50} />);
+    expect(
+      screen.getByTestId("tree-item-indentation-main-block-1")
+    ).toHaveStyle("width: 50px");
+  });
 });
