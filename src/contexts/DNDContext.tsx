@@ -23,6 +23,7 @@ import {
 import { removeItemAtGivenIndexFromArray } from "../utils/common";
 import { useSharedState } from "../hooks/useSharedState";
 import { SHARED_IS_DRAGGING_NODE_STATE } from "../constants";
+import { runCanNodeHaveChildren } from "../utils/prop-utils";
 
 interface DNDContextProps {
   isDraggingNode: boolean | null;
@@ -179,7 +180,16 @@ const DNDContextProvider = (props: ContextProviderProps): React.JSX.Element => {
         if (dropNodeDepth <= prevDepth) {
           dropNodeDepth = prevDepth;
         } else {
-          dropNodeDepth = prevDepth + 1;
+          if (
+            runCanNodeHaveChildren(
+              appleTreeProps.canNodeHaveChildren,
+              treeMap[flatTree[tmpDropIndex - 1].mapId]
+            )
+          ) {
+            dropNodeDepth = prevDepth + 1;
+          } else {
+            dropNodeDepth = prevDepth;
+          }
         }
       }
 

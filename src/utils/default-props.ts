@@ -15,6 +15,7 @@ export const defaultAppleTreeProps: ReactAppleTreeProps = {
   },
   canDrag: true,
   canDrop: () => true,
+  canNodeHaveChildren: true,
   searchMethod: ({ node, searchQuery }) => {
     let titleMatch: boolean = false;
     let subtitleMatch = false;

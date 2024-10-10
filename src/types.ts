@@ -399,11 +399,11 @@ export interface ReactAppleTreeProps<T = {}> extends ThemeTreeProps<T> {
   /**
    * A function that determines if a node can have children.
    *
-   * @type {CanNodeHaveChildrenFn<T>}
+   * @type {CanNodeHaveChildrenFn<T> | boolean}
    * @param {TreeItem<T>} node - The tree node.
    * @returns {boolean} - Whether the node can have children.
    */
-  canNodeHaveChildren?: CanNodeHaveChildrenFn<T>;
+  canNodeHaveChildren?: CanNodeHaveChildrenFn<T> | boolean;
 
   /**
    * The theme configuration for the tree.
