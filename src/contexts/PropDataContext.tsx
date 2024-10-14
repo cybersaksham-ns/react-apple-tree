@@ -5,7 +5,6 @@ import {
   ThemeProps,
 } from "../types";
 import { defaultAppleTreeProps } from "../utils/default-props";
-import cloneDeep from "lodash.clonedeep";
 
 interface PropDataContextProps {
   appleTreeProps: ReactAppleTreeProps;
@@ -59,14 +58,13 @@ const PropDataContextProvider = (
       value={{
         appleTreeProps,
         setAppleTreeProps: (props: ReactAppleTreeProps) => {
-          const cloneProps: any = cloneDeep(props);
           const mergedTheme: ThemeProps = mergeThemeProps({
             ...appleTreeProps,
-            ...cloneProps,
+            ...props,
           });
           setAppleTreeProps({
             ...appleTreeProps,
-            ...cloneProps,
+            ...props,
             ...mergedTheme,
           });
         },
