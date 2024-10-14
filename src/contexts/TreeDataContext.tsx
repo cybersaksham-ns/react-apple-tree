@@ -39,7 +39,7 @@ const TreeDataContextProvider = (
       setTreeMap({ ...map });
       setFlatTree([...flatArray]);
     }
-  }, [appleTreeProps.treeData]);
+  }, [appleTreeProps]);
 
   function expandOrCollapseNode(nodeKey: NodeKey) {
     if (!treeMap[nodeKey].expanded) {
